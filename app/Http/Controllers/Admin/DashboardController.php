@@ -25,6 +25,11 @@ class DashboardController extends Controller
         return view('admin.site-info.edit', $this->sharedViewData());
     }
 
+    public function apiAccess(): View
+    {
+        return view('admin.api-access.index', $this->sharedViewData());
+    }
+
     public function updateSiteInfo(Request $request): RedirectResponse
     {
         $validated = $request->validate([
@@ -63,6 +68,45 @@ class DashboardController extends Controller
             'adminCount' => Admin::count(),
             'tokenCount' => PersonalAccessToken::count(),
             'passwordResetCount' => DB::table('password_resets')->count(),
+            'apiEndpoints' => $this->apiEndpoints(),
+        ];
+    }
+
+    private function apiEndpoints(): array
+    {
+        return [
+            [
+                'method' => 'POST',
+                'title' => 'User Login',
+                'path' => '/api/user/login',
+                'description' => 'Use this endpoint for app users from the users table.',
+                'payload' => [
+                    'email' => 'user@landsite.test',
+                    'password' => 'password',
+                    'device_name' => 'android-app',
+                ],
+            ],
+            [
+                'method' => 'POST',
+                'title' => 'Admin Login',
+                'path' => '/api/admin/login',
+                'description' => 'Use this endpoint for admin accounts from the admins table.',
+                'payload' => [
+                    'email' => 'admin@landsite.test',
+                    'password' => 'password',
+                    'device_name' => 'android-app',
+                ],
+            ],
+            [
+                'method' => 'GET',
+                'title' => 'Authenticated User',
+                'path' => '/api/user',
+                'description' => 'Use this protected endpoint with a Sanctum bearer token to verify the authenticated account.',
+                'headers' => [
+                    'Authorization' => 'Bearer YOUR_TOKEN',
+                    'Accept' => 'application/json',
+                ],
+            ],
         ];
     }
 

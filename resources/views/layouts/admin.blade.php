@@ -170,7 +170,7 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{ route('admin.dashboard') }}#api-access" class="nav-link">
+                <a href="{{ route('admin.api-access.index') }}" class="nav-link {{ request()->routeIs('admin.api-access.*') ? 'active' : '' }}">
                   <i class="nav-icon bi bi-phone"></i>
                   <p>API Access</p>
                 </a>

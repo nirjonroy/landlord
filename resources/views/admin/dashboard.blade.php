@@ -12,7 +12,7 @@
           <span class="badge rounded-pill text-bg-light text-primary mb-3">Land management admin panel</span>
           <h1 class="h2 fw-bold mb-3">Manage {{ $siteName }} from one clean workspace.</h1>
           <p class="hero-meta mb-0">
-            {{ $siteInfo->short_description ?: 'Update your public site details on the Site Info page, then reuse them later across the website and mobile app.' }}
+            {{ $siteInfo->short_description ?: 'Use the dedicated Site Info and API Access pages to manage public site details and app integration references.' }}
           </p>
         </div>
         <div class="col-lg-4">
@@ -156,34 +156,36 @@
     </div>
 
     <div class="col-12">
-      <div id="api-access" class="card card-outline card-warning">
-        <div class="card-header">
-          <h3 class="card-title fw-semibold">API Access For App</h3>
+      <div class="card card-outline card-warning">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h3 class="card-title fw-semibold mb-0">API Access For App</h3>
+          <a href="{{ route('admin.api-access.index') }}" class="btn btn-warning btn-sm text-dark">
+            <i class="bi bi-box-arrow-up-right me-1"></i>
+            Open API Access
+          </a>
         </div>
         <div class="card-body">
-          <div class="row endpoint-list g-3">
-            <div class="col-md-6">
-              <div class="endpoint-item h-100">
-                <span class="method">POST</span>
-                <div class="fw-semibold mb-2">User Login</div>
-                <code>/api/user/login</code>
-                <p class="text-secondary mt-3 mb-0">Use this endpoint for app users from the `users` table.</p>
-              </div>
+          <div class="info-grid">
+            <div class="info-tile">
+              <span class="label">Available endpoints</span>
+              <div class="value">{{ count($apiEndpoints) }}</div>
             </div>
-            <div class="col-md-6">
-              <div class="endpoint-item h-100">
-                <span class="method">POST</span>
-                <div class="fw-semibold mb-2">Admin Login</div>
-                <code>/api/admin/login</code>
-                <p class="text-secondary mt-3 mb-0">Use this endpoint for admin accounts from the `admins` table.</p>
-              </div>
+            <div class="info-tile">
+              <span class="label">User login</span>
+              <div class="value">/api/user/login</div>
+            </div>
+            <div class="info-tile">
+              <span class="label">Admin login</span>
+              <div class="value">/api/admin/login</div>
+            </div>
+            <div class="info-tile">
+              <span class="label">Token check</span>
+              <div class="value">/api/user</div>
             </div>
           </div>
-          <div class="alert alert-warning mt-4 mb-0">
-            Send <code>email</code>, <code>password</code>, and <code>device_name</code> in the request body to receive a Sanctum bearer token.
-          </div>
-          <div class="alert alert-light quick-note mt-3 mb-0">
-            <strong>Note:</strong> The default template menus, widgets, forms, tables, and extra demo links were removed so this admin panel stays focused on the land site.
+
+          <div class="alert alert-light quick-note mt-4 mb-0">
+            <strong>Note:</strong> Use the dedicated API Access page for endpoint details, request payloads, and bearer token usage.
           </div>
         </div>
       </div>

@@ -23,7 +23,8 @@ class DashboardTest extends TestCase
             ->assertOk()
             ->assertSee('Admin Dashboard')
             ->assertSee('Template Admin')
-            ->assertSee('Manage Site Info');
+            ->assertSee('Manage Site Info')
+            ->assertSee('Open API Access');
     }
 
     public function test_admin_site_info_page_can_be_rendered(): void
@@ -35,6 +36,18 @@ class DashboardTest extends TestCase
             ->assertOk()
             ->assertSee('Site Information')
             ->assertSee('Save Site Info');
+    }
+
+    public function test_admin_api_access_page_can_be_rendered(): void
+    {
+        $admin = Admin::factory()->create();
+
+        $this->actingAs($admin, 'admin')
+            ->get('/admin/api-access')
+            ->assertOk()
+            ->assertSee('API Access For App')
+            ->assertSee('/api/user/login')
+            ->assertSee('/api/admin/login');
     }
 
     public function test_admin_can_update_site_information(): void

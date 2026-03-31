@@ -32,6 +32,7 @@ Route::middleware('guest:admin')->prefix('admin')->name('admin.')->group(functio
 Route::middleware('auth:admin')->prefix('admin')->name('admin.')->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('site-info', [DashboardController::class, 'editSiteInfo'])->name('site-info.edit');
+    Route::get('api-access', [DashboardController::class, 'apiAccess'])->name('api-access.index');
     Route::put('site-info', [DashboardController::class, 'updateSiteInfo'])->name('site-info.update');
     Route::post('logout', [AdminAuthenticatedSessionController::class, 'destroy'])->name('logout');
 });
