@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Admin;
+use App\Models\SiteInfo;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -16,6 +17,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        SiteInfo::updateOrCreate(
+            ['id' => 1],
+            [
+                'site_name' => 'Land Site',
+                'site_url' => config('app.url', 'http://127.0.0.1:8000'),
+                'contact_email' => 'admin@landsite.test',
+                'short_description' => 'Manage land listings, user accounts, and app access from a single dashboard.',
+            ]
+        );
+
         Admin::updateOrCreate(
             ['email' => 'admin@landsite.test'],
             [
