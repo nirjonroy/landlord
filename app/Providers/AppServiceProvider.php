@@ -28,7 +28,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        View::composer(['auth.login', 'auth.register'], function ($view) {
+        View::composer(['auth.login', 'auth.register', 'profile.edit'], function ($view) {
             if (Schema::hasTable('site_infos')) {
                 $siteInfo = SiteInfo::query()->firstOrCreate(
                     ['id' => 1],
