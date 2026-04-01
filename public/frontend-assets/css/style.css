@@ -2414,7 +2414,19 @@ html[data-theme="dark"] .cs_hero.cs_style_1 .cs_hero_text {
 }
 
 .cs_site_branding {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    width: 160px;
+    height: 64px;
+    flex: 0 0 160px;
+    overflow: hidden;
+}
+
+.cs_site_branding img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
 }
 
 .cs_site_branding+.cs_nav {
@@ -2555,6 +2567,9 @@ html[data-theme="dark"] .cs_hero.cs_style_1 .cs_hero_text {
     .cs_site_branding {
         position: relative;
         z-index: 1020;
+        width: 132px;
+        height: 52px;
+        flex-basis: 132px;
     }
     .cs_nav .cs_nav_list {
         position: fixed;
@@ -9526,3 +9541,4 @@ input::-webkit-inner-spin-button {
 .cs_tags_links .cs_tag_link:hover {
     border-color: var(--accent-color);
 }
+
