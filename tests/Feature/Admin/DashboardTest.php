@@ -5,6 +5,8 @@ namespace Tests\Feature\Admin;
 use App\Models\Admin;
 use App\Models\SiteInfo;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class DashboardTest extends TestCase
@@ -37,6 +39,7 @@ class DashboardTest extends TestCase
             ->get('/admin/site-info')
             ->assertOk()
             ->assertSee('Site Information')
+            ->assertSee('Upload Logo')
             ->assertSee('Save Site Info');
     }
 
@@ -54,7 +57,10 @@ class DashboardTest extends TestCase
 
     public function test_admin_can_update_site_information(): void
     {
+        Storage::fake('public');
+
         $admin = Admin::factory()->create();
+        $logo = UploadedFile::fake()->image('site-logo.png', 300, 300);
 
         $response = $this->actingAs($admin, 'admin')->put('/admin/site-info', [
             'site_name' => 'Prime Land Hub',
@@ -63,6 +69,7 @@ class DashboardTest extends TestCase
             'contact_phone' => '+8801700000000',
             'address' => 'Dhaka, Bangladesh',
             'short_description' => 'A central place to manage land listings and app data.',
+            'logo' => $logo,
             'facebook_url' => 'https://facebook.com/primelandhub',
             'instagram_url' => 'https://instagram.com/primelandhub',
             'youtube_url' => 'https://youtube.com/@primelandhub',
@@ -81,12 +88,18 @@ class DashboardTest extends TestCase
         $siteInfo = SiteInfo::query()->findOrFail(1);
 
         $this->assertSame('Dhaka, Bangladesh', $siteInfo->address);
+        $this->assertNotNull($siteInfo->logo_path);
         $this->assertSame('https://facebook.com/primelandhub', $siteInfo->facebook_url);
+        Storage::disk('public')->assertExists($siteInfo->logo_path);
 
         $this->actingAs($admin, 'admin')
             ->get('/admin/site-info')
             ->assertOk()
             ->assertSee('Prime Land Hub')
             ->assertSee('hello@primelandhub.test');
+
+        $this->actingAs($admin, 'admin')
+            ->get(route('admin.site-info.logo'))
+            ->assertOk();
     }
 }

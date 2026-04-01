@@ -10,16 +10,20 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Storage;
 
 class UserManagementController extends Controller
 {
     public function index(): View
     {
         [$users, $listingAnalytics] = $this->usersWithAnalytics();
+        $siteInfo = $this->siteInfo();
 
         return view('admin.users.index', [
             'admin' => Auth::guard('admin')->user(),
-            'siteName' => $this->siteName(),
+            'siteInfo' => $siteInfo,
+            'siteName' => $siteInfo->site_name ?: config('app.name', 'Land Site'),
+            'siteLogoUrl' => $this->siteLogoUrl($siteInfo),
             'users' => $users,
             'userCount' => $users->count(),
             'listingDataAvailable' => $listingAnalytics['available'],
@@ -135,8 +139,24 @@ class UserManagementController extends Controller
         return null;
     }
 
-    private function siteName(): string
+    private function siteInfo(): SiteInfo
     {
-        return SiteInfo::query()->value('site_name') ?: config('app.name', 'Land Site');
+        return SiteInfo::query()->firstOrCreate(
+            ['id' => 1],
+            [
+                'site_name' => config('app.name', 'Land Site'),
+                'site_url' => config('app.url', url('/')),
+                'short_description' => 'Manage land listings, user accounts, and app access from a single dashboard.',
+            ]
+        );
+    }
+
+    private function siteLogoUrl(SiteInfo $siteInfo): ?string
+    {
+        if (! $siteInfo->logo_path || ! Storage::disk('public')->exists($siteInfo->logo_path)) {
+            return null;
+        }
+
+        return route('admin.site-info.logo', ['v' => optional($siteInfo->updated_at)->timestamp]);
     }
 }

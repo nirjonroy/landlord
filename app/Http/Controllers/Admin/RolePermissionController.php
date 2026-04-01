@@ -10,6 +10,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -28,9 +29,13 @@ class RolePermissionController extends Controller
 
     public function createStaff(): View
     {
+        $siteInfo = $this->siteInfo();
+
         return view('admin.staff.create', [
             'admin' => Auth::guard('admin')->user(),
-            'siteName' => $this->siteName(),
+            'siteInfo' => $siteInfo,
+            'siteName' => $siteInfo->site_name ?: config('app.name', 'Land Site'),
+            'siteLogoUrl' => $this->siteLogoUrl($siteInfo),
             'staffMembers' => Admin::query()->with('roles')->orderBy('name')->get(),
             'roles' => $this->rolesQuery()->get(),
         ]);
@@ -38,9 +43,13 @@ class RolePermissionController extends Controller
 
     public function roles(): View
     {
+        $siteInfo = $this->siteInfo();
+
         return view('admin.roles.index', [
             'admin' => Auth::guard('admin')->user(),
-            'siteName' => $this->siteName(),
+            'siteInfo' => $siteInfo,
+            'siteName' => $siteInfo->site_name ?: config('app.name', 'Land Site'),
+            'siteLogoUrl' => $this->siteLogoUrl($siteInfo),
             'admins' => Admin::query()->with('roles')->orderBy('name')->get(),
             'roles' => $this->rolesQuery()->with('permissions')->get(),
             'permissions' => $this->permissionsQuery()->get(),
@@ -49,9 +58,13 @@ class RolePermissionController extends Controller
 
     public function permissions(): View
     {
+        $siteInfo = $this->siteInfo();
+
         return view('admin.permissions.index', [
             'admin' => Auth::guard('admin')->user(),
-            'siteName' => $this->siteName(),
+            'siteInfo' => $siteInfo,
+            'siteName' => $siteInfo->site_name ?: config('app.name', 'Land Site'),
+            'siteLogoUrl' => $this->siteLogoUrl($siteInfo),
             'permissions' => $this->permissionsQuery()->get(),
             'roles' => $this->rolesQuery()->with('permissions')->get(),
         ]);
@@ -198,8 +211,24 @@ class RolePermissionController extends Controller
             ->get();
     }
 
-    private function siteName(): string
+    private function siteInfo(): SiteInfo
     {
-        return SiteInfo::query()->value('site_name') ?: config('app.name', 'Land Site');
+        return SiteInfo::query()->firstOrCreate(
+            ['id' => 1],
+            [
+                'site_name' => config('app.name', 'Land Site'),
+                'site_url' => config('app.url', url('/')),
+                'short_description' => 'Manage land listings, user accounts, and app access from a single dashboard.',
+            ]
+        );
+    }
+
+    private function siteLogoUrl(SiteInfo $siteInfo): ?string
+    {
+        if (! $siteInfo->logo_path || ! Storage::disk('public')->exists($siteInfo->logo_path)) {
+            return null;
+        }
+
+        return route('admin.site-info.logo', ['v' => optional($siteInfo->updated_at)->timestamp]);
     }
 }

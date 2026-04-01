@@ -14,6 +14,13 @@
         margin-bottom: 0;
       }
 
+      .brand-logo-image {
+        background: rgba(255, 255, 255, 0.92);
+        border-radius: 50%;
+        object-fit: contain;
+        padding: 0.2rem;
+      }
+
       .dashboard-hero {
         background: linear-gradient(135deg, #16324f 0%, #2f6b8f 100%);
         border: 0;
@@ -149,7 +156,7 @@
       <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
         <div class="sidebar-brand">
           <a href="{{ route('admin.dashboard') }}" class="brand-link text-decoration-none">
-            <img src="{{ asset('assets/assets/img/AdminLTELogo.png') }}" alt="{{ $siteName }}" class="brand-image opacity-75 shadow" />
+            <img src="{{ $siteLogoUrl ?: asset('assets/assets/img/AdminLTELogo.png') }}" alt="{{ $siteName }}" class="brand-image opacity-75 shadow brand-logo-image" />
             <span class="brand-text fw-light">{{ $siteName }}</span>
           </a>
         </div>

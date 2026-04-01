@@ -35,6 +35,7 @@ Route::middleware('auth:admin')->prefix('admin')->name('admin.')->group(function
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('users', [UserManagementController::class, 'index'])->name('users.index');
     Route::get('site-info', [DashboardController::class, 'editSiteInfo'])->name('site-info.edit');
+    Route::get('site-info/logo', [DashboardController::class, 'siteLogo'])->name('site-info.logo');
     Route::get('api-access', [DashboardController::class, 'apiAccess'])->name('api-access.index');
     Route::get('staff', [RolePermissionController::class, 'staffIndex'])->name('staff.index');
     Route::get('staff/create', [RolePermissionController::class, 'createStaff'])->name('staff.create');

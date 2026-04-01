@@ -12,7 +12,7 @@
           <span class="badge rounded-pill text-bg-light text-primary mb-3">Dedicated update page</span>
           <h1 class="h2 fw-bold mb-3">Update the public details for {{ $siteName }}.</h1>
           <p class="hero-meta mb-0">
-            Change your site name, URLs, contact details, social links, and short description here. These values stay in the database for later use across the website and app.
+            Change your site name, logo, URLs, contact details, social links, and short description here. These values stay in the database for later use across the website and app.
           </p>
         </div>
         <div class="col-lg-4">
@@ -54,7 +54,7 @@
             </div>
           @endif
 
-          <form method="POST" action="{{ route('admin.site-info.update') }}">
+          <form method="POST" action="{{ route('admin.site-info.update') }}" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
@@ -101,6 +101,23 @@
                   <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
               </div>
+              <div class="col-md-7">
+                <label for="logo" class="form-label">Upload Logo</label>
+                <input id="logo" name="logo" type="file" class="form-control @error('logo') is-invalid @enderror" accept=".png,.jpg,.jpeg,.svg,.webp,image/png,image/jpeg,image/svg+xml,image/webp" />
+                @error('logo')
+                  <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+                <div class="form-text">Accepted: PNG, JPG, SVG, or WebP. Maximum size: 2 MB. The uploaded logo will be used in the admin sidebar immediately.</div>
+              </div>
+              <div class="col-md-5 d-flex align-items-end">
+                <div class="form-check info-tile w-100 mb-0">
+                  <input class="form-check-input" type="checkbox" value="1" id="remove_logo" name="remove_logo" @checked(old('remove_logo')) @disabled(! $siteInfo->logo_path)>
+                  <label class="form-check-label" for="remove_logo">
+                    Remove current logo
+                  </label>
+                  <div class="small text-secondary mt-2">Use this when you want to go back to the default admin panel logo.</div>
+                </div>
+              </div>
               <div class="col-md-4">
                 <label for="facebook_url" class="form-label">Facebook URL</label>
                 <input id="facebook_url" name="facebook_url" type="url" class="form-control @error('facebook_url') is-invalid @enderror" value="{{ old('facebook_url', $siteInfo->facebook_url) }}" placeholder="https://facebook.com/..." />
@@ -125,7 +142,7 @@
             </div>
 
             <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mt-4">
-              <p class="text-secondary mb-0">This page updates the single `site_infos` record used by the admin panel.</p>
+              <p class="text-secondary mb-0">This page updates the single <code>site_infos</code> record used by the admin panel.</p>
               <button type="submit" class="btn btn-primary">
                 <i class="bi bi-save me-1"></i>
                 Save Site Info
@@ -143,6 +160,16 @@
         </div>
         <div class="card-body">
           <div class="info-grid">
+            <div class="info-tile">
+              <span class="label">Site logo</span>
+              <div class="value">
+                @if ($siteLogoUrl)
+                  <img src="{{ $siteLogoUrl }}" alt="{{ $siteInfo->site_name }} logo" class="img-fluid rounded border bg-light p-2" style="max-height: 120px; width: auto;" />
+                @else
+                  No logo uploaded yet
+                @endif
+              </div>
+            </div>
             <div class="info-tile">
               <span class="label">Site name</span>
               <div class="value">{{ $siteInfo->site_name }}</div>

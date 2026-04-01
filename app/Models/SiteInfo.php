@@ -21,6 +21,7 @@ class SiteInfo extends Model
         'contact_phone',
         'address',
         'short_description',
+        'logo_path',
         'facebook_url',
         'instagram_url',
         'youtube_url',
