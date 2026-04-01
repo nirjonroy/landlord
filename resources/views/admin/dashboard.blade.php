@@ -196,6 +196,10 @@
         <div class="card-header d-flex justify-content-between align-items-center">
           <h3 class="card-title fw-semibold mb-0">Access Control</h3>
           <div class="d-flex flex-wrap gap-2">
+            <a href="{{ route('admin.users.index') }}" class="btn btn-primary btn-sm">
+              <i class="bi bi-person-lines-fill me-1"></i>
+              Open Users
+            </a>
             <a href="{{ route('admin.staff.create') }}" class="btn btn-warning btn-sm text-dark">
               <i class="bi bi-people me-1"></i>
               Open Staff
@@ -213,6 +217,10 @@
         <div class="card-body">
           <div class="info-grid">
             <div class="info-tile">
+              <span class="label">App users</span>
+              <div class="value">{{ $userCount }}</div>
+            </div>
+            <div class="info-tile">
               <span class="label">Staff accounts</span>
               <div class="value">{{ $adminCount }}</div>
             </div>
@@ -224,14 +232,10 @@
               <span class="label">Admin permissions</span>
               <div class="value">{{ $permissionCount }}</div>
             </div>
-            <div class="info-tile">
-              <span class="label">Staff page</span>
-              <div class="value">/admin/staff/create</div>
-            </div>
           </div>
 
           <div class="alert alert-light quick-note mt-4 mb-0">
-            <strong>Note:</strong> Staff, roles, and permissions now live on separate pages. Use Staff to create accounts, Roles for assignments and mapping, and Permissions for permission creation.
+            <strong>Note:</strong> Users, staff, roles, and permissions now live on separate pages. Use Users for app activity, Staff to create admin accounts, Roles for assignments and mapping, and Permissions for permission creation.
           </div>
         </div>
       </div>

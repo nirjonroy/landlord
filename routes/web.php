@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AuthenticatedSessionController as AdminAuthenticatedSessionController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\RolePermissionController;
+use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -32,6 +33,7 @@ Route::middleware('guest:admin')->prefix('admin')->name('admin.')->group(functio
 
 Route::middleware('auth:admin')->prefix('admin')->name('admin.')->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('users', [UserManagementController::class, 'index'])->name('users.index');
     Route::get('site-info', [DashboardController::class, 'editSiteInfo'])->name('site-info.edit');
     Route::get('api-access', [DashboardController::class, 'apiAccess'])->name('api-access.index');
     Route::get('staff', [RolePermissionController::class, 'staffIndex'])->name('staff.index');
