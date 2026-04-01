@@ -175,6 +175,18 @@
                   <p>API Access</p>
                 </a>
               </li>
+              <li class="nav-item">
+                <a href="{{ route('admin.roles.index') }}" class="nav-link {{ request()->routeIs('admin.roles.*') ? 'active' : '' }}">
+                  <i class="nav-icon bi bi-shield-check"></i>
+                  <p>Roles</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ route('admin.permissions.index') }}" class="nav-link {{ request()->routeIs('admin.permissions.*') ? 'active' : '' }}">
+                  <i class="nav-icon bi bi-key"></i>
+                  <p>Permissions</p>
+                </a>
+              </li>
               <li class="nav-item mt-3 px-3">
                 <div class="small text-uppercase text-secondary fw-semibold">Admin</div>
               </li>

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AuthenticatedSessionController as AdminAuthenticatedSessionController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\RolePermissionController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -33,6 +34,13 @@ Route::middleware('auth:admin')->prefix('admin')->name('admin.')->group(function
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('site-info', [DashboardController::class, 'editSiteInfo'])->name('site-info.edit');
     Route::get('api-access', [DashboardController::class, 'apiAccess'])->name('api-access.index');
+    Route::get('roles', [RolePermissionController::class, 'roles'])->name('roles.index');
+    Route::get('permissions', [RolePermissionController::class, 'permissions'])->name('permissions.index');
+    Route::get('roles-permissions', [RolePermissionController::class, 'index'])->name('roles-permissions.index');
+    Route::post('roles-permissions/permissions', [RolePermissionController::class, 'storePermission'])->name('roles-permissions.permissions.store');
+    Route::post('roles-permissions/roles', [RolePermissionController::class, 'storeRole'])->name('roles-permissions.roles.store');
+    Route::put('roles-permissions/roles/{role}/permissions', [RolePermissionController::class, 'updateRolePermissions'])->name('roles-permissions.roles.permissions.update');
+    Route::put('roles-permissions/admins/{admin}/roles', [RolePermissionController::class, 'updateAdminRoles'])->name('roles-permissions.admins.roles.update');
     Route::put('site-info', [DashboardController::class, 'updateSiteInfo'])->name('site-info.update');
     Route::post('logout', [AdminAuthenticatedSessionController::class, 'destroy'])->name('logout');
 });

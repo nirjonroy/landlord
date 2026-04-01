@@ -24,7 +24,9 @@ class DashboardTest extends TestCase
             ->assertSee('Admin Dashboard')
             ->assertSee('Template Admin')
             ->assertSee('Manage Site Info')
-            ->assertSee('Open API Access');
+            ->assertSee('Open API Access')
+            ->assertSee('Open Roles')
+            ->assertSee('Open Permissions');
     }
 
     public function test_admin_site_info_page_can_be_rendered(): void

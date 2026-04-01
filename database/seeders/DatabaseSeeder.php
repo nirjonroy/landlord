@@ -7,6 +7,9 @@ use App\Models\SiteInfo;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
 
 class DatabaseSeeder extends Seeder
 {
@@ -17,6 +20,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        app(PermissionRegistrar::class)->forgetCachedPermissions();
+
         SiteInfo::updateOrCreate(
             ['id' => 1],
             [
@@ -27,7 +32,17 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        Admin::updateOrCreate(
+        $permissions = collect([
+            'dashboard.view',
+            'site-info.manage',
+            'api-access.view',
+            'roles-permissions.manage',
+        ])->map(fn ($permissionName) => Permission::findOrCreate($permissionName, 'admin'));
+
+        $superAdminRole = Role::findOrCreate('super-admin', 'admin');
+        $superAdminRole->syncPermissions($permissions);
+
+        $admin = Admin::updateOrCreate(
             ['email' => 'admin@landsite.test'],
             [
                 'name' => 'Site Admin',
@@ -35,6 +50,8 @@ class DatabaseSeeder extends Seeder
                 'password' => Hash::make('password'),
             ]
         );
+
+        $admin->syncRoles([$superAdminRole]);
 
         User::updateOrCreate(
             ['email' => 'user@landsite.test'],

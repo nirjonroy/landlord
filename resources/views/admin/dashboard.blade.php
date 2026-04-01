@@ -12,7 +12,7 @@
           <span class="badge rounded-pill text-bg-light text-primary mb-3">Land management admin panel</span>
           <h1 class="h2 fw-bold mb-3">Manage {{ $siteName }} from one clean workspace.</h1>
           <p class="hero-meta mb-0">
-            {{ $siteInfo->short_description ?: 'Use the dedicated Site Info and API Access pages to manage public site details and app integration references.' }}
+            {{ $siteInfo->short_description ?: 'Use the dedicated Site Info, API Access, Roles, and Permissions pages to manage public details and admin access rules.' }}
           </p>
         </div>
         <div class="col-lg-4">
@@ -186,6 +186,48 @@
 
           <div class="alert alert-light quick-note mt-4 mb-0">
             <strong>Note:</strong> Use the dedicated API Access page for endpoint details, request payloads, and bearer token usage.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="card card-outline card-info">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h3 class="card-title fw-semibold mb-0">Access Control</h3>
+          <div class="d-flex flex-wrap gap-2">
+            <a href="{{ route('admin.roles.index') }}" class="btn btn-info btn-sm text-white">
+              <i class="bi bi-shield-check me-1"></i>
+              Open Roles
+            </a>
+            <a href="{{ route('admin.permissions.index') }}" class="btn btn-outline-info btn-sm">
+              <i class="bi bi-key me-1"></i>
+              Open Permissions
+            </a>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="info-grid">
+            <div class="info-tile">
+              <span class="label">Admin roles</span>
+              <div class="value">{{ $roleCount }}</div>
+            </div>
+            <div class="info-tile">
+              <span class="label">Admin permissions</span>
+              <div class="value">{{ $permissionCount }}</div>
+            </div>
+            <div class="info-tile">
+              <span class="label">Roles page</span>
+              <div class="value">/admin/roles</div>
+            </div>
+            <div class="info-tile">
+              <span class="label">Permissions page</span>
+              <div class="value">/admin/permissions</div>
+            </div>
+          </div>
+
+          <div class="alert alert-light quick-note mt-4 mb-0">
+            <strong>Note:</strong> Roles and permissions now live on different pages. Use Roles for assignments and mapping, and Permissions for permission creation.
           </div>
         </div>
       </div>
