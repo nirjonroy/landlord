@@ -1,52 +1,62 @@
-<x-guest-layout>
-    <form method="POST" action="{{ route('register') }}">
+@extends('layouts.frontend-auth')
+
+@section('title', 'Create Account | '.$siteName)
+
+@section('auth_content')
+    <h2 class="cs_fs_28 cs_semibold cs_body_font cs_mb_20 wow fadeInDown">Create Account On {{ $siteName }}</h2>
+    <p class="cs_auth_intro">Register as a user to browse land listings, manage your profile, and access the app later.</p>
+
+    @if ($errors->any())
+        <div class="cs_auth_notice cs_auth_notice_error">
+            Please review the highlighted registration fields and submit the form again.
+        </div>
+    @endif
+
+    <form method="POST" action="{{ route('register') }}" class="cs_contact_form cs_row_gap_40 row cs_gap_y_20 cs_mb_20">
         @csrf
 
-        <!-- Name -->
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+        <div class="col-sm-6">
+            <label for="name">Full Name</label>
+            <input type="text" name="name" class="cs_form_field cs_radius_7" id="name" value="{{ old('name') }}" autocomplete="name" required autofocus>
+            @error('name')
+                <div class="cs_form_error">{{ $message }}</div>
+            @enderror
         </div>
 
-        <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        <div class="col-sm-6">
+            <label for="email">Email</label>
+            <input type="email" name="email" class="cs_form_field cs_radius_7" id="email" value="{{ old('email') }}" autocomplete="username" required>
+            @error('email')
+                <div class="cs_form_error">{{ $message }}</div>
+            @enderror
         </div>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+        <div class="col-sm-6">
+            <label for="password">Password</label>
+            <input type="password" name="password" class="cs_form_field cs_radius_7" id="password" autocomplete="new-password" required>
+            @error('password')
+                <div class="cs_form_error">{{ $message }}</div>
+            @enderror
         </div>
 
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                            type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+        <div class="col-sm-6">
+            <label for="password_confirmation">Confirm Password</label>
+            <input type="password" name="password_confirmation" class="cs_form_field cs_radius_7" id="password_confirmation" autocomplete="new-password" required>
+            @error('password_confirmation')
+                <div class="cs_form_error">{{ $message }}</div>
+            @enderror
         </div>
 
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
-                {{ __('Already registered?') }}
-            </a>
-
-            <x-primary-button class="ml-4">
-                {{ __('Register') }}
-            </x-primary-button>
+        <div class="col-12">
+            <div class="cs_auth_submit_row">
+                <button type="submit" aria-label="Register button" class="cs_btn cs_style_1 cs_accent_bg cs_white_color cs_medium cs_radius_7">
+                    <span>Create Account</span>
+                </button>
+                <div class="cs_auth_links">
+                    <a href="{{ route('login') }}">Already have an account? Login</a>
+                    <a href="{{ route('admin.login') }}">Admin login</a>
+                </div>
+            </div>
         </div>
     </form>
-</x-guest-layout>
+@endsection

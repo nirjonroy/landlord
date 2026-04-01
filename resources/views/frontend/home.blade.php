@@ -77,9 +77,9 @@
               <span class="cs_btn_icon"><i class="fa-solid fa-circle-user"></i></span>
               <span class="cs_btn_text">Sign In</span>
               </a>
-                        <a href="{{ route('login') }}" aria-label="Add Property Button" class="cs_btn cs_style_1 cs_type_1 cs_accent_color cs_fs_15 cs_medium cs_radius_7">
-              <span class="cs_btn_icon"><i class="fa-solid fa-circle-plus"></i></span>
-              <span class="cs_btn_text">Add Property</span>
+                        <a href="{{ route('register') }}" aria-label="Create account button" class="cs_btn cs_style_1 cs_type_1 cs_accent_color cs_fs_15 cs_medium cs_radius_7">
+              <span class="cs_btn_icon"><i class="fa-solid fa-user-plus"></i></span>
+              <span class="cs_btn_text">Create Account</span>
               </a>
                     </div>
                 </div>
