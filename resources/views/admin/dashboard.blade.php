@@ -12,7 +12,7 @@
           <span class="badge rounded-pill text-bg-light text-primary mb-3">Land management admin panel</span>
           <h1 class="h2 fw-bold mb-3">Manage {{ $siteName }} from one clean workspace.</h1>
           <p class="hero-meta mb-0">
-            {{ $siteInfo->short_description ?: 'Use the dedicated Site Info, API Access, Roles, and Permissions pages to manage public details and admin access rules.' }}
+            {{ $siteInfo->short_description ?: 'Use the dedicated Site Info, API Access, Staff, Roles, and Permissions pages to manage public details and admin access rules.' }}
           </p>
         </div>
         <div class="col-lg-4">
@@ -196,6 +196,10 @@
         <div class="card-header d-flex justify-content-between align-items-center">
           <h3 class="card-title fw-semibold mb-0">Access Control</h3>
           <div class="d-flex flex-wrap gap-2">
+            <a href="{{ route('admin.staff.create') }}" class="btn btn-warning btn-sm text-dark">
+              <i class="bi bi-people me-1"></i>
+              Open Staff
+            </a>
             <a href="{{ route('admin.roles.index') }}" class="btn btn-info btn-sm text-white">
               <i class="bi bi-shield-check me-1"></i>
               Open Roles
@@ -209,6 +213,10 @@
         <div class="card-body">
           <div class="info-grid">
             <div class="info-tile">
+              <span class="label">Staff accounts</span>
+              <div class="value">{{ $adminCount }}</div>
+            </div>
+            <div class="info-tile">
               <span class="label">Admin roles</span>
               <div class="value">{{ $roleCount }}</div>
             </div>
@@ -217,17 +225,13 @@
               <div class="value">{{ $permissionCount }}</div>
             </div>
             <div class="info-tile">
-              <span class="label">Roles page</span>
-              <div class="value">/admin/roles</div>
-            </div>
-            <div class="info-tile">
-              <span class="label">Permissions page</span>
-              <div class="value">/admin/permissions</div>
+              <span class="label">Staff page</span>
+              <div class="value">/admin/staff/create</div>
             </div>
           </div>
 
           <div class="alert alert-light quick-note mt-4 mb-0">
-            <strong>Note:</strong> Roles and permissions now live on different pages. Use Roles for assignments and mapping, and Permissions for permission creation.
+            <strong>Note:</strong> Staff, roles, and permissions now live on separate pages. Use Staff to create accounts, Roles for assignments and mapping, and Permissions for permission creation.
           </div>
         </div>
       </div>

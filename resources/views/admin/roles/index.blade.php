@@ -186,7 +186,7 @@
     <div class="col-xl-5">
       <div class="card card-outline card-warning mb-4">
         <div class="card-header">
-          <h3 class="card-title fw-semibold">Admin Role Assignment</h3>
+          <h3 class="card-title fw-semibold">Staff Role Assignment</h3>
         </div>
         <div class="card-body">
           @foreach ($admins as $managedAdmin)
@@ -219,7 +219,7 @@
                   @endforeach
                 </div>
                 <button type="submit" class="btn btn-outline-warning btn-sm mt-3">
-                  Update Admin Roles
+                  Update Staff Roles
                 </button>
               </form>
             </div>

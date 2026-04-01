@@ -12,7 +12,7 @@
           <span class="badge rounded-pill text-bg-light text-primary mb-3">Admin permission manager</span>
           <h1 class="h2 fw-bold mb-3">Manage admin permissions for {{ $siteName }}.</h1>
           <p class="hero-meta mb-0">
-            Create permissions here, then attach them to roles from the separate Roles page.
+            Create permissions here, then attach them to roles and use the separate Staff page when you want to create admin accounts.
           </p>
         </div>
         <div class="col-lg-4">
@@ -52,9 +52,9 @@
       <div class="card card-outline card-primary h-100">
         <div class="card-header d-flex justify-content-between align-items-center">
           <h3 class="card-title fw-semibold">Create Permission</h3>
-          <a href="{{ route('admin.roles.index') }}" class="btn btn-outline-success btn-sm">
-            <i class="bi bi-shield-check me-1"></i>
-            Open Roles Page
+          <a href="{{ route('admin.staff.create') }}" class="btn btn-outline-warning btn-sm">
+            <i class="bi bi-people me-1"></i>
+            Open Staff Page
           </a>
         </div>
         <div class="card-body">
@@ -77,31 +77,48 @@
     </div>
 
     <div class="col-xl-8">
-      <div class="card card-outline card-secondary h-100">
+      <div class="card card-outline card-info h-100">
         <div class="card-header">
           <h3 class="card-title fw-semibold">Permission Usage</h3>
         </div>
         <div class="card-body">
-          <div class="info-grid">
-            <div class="info-tile">
-              <span class="label">Default permission set</span>
-              <div class="value">Seeded for super-admin</div>
+          <div class="row g-4">
+            <div class="col-md-6">
+              <div class="info-tile h-100">
+                <div class="small text-uppercase text-secondary fw-semibold mb-2">Where permissions are used</div>
+                <p class="mb-3">Create permission names here, attach them to roles on the Roles page, and assign direct permissions while creating staff from the Staff page.</p>
+                <div class="d-flex flex-wrap gap-2">
+                  <a href="{{ route('admin.roles.index') }}" class="btn btn-outline-primary btn-sm">
+                    <i class="bi bi-shield-check me-1"></i>
+                    Open Roles
+                  </a>
+                  <a href="{{ route('admin.staff.create') }}" class="btn btn-outline-warning btn-sm">
+                    <i class="bi bi-people me-1"></i>
+                    Open Staff
+                  </a>
+                </div>
+              </div>
             </div>
-            <div class="info-tile">
-              <span class="label">Role mapping page</span>
-              <div class="value">/admin/roles</div>
+            <div class="col-md-6">
+              <div class="info-grid">
+                <div class="info-tile">
+                  <span class="label">Create route</span>
+                  <div class="value">POST /admin/roles-permissions/permissions</div>
+                </div>
+                <div class="info-tile">
+                  <span class="label">Roles page</span>
+                  <div class="value">/admin/roles</div>
+                </div>
+                <div class="info-tile">
+                  <span class="label">Staff page</span>
+                  <div class="value">/admin/staff/create</div>
+                </div>
+                <div class="info-tile">
+                  <span class="label">Guard</span>
+                  <div class="value">admin</div>
+                </div>
+              </div>
             </div>
-            <div class="info-tile">
-              <span class="label">Compatibility route</span>
-              <div class="value">/admin/roles-permissions</div>
-            </div>
-            <div class="info-tile">
-              <span class="label">Package</span>
-              <div class="value">spatie/laravel-permission</div>
-            </div>
-          </div>
-          <div class="alert alert-light quick-note mt-4 mb-0">
-            <strong>Note:</strong> Permissions are created on this page, but attached to roles on the Roles page.
           </div>
         </div>
       </div>
@@ -109,7 +126,7 @@
   </div>
 
   <div class="row g-4">
-    <div class="col-xl-7">
+    <div class="col-xl-6">
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title fw-semibold">Available Permissions</h3>
@@ -137,8 +154,8 @@
       </div>
     </div>
 
-    <div class="col-xl-5">
-      <div class="card card-outline card-warning">
+    <div class="col-xl-6">
+      <div class="card card-outline card-secondary">
         <div class="card-header">
           <h3 class="card-title fw-semibold">Role Summary</h3>
         </div>

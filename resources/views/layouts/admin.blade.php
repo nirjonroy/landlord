@@ -176,6 +176,12 @@
                 </a>
               </li>
               <li class="nav-item">
+                <a href="{{ route('admin.staff.create') }}" class="nav-link {{ request()->routeIs('admin.staff.*') ? 'active' : '' }}">
+                  <i class="nav-icon bi bi-people"></i>
+                  <p>Staff</p>
+                </a>
+              </li>
+              <li class="nav-item">
                 <a href="{{ route('admin.roles.index') }}" class="nav-link {{ request()->routeIs('admin.roles.*') ? 'active' : '' }}">
                   <i class="nav-icon bi bi-shield-check"></i>
                   <p>Roles</p>

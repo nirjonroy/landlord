@@ -9,6 +9,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -18,6 +19,21 @@ class RolePermissionController extends Controller
     public function index(): RedirectResponse
     {
         return redirect()->route('admin.roles.index');
+    }
+
+    public function staffIndex(): RedirectResponse
+    {
+        return redirect()->route('admin.staff.create');
+    }
+
+    public function createStaff(): View
+    {
+        return view('admin.staff.create', [
+            'admin' => Auth::guard('admin')->user(),
+            'siteName' => $this->siteName(),
+            'staffMembers' => Admin::query()->with('roles')->orderBy('name')->get(),
+            'roles' => $this->rolesQuery()->get(),
+        ]);
     }
 
     public function roles(): View
@@ -60,6 +76,36 @@ class RolePermissionController extends Controller
         return redirect()
             ->route('admin.permissions.index')
             ->with('status', 'permission-created');
+    }
+
+    public function storeStaff(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'staff_name' => ['required', 'string', 'max:255'],
+            'staff_email' => ['required', 'string', 'email', 'max:255', 'unique:admins,email'],
+            'staff_password' => ['required', 'string', 'min:8', 'confirmed'],
+            'staff_role' => [
+                'required',
+                'integer',
+                Rule::exists('roles', 'id')->where(fn ($query) => $query->where('guard_name', 'admin')),
+            ],
+        ]);
+
+        $staff = Admin::create([
+            'name' => $validated['staff_name'],
+            'email' => $validated['staff_email'],
+            'password' => Hash::make($validated['staff_password']),
+        ]);
+
+        $staffRole = $this->rolesQuery()
+            ->where('id', $validated['staff_role'])
+            ->firstOrFail();
+
+        $staff->syncRoles([$staffRole]);
+
+        return redirect()
+            ->route('admin.staff.create')
+            ->with('status', 'staff-created');
     }
 
     public function storeRole(Request $request): RedirectResponse
