@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\User;
+use App\Support\ListingAnalytics;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,15 +15,24 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class ProfileController extends Controller
 {
+    private ListingAnalytics $listingAnalytics;
+
+    public function __construct(ListingAnalytics $listingAnalytics)
+    {
+        $this->listingAnalytics = $listingAnalytics;
+    }
+
     /**
      * Display the user's profile form.
      */
     public function edit(Request $request): View
     {
         $user = $request->user();
+        $activeTab = $this->activeTab($request->query('tab'));
 
         return view('profile.edit', [
             'user' => $user,
+            'activeTab' => $activeTab,
             'profileCompletionPercent' => $this->profileCompletionPercent($user),
             'profileFileUrls' => [
                 'profile_photo' => $this->profileFileUrl($user, 'profile-photo'),
@@ -37,6 +47,7 @@ class ProfileController extends Controller
                 'ownership_ready' => (bool) $user->ownership_proof_path,
                 'gallery_count' => count($user->home_elevation_image_paths ?? []),
             ],
+            'propertyAnalytics' => $this->listingAnalytics->analyticsForUser($user),
         ]);
     }
 
@@ -236,5 +247,21 @@ class ProfileController extends Controller
         if ($path && Storage::disk('public')->exists($path)) {
             Storage::disk('public')->delete($path);
         }
+    }
+
+    private function activeTab(?string $tab): string
+    {
+        $allowedTabs = [
+            'dashboard',
+            'my_property',
+            'add_property',
+            'profile',
+            'verification',
+            'home_info',
+            'password_update',
+            'account_security',
+        ];
+
+        return in_array($tab, $allowedTabs, true) ? $tab : 'profile';
     }
 }

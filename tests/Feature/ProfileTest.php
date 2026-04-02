@@ -3,8 +3,11 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
@@ -23,7 +26,84 @@ class ProfileTest extends TestCase
         $response
             ->assertOk()
             ->assertSee('Landlord Profile')
-            ->assertSee($user->name);
+            ->assertSee($user->name)
+            ->assertSee('My Property')
+            ->assertSee('Add New Property');
+    }
+
+    public function test_dashboard_redirects_to_profile_dashboard_tab(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->get('/dashboard')
+            ->assertRedirect('/profile?tab=dashboard#dashboard');
+    }
+
+    public function test_profile_page_can_show_logged_in_user_property_status(): void
+    {
+        $user = User::factory()->create();
+        $otherUser = User::factory()->create();
+
+        Schema::create('posts', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('user_id');
+            $table->string('title')->nullable();
+            $table->string('type')->nullable();
+            $table->string('status')->nullable();
+            $table->unsignedBigInteger('price')->nullable();
+            $table->timestamps();
+        });
+
+        DB::table('posts')->insert([
+            [
+                'user_id' => $user->id,
+                'title' => 'Beach Plot',
+                'type' => 'sale',
+                'status' => 'pending',
+                'price' => 3500000,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'user_id' => $user->id,
+                'title' => 'City Apartment',
+                'type' => 'rent',
+                'status' => 'approved',
+                'price' => 45000,
+                'created_at' => now()->subDay(),
+                'updated_at' => now()->subDay(),
+            ],
+            [
+                'user_id' => $otherUser->id,
+                'title' => 'Other User Property',
+                'type' => 'sale',
+                'status' => 'approved',
+                'price' => 5000000,
+                'created_at' => now()->subDays(2),
+                'updated_at' => now()->subDays(2),
+            ],
+        ]);
+
+        $response = $this->actingAs($user)->get('/profile?tab=my_property');
+
+        $response
+            ->assertOk()
+            ->assertSee('Beach Plot')
+            ->assertSee('City Apartment')
+            ->assertDontSee('Other User Property')
+            ->assertSee('For Sale')
+            ->assertSee('For Rent')
+            ->assertSee('Pending')
+            ->assertSee('Approved');
+
+        $propertyAnalytics = $response->viewData('propertyAnalytics');
+
+        $this->assertTrue($propertyAnalytics['available']);
+        $this->assertSame('posts', $propertyAnalytics['table']);
+        $this->assertSame(2, $propertyAnalytics['total_posts']);
+        $this->assertSame(1, $propertyAnalytics['sale_posts']);
+        $this->assertSame(1, $propertyAnalytics['rent_posts']);
     }
 
     public function test_profile_information_can_be_updated(): void

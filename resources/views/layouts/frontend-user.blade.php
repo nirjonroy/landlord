@@ -201,9 +201,9 @@
                         </nav>
                     </div>
                     <div class="cs_main_header_right">
-                        <a href="{{ route('home') }}" aria-label="Back home button" class="cs_btn cs_style_1 cs_type_1 cs_accent_color cs_fs_15 cs_medium cs_radius_7">
-                            <span class="cs_btn_icon"><i class="fa-solid fa-house"></i></span>
-                            <span class="cs_btn_text">Back Home</span>
+                        <a href="{{ route('profile.edit', ['tab' => 'add_property']) }}#add_property" aria-label="Add property button" class="cs_btn cs_style_1 cs_type_1 cs_accent_color cs_fs_15 cs_medium cs_radius_7">
+                            <span class="cs_btn_icon"><i class="fa-solid fa-circle-plus"></i></span>
+                            <span class="cs_btn_text">Add Property</span>
                         </a>
                         <form method="POST" action="{{ route('logout') }}" class="cs_logout_form">
                             @csrf

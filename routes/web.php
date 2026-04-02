@@ -23,7 +23,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('site-logo', [HomeController::class, 'siteLogo'])->name('site.logo');
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    return redirect()->to(route('profile.edit', ['tab' => 'dashboard']).'#dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('guest:admin')->prefix('admin')->name('admin.')->group(function () {
