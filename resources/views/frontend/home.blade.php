@@ -20,6 +20,15 @@
     <link rel="stylesheet" href="{{ asset('frontend-assets/css/odometer.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend-assets/css/animate.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend-assets/css/style.css') }}">
+    <style>
+        .cs_header_logout_form {
+            display: inline-flex;
+        }
+
+        .cs_header_logout_form button {
+            border: 0;
+        }
+    </style>
 </head>
 
 <body>
@@ -73,14 +82,40 @@
                         </nav>
                     </div>
                     <div class="cs_main_header_right">
-                        <a href="{{ route('login') }}" aria-label="Sign In Button" class="cs_btn cs_style_1 cs_accent_bg cs_fs_15 cs_medium cs_white_color cs_radius_7">
+                        @if (auth()->check())
+                            <a href="{{ route('dashboard') }}" aria-label="Dashboard button" class="cs_btn cs_style_1 cs_type_1 cs_accent_color cs_fs_15 cs_medium cs_radius_7">
+              <span class="cs_btn_icon"><i class="fa-solid fa-table-columns"></i></span>
+              <span class="cs_btn_text">Dashboard</span>
+              </a>
+                            <form method="POST" action="{{ route('logout') }}" class="cs_header_logout_form">
+                                @csrf
+                                <button type="submit" aria-label="Logout button" class="cs_btn cs_style_1 cs_accent_bg cs_fs_15 cs_medium cs_white_color cs_radius_7">
+              <span class="cs_btn_icon"><i class="fa-solid fa-right-from-bracket"></i></span>
+              <span class="cs_btn_text">Logout</span>
+              </button>
+                            </form>
+                        @elseif (auth('admin')->check())
+                            <a href="{{ route('admin.dashboard') }}" aria-label="Admin dashboard button" class="cs_btn cs_style_1 cs_type_1 cs_accent_color cs_fs_15 cs_medium cs_radius_7">
+              <span class="cs_btn_icon"><i class="fa-solid fa-table-columns"></i></span>
+              <span class="cs_btn_text">Dashboard</span>
+              </a>
+                            <form method="POST" action="{{ route('admin.logout') }}" class="cs_header_logout_form">
+                                @csrf
+                                <button type="submit" aria-label="Admin logout button" class="cs_btn cs_style_1 cs_accent_bg cs_fs_15 cs_medium cs_white_color cs_radius_7">
+              <span class="cs_btn_icon"><i class="fa-solid fa-right-from-bracket"></i></span>
+              <span class="cs_btn_text">Logout</span>
+              </button>
+                            </form>
+                        @else
+                            <a href="{{ route('login') }}" aria-label="Sign In Button" class="cs_btn cs_style_1 cs_accent_bg cs_fs_15 cs_medium cs_white_color cs_radius_7">
               <span class="cs_btn_icon"><i class="fa-solid fa-circle-user"></i></span>
               <span class="cs_btn_text">Sign In</span>
               </a>
-                        <a href="{{ route('register') }}" aria-label="Create account button" class="cs_btn cs_style_1 cs_type_1 cs_accent_color cs_fs_15 cs_medium cs_radius_7">
+                            <a href="{{ route('register') }}" aria-label="Create account button" class="cs_btn cs_style_1 cs_type_1 cs_accent_color cs_fs_15 cs_medium cs_radius_7">
               <span class="cs_btn_icon"><i class="fa-solid fa-user-plus"></i></span>
               <span class="cs_btn_text">Create Account</span>
               </a>
+                        @endif
                     </div>
                 </div>
             </div>
