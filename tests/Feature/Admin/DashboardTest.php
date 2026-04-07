@@ -27,6 +27,7 @@ class DashboardTest extends TestCase
             ->assertSee('Template Admin')
             ->assertSee('Manage Site Info')
             ->assertSee('Open API Access')
+            ->assertSee('Open Property Reviews')
             ->assertSee('Open Roles')
             ->assertSee('Open Permissions');
     }

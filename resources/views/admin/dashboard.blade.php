@@ -71,6 +71,42 @@
   </div>
 
   <div class="row g-4">
+    <div class="col-12">
+      <div class="card card-outline card-warning">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h3 class="card-title fw-semibold mb-0">Property Review Queue</h3>
+          <a href="{{ route('admin.properties.index') }}" class="btn btn-warning btn-sm text-dark">
+            <i class="bi bi-box-arrow-up-right me-1"></i>
+            Open Property Reviews
+          </a>
+        </div>
+        <div class="card-body">
+          <div class="info-grid">
+            <div class="info-tile">
+              <span class="label">Total properties</span>
+              <div class="value">{{ $propertyCount }}</div>
+            </div>
+            <div class="info-tile">
+              <span class="label">Pending approval</span>
+              <div class="value">{{ $pendingPropertyCount }}</div>
+            </div>
+            <div class="info-tile">
+              <span class="label">Approved</span>
+              <div class="value">{{ $approvedPropertyCount }}</div>
+            </div>
+            <div class="info-tile">
+              <span class="label">Rejected</span>
+              <div class="value">{{ $rejectedPropertyCount }}</div>
+            </div>
+          </div>
+
+          <div class="alert alert-light quick-note mt-4 mb-0">
+            <strong>Note:</strong> New user listings now enter the admin queue with a pending status. Use the Properties page to approve or reject them with review notes.
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="col-xl-8">
       <div class="card card-outline card-primary h-100">
         <div class="card-header d-flex justify-content-between align-items-center">
@@ -199,6 +235,10 @@
             <a href="{{ route('admin.users.index') }}" class="btn btn-primary btn-sm">
               <i class="bi bi-person-lines-fill me-1"></i>
               Open Users
+            </a>
+            <a href="{{ route('admin.properties.index') }}" class="btn btn-secondary btn-sm">
+              <i class="bi bi-buildings me-1"></i>
+              Open Properties
             </a>
             <a href="{{ route('admin.staff.create') }}" class="btn btn-warning btn-sm text-dark">
               <i class="bi bi-people me-1"></i>

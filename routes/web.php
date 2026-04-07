@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AuthenticatedSessionController as AdminAuthenticatedSessionController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\PropertyManagementController;
 use App\Http\Controllers\Admin\RolePermissionController;
 use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\HomeController;
@@ -35,6 +36,8 @@ Route::middleware('guest:admin')->prefix('admin')->name('admin.')->group(functio
 Route::middleware('auth:admin')->prefix('admin')->name('admin.')->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('users', [UserManagementController::class, 'index'])->name('users.index');
+    Route::get('properties', [PropertyManagementController::class, 'index'])->name('properties.index');
+    Route::put('properties/{property}/review', [PropertyManagementController::class, 'updateReview'])->name('properties.review.update');
     Route::get('site-info', [DashboardController::class, 'editSiteInfo'])->name('site-info.edit');
     Route::get('site-info/logo', [DashboardController::class, 'siteLogo'])->name('site-info.logo');
     Route::get('api-access', [DashboardController::class, 'apiAccess'])->name('api-access.index');

@@ -21,6 +21,9 @@ class Property extends Model
         'purpose',
         'property_type',
         'status',
+        'review_note',
+        'reviewed_at',
+        'reviewed_by_admin_id',
         'price',
         'area_size',
         'bedrooms',
@@ -43,16 +46,23 @@ class Property extends Model
      */
     protected $casts = [
         'user_id' => 'integer',
+        'reviewed_by_admin_id' => 'integer',
         'price' => 'integer',
         'gallery_paths' => 'array',
         'area_size' => 'decimal:2',
         'bedrooms' => 'integer',
         'bathrooms' => 'integer',
         'garages' => 'integer',
+        'reviewed_at' => 'datetime',
     ];
 
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function reviewedBy(): BelongsTo
+    {
+        return $this->belongsTo(Admin::class, 'reviewed_by_admin_id');
     }
 }

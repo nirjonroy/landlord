@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Admin;
+use App\Models\Property;
 use App\Models\SiteInfo;
 use App\Models\User;
 use Illuminate\Contracts\View\View;
@@ -100,6 +101,10 @@ class DashboardController extends Controller
             'adminCount' => Admin::count(),
             'tokenCount' => PersonalAccessToken::count(),
             'passwordResetCount' => DB::table('password_resets')->count(),
+            'propertyCount' => Property::count(),
+            'pendingPropertyCount' => Property::query()->where('status', 'pending')->count(),
+            'approvedPropertyCount' => Property::query()->where('status', 'approved')->count(),
+            'rejectedPropertyCount' => Property::query()->where('status', 'rejected')->count(),
             'apiEndpoints' => $this->apiEndpoints(),
             'roleCount' => Role::query()->where('guard_name', 'admin')->count(),
             'permissionCount' => Permission::query()->where('guard_name', 'admin')->count(),
