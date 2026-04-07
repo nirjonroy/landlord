@@ -23,6 +23,24 @@ class ProfileUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
+        $sectionRules = match ($this->input('profile_section')) {
+            'profile_details' => $this->profileDetailsRules(),
+            'verification' => $this->verificationRules(),
+            'home_info' => $this->homeInfoRules(),
+            default => array_merge(
+                $this->profileDetailsRules(),
+                $this->verificationRules(),
+                $this->homeInfoRules()
+            ),
+        };
+
+        return array_merge([
+            'profile_section' => ['nullable', Rule::in(['profile_details', 'verification', 'home_info'])],
+        ], $sectionRules);
+    }
+
+    private function profileDetailsRules(): array
+    {
         return [
             'name' => ['required', 'string', 'max:255'],
             'account_type' => ['nullable', Rule::in(['landlord', 'owner', 'landlord-owner'])],
@@ -32,6 +50,34 @@ class ProfileUpdateRequest extends FormRequest
             'date_of_birth' => ['nullable', 'date', 'before:today'],
             'gender' => ['nullable', Rule::in(['male', 'female', 'other'])],
             'profession' => ['nullable', 'string', 'max:255'],
+            'bio' => ['nullable', 'string', 'max:2000'],
+            'emergency_contact_name' => ['nullable', 'string', 'max:255'],
+            'emergency_contact_phone' => ['nullable', 'string', 'max:20'],
+            'profile_photo' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'remove_profile_photo' => ['nullable', 'boolean'],
+        ];
+    }
+
+    private function verificationRules(): array
+    {
+        return [
+            'nid_number' => ['nullable', 'string', 'max:30'],
+            'passport_number' => ['nullable', 'string', 'max:30'],
+            'ownership_document_type' => ['nullable', Rule::in(['title-deed', 'mutation-certificate', 'land-development-tax', 'utility-bill', 'other'])],
+            'nid_front_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
+            'nid_back_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
+            'passport_image' => ['nullable', 'file', 'mimes:jpg,jpeg,png,webp,pdf', 'max:4096'],
+            'ownership_proof' => ['nullable', 'file', 'mimes:jpg,jpeg,png,webp,pdf', 'max:5120'],
+            'remove_nid_front_image' => ['nullable', 'boolean'],
+            'remove_nid_back_image' => ['nullable', 'boolean'],
+            'remove_passport_image' => ['nullable', 'boolean'],
+            'remove_ownership_proof' => ['nullable', 'boolean'],
+        ];
+    }
+
+    private function homeInfoRules(): array
+    {
+        return [
             'home_name' => ['nullable', 'string', 'max:255'],
             'home_type' => ['nullable', 'string', 'max:255'],
             'present_address' => ['nullable', 'string', 'max:1000'],
@@ -43,24 +89,8 @@ class ProfileUpdateRequest extends FormRequest
             'district' => ['nullable', 'string', 'max:255'],
             'division' => ['nullable', 'string', 'max:255'],
             'country' => ['nullable', 'string', 'max:255'],
-            'bio' => ['nullable', 'string', 'max:2000'],
-            'nid_number' => ['nullable', 'string', 'max:30'],
-            'passport_number' => ['nullable', 'string', 'max:30'],
-            'ownership_document_type' => ['nullable', Rule::in(['title-deed', 'mutation-certificate', 'land-development-tax', 'utility-bill', 'other'])],
-            'emergency_contact_name' => ['nullable', 'string', 'max:255'],
-            'emergency_contact_phone' => ['nullable', 'string', 'max:20'],
-            'profile_photo' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
-            'nid_front_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
-            'nid_back_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
-            'passport_image' => ['nullable', 'file', 'mimes:jpg,jpeg,png,webp,pdf', 'max:4096'],
-            'ownership_proof' => ['nullable', 'file', 'mimes:jpg,jpeg,png,webp,pdf', 'max:5120'],
             'home_elevation_images' => ['nullable', 'array', 'max:6'],
             'home_elevation_images.*' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
-            'remove_profile_photo' => ['nullable', 'boolean'],
-            'remove_nid_front_image' => ['nullable', 'boolean'],
-            'remove_nid_back_image' => ['nullable', 'boolean'],
-            'remove_passport_image' => ['nullable', 'boolean'],
-            'remove_ownership_proof' => ['nullable', 'boolean'],
             'reset_home_elevation_images' => ['nullable', 'boolean'],
         ];
     }

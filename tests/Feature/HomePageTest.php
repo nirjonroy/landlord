@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Admin;
 use App\Models\SiteInfo;
 use App\Models\User;
+use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -66,5 +67,18 @@ class HomePageTest extends TestCase
             ->assertSee('Dashboard')
             ->assertSee('Logout')
             ->assertDontSee('Create Account');
+    }
+
+    public function test_home_page_can_show_seeded_bangladesh_demo_content(): void
+    {
+        $this->seed(DatabaseSeeder::class);
+
+        $this->get('/')
+            ->assertOk()
+            ->assertSee('Dhaka')
+            ->assertSee('Chattogram')
+            ->assertSee('Bashundhara Lake View Apartment')
+            ->assertSee('৳45,000 /month')
+            ->assertSee('We Are Available Across Bangladesh');
     }
 }

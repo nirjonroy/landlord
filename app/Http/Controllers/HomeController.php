@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\HomepageCity;
+use App\Models\HomepageProperty;
 use App\Models\SiteInfo;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
@@ -12,12 +16,17 @@ class HomeController extends Controller
     public function index(): View
     {
         $siteInfo = $this->siteInfo();
+        $featuredProperties = $this->homepageProperties();
 
         return view('frontend.home', [
             'siteInfo' => $siteInfo,
             'siteName' => $siteInfo->site_name ?: config('app.name', 'Land Site'),
             'siteLogoUrl' => $this->siteLogoUrl($siteInfo),
             'siteUrl' => rtrim($siteInfo->site_url ?: config('app.url', url('/')), '/').'/',
+            'featuredProperties' => $featuredProperties,
+            'rentProperties' => $featuredProperties->where('purpose', 'rent')->values(),
+            'saleProperties' => $featuredProperties->where('purpose', 'sale')->values(),
+            'popularCities' => $this->homepageCities(),
         ]);
     }
 
@@ -52,5 +61,27 @@ class HomeController extends Controller
         }
 
         return route('site.logo', ['v' => optional($siteInfo->updated_at)->timestamp]);
+    }
+
+    private function homepageProperties(): Collection
+    {
+        if (! Schema::hasTable('homepage_properties')) {
+            return collect();
+        }
+
+        return HomepageProperty::query()
+            ->orderBy('display_order')
+            ->get();
+    }
+
+    private function homepageCities(): Collection
+    {
+        if (! Schema::hasTable('homepage_cities')) {
+            return collect();
+        }
+
+        return HomepageCity::query()
+            ->orderBy('display_order')
+            ->get();
     }
 }

@@ -183,6 +183,38 @@ class ProfileTest extends TestCase
             ->assertOk();
     }
 
+    public function test_home_info_section_can_be_updated_without_profile_details_fields(): void
+    {
+        $user = User::factory()->create([
+            'name' => 'Existing User',
+            'email' => 'existing@example.com',
+        ]);
+
+        $response = $this
+            ->actingAs($user)
+            ->patch('/profile', [
+                'profile_section' => 'home_info',
+                'home_name' => 'Prantik',
+                'home_type' => 'Apartment',
+                'present_address' => 'Dhanmondi, Dhaka',
+                'permanent_address' => 'Sylhet Sadar, Sylhet',
+                'district' => 'Sylhet',
+                'division' => 'Sylhet',
+            ]);
+
+        $response
+            ->assertSessionHasNoErrors()
+            ->assertRedirect('/profile?tab=home_info#home_info');
+
+        $user->refresh();
+
+        $this->assertSame('Existing User', $user->name);
+        $this->assertSame('existing@example.com', $user->email);
+        $this->assertSame('Prantik', $user->home_name);
+        $this->assertSame('Apartment', $user->home_type);
+        $this->assertSame('Sylhet', $user->district);
+    }
+
     public function test_email_verification_status_is_unchanged_when_the_email_address_is_unchanged(): void
     {
         $user = User::factory()->create();

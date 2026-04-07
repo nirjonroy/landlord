@@ -58,6 +58,7 @@ class ProfileController extends Controller
     {
         $user = $request->user();
         $validated = $request->safe()->except([
+            'profile_section',
             'profile_photo',
             'nid_front_image',
             'nid_back_image',
@@ -72,7 +73,7 @@ class ProfileController extends Controller
             'reset_home_elevation_images',
         ]);
 
-        if (empty($validated['country'])) {
+        if (array_key_exists('country', $validated) && empty($validated['country'])) {
             $validated['country'] = 'Bangladesh';
         }
 
@@ -105,7 +106,14 @@ class ProfileController extends Controller
 
         $user->save();
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        $redirectTab = $this->tabForSection($request->input('profile_section'));
+
+        if ($redirectTab === null) {
+            return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        }
+
+        return Redirect::to(route('profile.edit', ['tab' => $redirectTab]).'#'.$redirectTab)
+            ->with('status', 'profile-updated');
     }
 
     /**
@@ -263,5 +271,15 @@ class ProfileController extends Controller
         ];
 
         return in_array($tab, $allowedTabs, true) ? $tab : 'profile';
+    }
+
+    private function tabForSection(?string $section): ?string
+    {
+        return match ($section) {
+            'profile_details' => 'profile',
+            'verification' => 'verification',
+            'home_info' => 'home_info',
+            default => null,
+        };
     }
 }

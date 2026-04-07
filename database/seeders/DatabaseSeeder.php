@@ -27,8 +27,10 @@ class DatabaseSeeder extends Seeder
             [
                 'site_name' => 'Land Site',
                 'site_url' => config('app.url', 'http://127.0.0.1:8000'),
-                'contact_email' => 'admin@landsite.test',
-                'short_description' => 'Manage land listings, user accounts, and app access from a single dashboard.',
+                'contact_email' => 'hello@landsite.com.bd',
+                'contact_phone' => '+8801712345678',
+                'address' => 'House 12, Road 7, Dhanmondi, Dhaka 1205, Bangladesh',
+                'short_description' => 'Find verified landlord, owner, flat, and land listings across Bangladesh with prices in BDT.',
             ]
         );
 
@@ -56,10 +58,15 @@ class DatabaseSeeder extends Seeder
         User::updateOrCreate(
             ['email' => 'user@landsite.test'],
             [
-                'name' => 'Demo User',
+                'name' => 'Nirjon Roy',
                 'email_verified_at' => now(),
                 'password' => Hash::make('password'),
             ]
         );
+
+        $this->call([
+            HomepagePropertySeeder::class,
+            HomepageCitySeeder::class,
+        ]);
     }
 }

@@ -1,6 +1,7 @@
 <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data" class="row cs_profile_form cs_row_gap_40 cs_gap_y_20">
     @csrf
     @method('PATCH')
+    <input type="hidden" name="profile_section" value="profile_details">
 
     <div class="col-sm-6">
         <label for="name">Full Name</label>
