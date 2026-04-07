@@ -2,12 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\Models\Property;
 use App\Models\User;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
@@ -45,44 +43,28 @@ class ProfileTest extends TestCase
         $user = User::factory()->create();
         $otherUser = User::factory()->create();
 
-        Schema::create('posts', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->string('title')->nullable();
-            $table->string('type')->nullable();
-            $table->string('status')->nullable();
-            $table->unsignedBigInteger('price')->nullable();
-            $table->timestamps();
-        });
+        Property::factory()->create([
+            'user_id' => $user->id,
+            'title' => 'Beach Plot',
+            'purpose' => 'sale',
+            'status' => 'pending',
+            'price' => 3500000,
+        ]);
 
-        DB::table('posts')->insert([
-            [
-                'user_id' => $user->id,
-                'title' => 'Beach Plot',
-                'type' => 'sale',
-                'status' => 'pending',
-                'price' => 3500000,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'user_id' => $user->id,
-                'title' => 'City Apartment',
-                'type' => 'rent',
-                'status' => 'approved',
-                'price' => 45000,
-                'created_at' => now()->subDay(),
-                'updated_at' => now()->subDay(),
-            ],
-            [
-                'user_id' => $otherUser->id,
-                'title' => 'Other User Property',
-                'type' => 'sale',
-                'status' => 'approved',
-                'price' => 5000000,
-                'created_at' => now()->subDays(2),
-                'updated_at' => now()->subDays(2),
-            ],
+        Property::factory()->create([
+            'user_id' => $user->id,
+            'title' => 'City Apartment',
+            'purpose' => 'rent',
+            'status' => 'approved',
+            'price' => 45000,
+        ]);
+
+        Property::factory()->create([
+            'user_id' => $otherUser->id,
+            'title' => 'Other User Property',
+            'purpose' => 'sale',
+            'status' => 'approved',
+            'price' => 5000000,
         ]);
 
         $response = $this->actingAs($user)->get('/profile?tab=my_property');
@@ -100,10 +82,95 @@ class ProfileTest extends TestCase
         $propertyAnalytics = $response->viewData('propertyAnalytics');
 
         $this->assertTrue($propertyAnalytics['available']);
-        $this->assertSame('posts', $propertyAnalytics['table']);
+        $this->assertSame('properties', $propertyAnalytics['table']);
         $this->assertSame(2, $propertyAnalytics['total_posts']);
         $this->assertSame(1, $propertyAnalytics['sale_posts']);
         $this->assertSame(1, $propertyAnalytics['rent_posts']);
+    }
+
+    public function test_user_can_add_property_from_profile(): void
+    {
+        Storage::fake('public');
+
+        $user = User::factory()->create([
+            'phone' => '01712345678',
+            'district' => 'Dhaka',
+            'division' => 'Dhaka',
+            'present_address' => 'House 12, Road 7, Dhanmondi, Dhaka',
+        ]);
+
+        $response = $this
+            ->actingAs($user)
+            ->post('/properties', [
+                'property_form' => 'create',
+                'title' => 'Dhanmondi Family Apartment',
+                'purpose' => 'rent',
+                'property_type' => 'Apartment',
+                'price' => 52000,
+                'area_size' => 1450,
+                'bedrooms' => 3,
+                'bathrooms' => 2,
+                'garages' => 1,
+                'location' => 'Dhanmondi, Dhaka',
+                'district' => 'Dhaka',
+                'division' => 'Dhaka',
+                'address' => 'House 12, Road 7, Dhanmondi, Dhaka',
+                'description' => 'South-facing flat near main road.',
+                'thumbnail_image' => UploadedFile::fake()->image('cover.jpg'),
+                'gallery_images' => [
+                    UploadedFile::fake()->image('room.jpg'),
+                    UploadedFile::fake()->image('front.jpg'),
+                ],
+            ]);
+
+        $response
+            ->assertSessionHasNoErrors()
+            ->assertRedirect('/profile?tab=my_property#my_property');
+
+        $property = Property::query()->first();
+
+        $this->assertNotNull($property);
+        $this->assertSame($user->id, $property->user_id);
+        $this->assertSame('Dhanmondi Family Apartment', $property->title);
+        $this->assertSame('rent', $property->purpose);
+        $this->assertSame('pending', $property->status);
+        $this->assertSame('01712345678', $property->contact_phone);
+        $this->assertNotNull($property->thumbnail_path);
+        $this->assertCount(2, $property->gallery_paths ?? []);
+
+        Storage::disk('public')->assertExists($property->thumbnail_path);
+
+        foreach ($property->gallery_paths as $path) {
+            Storage::disk('public')->assertExists($path);
+        }
+    }
+
+    public function test_user_can_delete_their_property(): void
+    {
+        Storage::fake('public');
+
+        $user = User::factory()->create();
+        $property = Property::factory()->create([
+            'user_id' => $user->id,
+            'thumbnail_path' => 'users/'.$user->id.'/properties/thumbnails/cover.jpg',
+            'gallery_paths' => [
+                'users/'.$user->id.'/properties/gallery/one.jpg',
+                'users/'.$user->id.'/properties/gallery/two.jpg',
+            ],
+        ]);
+
+        Storage::disk('public')->put($property->thumbnail_path, 'cover');
+        Storage::disk('public')->put($property->gallery_paths[0], 'one');
+        Storage::disk('public')->put($property->gallery_paths[1], 'two');
+
+        $this->actingAs($user)
+            ->delete(route('properties.destroy', $property))
+            ->assertRedirect('/profile?tab=my_property#my_property');
+
+        $this->assertNull($property->fresh());
+        Storage::disk('public')->assertMissing($property->thumbnail_path);
+        Storage::disk('public')->assertMissing($property->gallery_paths[0]);
+        Storage::disk('public')->assertMissing($property->gallery_paths[1]);
     }
 
     public function test_profile_information_can_be_updated(): void

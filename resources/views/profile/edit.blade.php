@@ -127,12 +127,36 @@
             background: #f8fafc;
             border: 1px dashed rgba(15, 23, 42, 0.18);
         }
+
+        .cs_form_field.is-invalid {
+            border-color: #dc3545;
+            box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.12);
+        }
+
+        .cs_inline_badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 14px;
+            border-radius: 999px;
+            background: #fef3c7;
+            color: #92400e;
+            font-size: 13px;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .cs_table_action_btn {
+            padding: 10px 14px;
+            min-width: auto;
+            font-size: 14px;
+        }
     </style>
 @endsection
 
 @section('content')
     @php
         $profilePhotoUrl = $profileFileUrls['profile_photo'] ?? asset('frontend-assets/img/team_1.jpg');
+        $errorContext = old('property_form') ? 'property' : 'profile';
     @endphp
 
     <section class="cs_page_heading position-relative">
@@ -159,8 +183,18 @@
                     <div class="cs_status_alert cs_status_alert_success">Your password has been updated successfully.</div>
                 @endif
 
+                @if (session('status') === 'property-created')
+                    <div class="cs_status_alert cs_status_alert_success">Your property was added successfully and is now waiting for review.</div>
+                @endif
+
+                @if (session('status') === 'property-deleted')
+                    <div class="cs_status_alert cs_status_alert_success">The property was removed from your account.</div>
+                @endif
+
                 @if ($errors->any())
-                    <div class="cs_status_alert cs_status_alert_error">Please review the highlighted fields before saving your profile.</div>
+                    <div class="cs_status_alert cs_status_alert_error">
+                        {{ $errorContext === 'property' ? 'Please review the highlighted property fields before submitting your listing.' : 'Please review the highlighted fields before saving your profile.' }}
+                    </div>
                 @endif
 
                 <div class="row cs_gap_y_30">

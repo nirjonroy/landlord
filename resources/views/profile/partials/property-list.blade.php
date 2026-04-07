@@ -19,6 +19,9 @@
                         <th class="cs_medium cs_heading_color">Status</th>
                         <th class="cs_medium cs_heading_color">Price</th>
                         <th class="cs_medium cs_heading_color">Submitted</th>
+                        @if ($propertyAnalytics['table'] === 'properties')
+                            <th class="cs_medium cs_heading_color">Action</th>
+                        @endif
                     </tr>
                 </thead>
                 <tbody>
@@ -36,6 +39,17 @@
                             </td>
                             <td>{{ $listing['price'] ?: 'Price not set' }}</td>
                             <td>{{ $listing['submitted_at'] }}</td>
+                            @if ($propertyAnalytics['table'] === 'properties' && $listing['id'])
+                                <td>
+                                    <form method="POST" action="{{ route('properties.destroy', $listing['id']) }}" onsubmit="return confirm('Delete this property from your account?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="cs_btn cs_style_1 cs_type_1 cs_accent_color cs_medium cs_radius_7 cs_table_action_btn">
+                                            <span>Delete</span>
+                                        </button>
+                                    </form>
+                                </td>
+                            @endif
                         </tr>
                     @endforeach
                 </tbody>

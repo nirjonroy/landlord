@@ -71,6 +71,10 @@ class ListingAnalytics
             ->get()
             ->keyBy('user_id');
 
+        if ($analytics['total_posts'] === 0) {
+            $analytics['message'] = 'The '.$listingTable.' table is ready, but no user has posted a property yet.';
+        }
+
         return [$this->attachUserPostCounts($users, $perUserCounts), $analytics];
     }
 
@@ -143,6 +147,7 @@ class ListingAnalytics
             ->get()
             ->map(function (object $listing) use ($locationColumn, $priceColumn, $statusColumn, $titleColumn, $typeColumn) {
                 return [
+                    'id' => $listing->id ?? null,
                     'title' => $this->listingTitle($listing, $titleColumn),
                     'purpose' => $this->listingPurpose($listing, $typeColumn),
                     'status' => $this->listingStatus($listing, $statusColumn),
@@ -153,12 +158,16 @@ class ListingAnalytics
                 ];
             });
 
+        if ($analytics['total_posts'] === 0) {
+            $analytics['message'] = 'Your property module is ready. Add your first sale or rent property to see it here.';
+        }
+
         return $analytics;
     }
 
     public function detectListingTable(): ?string
     {
-        foreach (['posts', 'listings', 'properties', 'property_posts', 'land_posts'] as $candidateTable) {
+        foreach (['properties', 'listings', 'property_posts', 'land_posts', 'posts'] as $candidateTable) {
             if (Schema::hasTable($candidateTable)) {
                 return $candidateTable;
             }
@@ -184,7 +193,7 @@ class ListingAnalytics
     {
         return [
             'available' => false,
-            'message' => 'No posts or listings table exists yet. User totals are live now, and post, rent, and sale metrics will start filling automatically after the listing module is added.',
+            'message' => 'No property table exists yet. User totals are live now, and sale and rent metrics will start filling automatically after the listing module is added.',
             'table' => null,
             'type_column' => null,
             'total_posts' => 0,
@@ -257,7 +266,7 @@ class ListingAnalytics
         }
 
         if (is_numeric($value)) {
-            return 'BDT '.number_format((float) $value, 0);
+            return '৳'.number_format((float) $value, 0);
         }
 
         return $this->stringValue($value);

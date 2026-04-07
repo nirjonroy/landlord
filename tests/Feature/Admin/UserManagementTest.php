@@ -3,11 +3,9 @@
 namespace Tests\Feature\Admin;
 
 use App\Models\Admin;
+use App\Models\Property;
 use App\Models\User;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 use Tests\TestCase;
 
 class UserManagementTest extends TestCase
@@ -29,15 +27,16 @@ class UserManagementTest extends TestCase
             ->assertSee('App Users')
             ->assertSee('User Directory')
             ->assertSee($user->email)
-            ->assertSee('No posts or listings table exists yet.')
+            ->assertSee('The properties table is ready, but no user has posted a property yet.')
             ->assertViewHas('userCount', 1)
             ->assertViewHas('totalPostsCount', 0)
             ->assertViewHas('rentPostsCount', 0)
             ->assertViewHas('salePostsCount', 0)
-            ->assertViewHas('listingDataAvailable', false);
+            ->assertViewHas('listingDataAvailable', true)
+            ->assertViewHas('listingTable', 'properties');
     }
 
-    public function test_admin_users_page_can_read_post_metrics_from_posts_table(): void
+    public function test_admin_users_page_can_read_post_metrics_from_properties_table(): void
     {
         $admin = Admin::factory()->create();
         $rentUser = User::factory()->create([
@@ -49,27 +48,18 @@ class UserManagementTest extends TestCase
             'email' => 'sale.user@landsite.test',
         ]);
 
-        Schema::create('posts', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->string('type');
-            $table->timestamps();
-        });
-
-        DB::table('posts')->insert([
-            ['user_id' => $rentUser->id, 'type' => 'rent'],
-            ['user_id' => $rentUser->id, 'type' => 'rent'],
-            ['user_id' => $saleUser->id, 'type' => 'sale'],
-            ['user_id' => $saleUser->id, 'type' => 'sale'],
-        ]);
+        Property::factory()->create(['user_id' => $rentUser->id, 'purpose' => 'rent']);
+        Property::factory()->create(['user_id' => $rentUser->id, 'purpose' => 'rent']);
+        Property::factory()->create(['user_id' => $saleUser->id, 'purpose' => 'sale']);
+        Property::factory()->create(['user_id' => $saleUser->id, 'purpose' => 'sale']);
 
         $response = $this->actingAs($admin, 'admin')->get('/admin/users');
 
         $response
             ->assertOk()
             ->assertViewHas('listingDataAvailable', true)
-            ->assertViewHas('listingTable', 'posts')
-            ->assertViewHas('listingTypeColumn', 'type')
+            ->assertViewHas('listingTable', 'properties')
+            ->assertViewHas('listingTypeColumn', 'purpose')
             ->assertViewHas('totalPostsCount', 4)
             ->assertViewHas('usersWithPostsCount', 2)
             ->assertViewHas('rentPostsCount', 2)
