@@ -101,7 +101,7 @@
                                     </ul>
                                 </li>
                                 <li><a href="{{ route('about') }}" aria-label="Click to visit about page">About</a></li>
-                                <li><a href="#contact" aria-label="Click to visit contact page">Contact</a></li>
+                                <li><a href="{{ route('contact') }}" aria-label="Click to visit contact page">Contact</a></li>
                                 <li class="menu-item-has-children">
                                     <a href="#blog">Blog</a>
                                     <ul>
@@ -630,7 +630,7 @@
                             <li><a href="#" aria-label="Page Link">Guide</a></li>
                             <li><a href="#" aria-label="Page Link">Support Center</a></li>
                             <li><a href="#blog" aria-label="Page Link">Blog</a></li>
-                            <li><a href="#contact" aria-label="Page Link">Contact</a></li>
+                            <li><a href="{{ route('contact') }}" aria-label="Page Link">Contact</a></li>
                             <li><a href="#" aria-label="Page Link">Privacy Policy</a></li>
                         </ul>
                     </div>

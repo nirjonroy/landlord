@@ -285,7 +285,7 @@
             </div>
             <div class="cs_height_70 cs_height_lg_50"></div>
             <div class="cs_center">
-                <a href="{{ route('home') }}#contact" aria-label="Click to contact" class="cs_btn cs_style_1 cs_accent_bg cs_white_color cs_medium cs_radius_7 wow fadeInUp">
+                <a href="{{ route('contact') }}" aria-label="Click to contact" class="cs_btn cs_style_1 cs_accent_bg cs_white_color cs_medium cs_radius_7 wow fadeInUp">
                     <span class="cs_btn_text">Other Questions</span>
                 </a>
             </div>

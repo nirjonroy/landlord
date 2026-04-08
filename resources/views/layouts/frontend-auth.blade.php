@@ -131,7 +131,7 @@
                                 <li><a href="{{ route('home') }}" aria-label="Home">Home</a></li>
                                 <li><a href="{{ route('home') }}#featured-properties" aria-label="Listing">Listing</a></li>
                                 <li><a href="{{ route('about') }}" aria-label="About">About</a></li>
-                                <li><a href="{{ route('home') }}#contact" aria-label="Contact">Contact</a></li>
+                                <li><a href="{{ route('contact') }}" aria-label="Contact">Contact</a></li>
                                 <li><a href="{{ route('home') }}#blog" aria-label="Blog">Blog</a></li>
                             </ul>
                         </nav>
@@ -250,7 +250,7 @@
                             <li><a href="{{ route('about') }}" aria-label="About Us">About Us</a></li>
                             <li><a href="{{ route('home') }}#featured-properties" aria-label="Listings">Listings</a></li>
                             <li><a href="{{ route('home') }}#blog" aria-label="Blog">Blog</a></li>
-                            <li><a href="{{ route('home') }}#contact" aria-label="Contact">Contact</a></li>
+                            <li><a href="{{ route('contact') }}" aria-label="Contact">Contact</a></li>
                             <li><a href="{{ route('login') }}" aria-label="User Login">User Login</a></li>
                             <li><a href="{{ route('register') }}" aria-label="User Registration">Create Account</a></li>
                             <li><a href="{{ route('admin.login') }}" aria-label="Admin Login">Admin Login</a></li>

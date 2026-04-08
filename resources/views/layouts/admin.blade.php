@@ -189,6 +189,12 @@
                 </a>
               </li>
               <li class="nav-item">
+                <a href="{{ route('admin.contact-page.edit') }}" class="nav-link {{ request()->routeIs('admin.contact-page.*') ? 'active' : '' }}">
+                  <i class="nav-icon bi bi-envelope-paper"></i>
+                  <p>Contact Page</p>
+                </a>
+              </li>
+              <li class="nav-item">
                 <a href="{{ route('admin.homepage-banners.index') }}" class="nav-link {{ request()->routeIs('admin.homepage-banners.*') ? 'active' : '' }}">
                   <i class="nav-icon bi bi-images"></i>
                   <p>Hero Banners</p>
