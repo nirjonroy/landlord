@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AboutPage;
 use App\Models\HomepageBanner;
 use App\Models\HomepageCity;
 use App\Models\HomepageProperty;
@@ -32,6 +33,26 @@ class HomeController extends Controller
         ]);
     }
 
+    public function about(): View
+    {
+        $siteInfo = $this->siteInfo();
+        $aboutPage = $this->aboutPage();
+
+        return view('frontend.about', [
+            'siteInfo' => $siteInfo,
+            'siteName' => $siteInfo->site_name ?: config('app.name', 'Land Site'),
+            'siteLogoUrl' => $this->siteLogoUrl($siteInfo),
+            'siteUrl' => rtrim($siteInfo->site_url ?: config('app.url', url('/')), '/').'/',
+            'aboutPage' => $aboutPage,
+            'stats' => collect($aboutPage->stats ?? [])->values(),
+            'teamMembers' => collect($aboutPage->team_members ?? [])->values(),
+            'services' => collect($aboutPage->services ?? [])->values(),
+            'testimonials' => collect($aboutPage->testimonials ?? [])->values(),
+            'brands' => collect($aboutPage->brands ?? [])->values(),
+            'faqs' => collect($aboutPage->faqs ?? [])->values(),
+        ]);
+    }
+
     public function siteLogo(): BinaryFileResponse
     {
         $siteInfo = $this->siteInfo();
@@ -54,6 +75,21 @@ class HomeController extends Controller
         );
 
         return response()->file(Storage::disk('public')->path($homepageBanner->image_path));
+    }
+
+    public function aboutPageImage(AboutPage $aboutPage, string $group, ?int $index = null): BinaryFileResponse
+    {
+        $path = $aboutPage->imagePathFor($group, $index);
+        $source = $aboutPage->imageSourceFor($group, $index);
+
+        abort_unless(
+            $source === 'upload' &&
+            $path &&
+            Storage::disk('public')->exists($path),
+            404
+        );
+
+        return response()->file(Storage::disk('public')->path($path));
     }
 
     private function siteInfo(): SiteInfo
@@ -110,5 +146,17 @@ class HomeController extends Controller
             ->orderBy('display_order')
             ->orderBy('id')
             ->get();
+    }
+
+    private function aboutPage(): AboutPage
+    {
+        if (! Schema::hasTable('about_pages')) {
+            return new AboutPage(AboutPage::defaultAttributes());
+        }
+
+        return AboutPage::query()->firstOrCreate(
+            ['id' => 1],
+            AboutPage::defaultAttributes()
+        );
     }
 }

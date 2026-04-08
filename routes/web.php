@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AuthenticatedSessionController as AdminAuthenticatedSessionController;
+use App\Http\Controllers\Admin\AboutPageController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\HomepageBannerController;
 use App\Http\Controllers\Admin\PropertyManagementController;
@@ -23,8 +24,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/about', [HomeController::class, 'about'])->name('about');
 Route::get('site-logo', [HomeController::class, 'siteLogo'])->name('site.logo');
 Route::get('homepage-banners/{homepageBanner}/image', [HomeController::class, 'homepageBannerImage'])->name('homepage-banners.image');
+Route::get('about-page/{aboutPage}/image/{group}/{index?}', [HomeController::class, 'aboutPageImage'])->name('about.image');
 
 Route::get('/dashboard', function () {
     return redirect()->to(route('profile.edit', ['tab' => 'dashboard']).'#dashboard');
@@ -37,6 +40,8 @@ Route::middleware('guest:admin')->prefix('admin')->name('admin.')->group(functio
 
 Route::middleware('auth:admin')->prefix('admin')->name('admin.')->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('about-page', [AboutPageController::class, 'edit'])->name('about-page.edit');
+    Route::put('about-page', [AboutPageController::class, 'update'])->name('about-page.update');
     Route::get('homepage-banners', [HomepageBannerController::class, 'index'])->name('homepage-banners.index');
     Route::post('homepage-banners', [HomepageBannerController::class, 'store'])->name('homepage-banners.store');
     Route::put('homepage-banners/{homepageBanner}', [HomepageBannerController::class, 'update'])->name('homepage-banners.update');

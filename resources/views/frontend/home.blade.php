@@ -100,7 +100,7 @@
                                         <li><a href="#featured-properties" aria-label="Click to visit property details V2 page">Property Details V2</a></li>
                                     </ul>
                                 </li>
-                                <li><a href="#about" aria-label="Click to visit about page">About</a></li>
+                                <li><a href="{{ route('about') }}" aria-label="Click to visit about page">About</a></li>
                                 <li><a href="#contact" aria-label="Click to visit contact page">Contact</a></li>
                                 <li class="menu-item-has-children">
                                     <a href="#blog">Blog</a>
@@ -286,7 +286,7 @@
                     <div class="cs_about_text">
                         <h2 class="cs_fs_48 cs_semibold cs_mb_46 cs_mb_lg_30  wow fadeInDown">Welcome to {{ $siteName }}</h2>
                         <p class="cs_fs_24 cs_mb_57 cs_mb_lg_36">We are a Bangladesh-focused real estate platform that helps users discover flats, land, and homes across major cities with trusted local support.</p>
-                        <a href="#about" area-label="Click to visit About Page" class="cs_btn cs_style_1 cs_accent_bg cs_medium cs_white_color cs_radius_7 wow fadeInUp">
+                        <a href="{{ route('about') }}" area-label="Click to visit About Page" class="cs_btn cs_style_1 cs_accent_bg cs_medium cs_white_color cs_radius_7 wow fadeInUp">
               <span class="cs_btn_text">About More</span>
               </a>
                     </div>
@@ -625,7 +625,7 @@
                     <div class="cs_footer_widget">
                         <h2 class="cs_footer_widget_title cs_fs_18 cs_white_color cs_semibold">Quick Links</h2>
                         <ul class="cs_footer_widget_menu">
-                            <li><a href="#about" aria-label="Page Link">About Us</a></li>
+                            <li><a href="{{ route('about') }}" aria-label="Page Link">About Us</a></li>
                             <li><a href="#" aria-label="Page Link">Terms & Conditions</a></li>
                             <li><a href="#" aria-label="Page Link">Guide</a></li>
                             <li><a href="#" aria-label="Page Link">Support Center</a></li>

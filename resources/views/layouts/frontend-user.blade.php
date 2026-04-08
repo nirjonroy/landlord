@@ -194,7 +194,7 @@
                             <ul class="cs_nav_list">
                                 <li><a href="{{ route('home') }}" aria-label="Home">Home</a></li>
                                 <li><a href="{{ route('home') }}#featured-properties" aria-label="Listing">Listing</a></li>
-                                <li><a href="{{ route('home') }}#about" aria-label="About">About</a></li>
+                                <li><a href="{{ route('about') }}" aria-label="About">About</a></li>
                                 <li><a href="{{ route('home') }}#contact" aria-label="Contact">Contact</a></li>
                                 <li><a href="{{ route('home') }}#blog" aria-label="Blog">Blog</a></li>
                             </ul>
@@ -238,7 +238,7 @@
                     <div class="cs_footer_widget">
                         <h2 class="cs_footer_widget_title cs_fs_18 cs_white_color cs_semibold">Quick Links</h2>
                         <ul class="cs_footer_widget_menu">
-                            <li><a href="{{ route('home') }}#about" aria-label="About Us">About Us</a></li>
+                            <li><a href="{{ route('about') }}" aria-label="About Us">About Us</a></li>
                             <li><a href="{{ route('home') }}#featured-properties" aria-label="Listings">Listings</a></li>
                             <li><a href="{{ route('home') }}#blog" aria-label="Blog">Blog</a></li>
                             <li><a href="{{ route('home') }}#contact" aria-label="Contact">Contact</a></li>
