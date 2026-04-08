@@ -28,6 +28,37 @@
         .cs_header_logout_form button {
             border: 0;
         }
+
+        .cs_hero_banner_slider .cs_slider_arrows {
+            display: flex;
+            justify-content: space-between;
+            left: 32px;
+            pointer-events: none;
+            position: absolute;
+            right: 32px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 3;
+        }
+
+        .cs_hero_banner_slider .cs_slider_arrows > div {
+            background: rgba(255, 255, 255, 0.92);
+            pointer-events: auto;
+        }
+
+        .cs_hero_banner_slider .cs_slide > div {
+            height: 100%;
+        }
+
+        .cs_hero_banner_slider .cs_hero_title {
+            text-wrap: balance;
+        }
+
+        @media (max-width: 991px) {
+            .cs_hero_banner_slider .cs_slider_arrows {
+                display: none;
+            }
+        }
     </style>
 </head>
 
@@ -124,302 +155,7 @@
     <div class="cs_height_116 cs_height_lg_110"></div>
     <!-- End Header Section -->
     <!-- Start Hero Section -->
-    <section class="cs_hero cs_style_1">
-        <div class="container">
-            <div class="cs_hero_content_wrapper cs_center_column cs_bg_filed cs_radius_25" data-src="{{ asset('frontend-assets/img/hero_img_1.jpg') }}">
-                <div class="cs_hero_text text-center">
-                    <h1 class="cs_hero_title cs_fs_64 cs_mb_34 wow fadeInDown">We provide <span class="cs_accent_color">the best house</span> to be your home</h1>
-                    <p class="cs_fs_24 mb-0 wow fadeInUp">We provide the best house to be your home</p>
-                </div>
-            </div>
-            <!-- Start Filter Tabs Section -->
-            <div class="cs_tabs cs_style_1 wow fadeInUp">
-                <div class="cs_filter_content_wrapper cs_type_1">
-                    <ul class="cs_tab_links cs_style_1 cs_center cs_mp_0">
-                        <li class="active"><a href="#buy" aria-label="Tab button">Buy</a></li>
-                        <li><a href="#co_living" aria-label="Tab Link button">Co-Living</a></li>
-                        <li><a href="#rent" aria-label="Tab buttont">Rent</a></li>
-                    </ul>
-                    <div class="cs_tab_body cs_white_bg cs_radius_20">
-                        <div class="cs_tab active" id="buy">
-                            <form class="cs_property_filter_form position-relative">
-                                <div class="cs_custom_select_wrapper">
-                                    <label for="buy_house">Type</label>
-                                    <select class="cs_fs_20 cs_semibold cs_custom_select" name="house" id="buy_house">
-                      <option value="houses" selected>Houses</option>
-                      <option value="open_house">Open House</option>
-                      <option value="rent_house">Rent House</option>
-                      <option value="sale_house">Sale House</option>
-                      <option value="buy_house">Buy House</option>
-                    </select>
-                                </div>
-                                <div class="cs_custom_select_wrapper">
-                                    <label for="buy_location">Location</label>
-                                    <select class="cs_fs_20 cs_semibold cs_custom_select" name="location" id="buy_location">
-                      <option value="dhaka" selected>Dhaka</option>
-                      <option value="chattogram">Chattogram</option>
-                      <option value="sylhet">Sylhet</option>
-                      <option value="rajshahi">Rajshahi</option>
-                      <option value="khulna">Khulna</option>
-                      <option value="coxs_bazar">Cox's Bazar</option>
-                    </select>
-                                </div>
-                                <div class="cs_btns_wrapper">
-                                    <button type="button" aria-label="Advanced Search Button" class="cs_btn cs_style_1 cs_type_1 cs_white_bg advanced_search cs_radius_7">
-                    <span class="cs_btn_icon"><i class="fa-solid fa-sliders"></i></span>
-                    <span class="cs_btn_text">Advanced Search</span>
-                    </button>
-                                    <button type="submit" aria-label="Search Button" class="cs_btn cs_style_1 cs_accent_bg cs_white_color cs_radius_7">
-                    <span class="cs_btn_icon"><i class="fa-solid fa-magnifying-glass"></i></span>
-                    <span class="cs_btn_text">Search</span>
-                    </button>
-                                </div>
-                                <div class="cs_advanced_options_wrapper">
-                                    <div class="row cs_gap_y_24">
-                                        <div class="col-lg-3 col-sm-6">
-                                            <select aria-label="Property Location" name="location" class="cs_fs_20 cs_semibold cs_custom_select">
-                          <option selected>Any Location</option>
-                          <option value="dhaka">Dhaka</option>
-                          <option value="chattogram">Chattogram</option>
-                          <option value="sylhet">Sylhet</option>
-                          <option value="rajshahi">Rajshahi</option>
-                          <option value="khulna">Khulna</option>
-                          <option value="coxs_bazar">Cox's Bazar</option>
-                        </select>
-                                        </div>
-                                        <div class="col-lg-3 col-sm-6">
-                                            <select aria-label="Property Type" name="house" class="cs_fs_20 cs_semibold cs_custom_select">
-                          <option selected>Any Property</option>
-                          <option value="open_house">Open House</option>
-                          <option value="rent_house">Rent House</option>
-                          <option value="sale_house">Sale House</option>
-                          <option value="buy_house">Buy House</option>
-                        </select>
-                                        </div>
-                                        <div class="col-lg-3 col-sm-6">
-                                            <select aria-label="Property Bedrooms" name="bedroom" class="cs_fs_20 cs_semibold cs_custom_select">
-                          <option selected>Bedrooms</option>
-                          <option value="1">1</option>
-                          <option value="2">2</option>
-                          <option value="3">3</option>
-                          <option value="4">4</option>
-                        </select>
-                                        </div>
-                                        <div class="col-lg-3 col-sm-6">
-                                            <select aria-label="Property Bathrooms" name="bathroom" class="cs_fs_20 cs_semibold cs_custom_select">
-                          <option selected>Bathrooms</option>
-                          <option value="1">1</option>
-                          <option value="2">2</option>
-                          <option value="3">3</option>
-                          <option value="4">4</option>
-                        </select>
-                                        </div>
-                                        <div class="col-lg-6 col-sm-12">
-                                            <div class="cs_range-slider-wrap">
-                                                <div class="cs_amount-wrap">
-                                                    <input type="text" name="pvalue-range" class="cs_amount" readonly>
-                                                </div>
-                                                <div class="cs_slider_range"></div>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-3 col-sm-6">
-                                            <input type="text" name="minarea" placeholder="Min Area (sqft)">
-                                        </div>
-                                        <div class="col-lg-3 col-sm-6">
-                                            <input type="text" name="maxarea" placeholder="Max Area (sqft)">
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="cs_tab" id="co_living">
-                            <form class="cs_property_filter_form position-relative">
-                                <div class="cs_custom_select_wrapper">
-                                    <label for="buy_house">Type</label>
-                                    <select class="cs_fs_20 cs_semibold cs_custom_select" name="house" id="buy_house">
-                      <option value="houses" selected>Houses</option>
-                      <option value="open_house">Open House</option>
-                      <option value="rent_house">Rent House</option>
-                      <option value="sale_house">Sale House</option>
-                      <option value="buy_house">Buy House</option>
-                    </select>
-                                </div>
-                                <div class="cs_custom_select_wrapper">
-                                    <label for="buy_location">Location</label>
-                                    <select class="cs_fs_20 cs_semibold cs_custom_select" name="location" id="buy_location">
-                      <option value="dhaka" selected>Dhaka</option>
-                      <option value="chattogram">Chattogram</option>
-                      <option value="sylhet">Sylhet</option>
-                      <option value="rajshahi">Rajshahi</option>
-                      <option value="khulna">Khulna</option>
-                      <option value="coxs_bazar">Cox's Bazar</option>
-                    </select>
-                                </div>
-                                <div class="cs_btns_wrapper">
-                                    <button type="button" aria-label="Advanced Search Button" class="cs_btn cs_style_1 cs_type_1 cs_white_bg advanced_search cs_radius_7">
-                    <span class="cs_btn_icon"><i class="fa-solid fa-sliders"></i></span>
-                    <span class="cs_btn_text">Advanced Search</span>
-                    </button>
-                                    <button type="submit" aria-label="Search Button" class="cs_btn cs_style_1 cs_accent_bg cs_white_color cs_radius_7">
-                    <span class="cs_btn_icon"><i class="fa-solid fa-magnifying-glass"></i></span>
-                    <span class="cs_btn_text">Search</span>
-                    </button>
-                                </div>
-                                <div class="cs_advanced_options_wrapper">
-                                    <div class="row cs_gap_y_24">
-                                        <div class="col-lg-3 col-sm-6">
-                                            <select aria-label="Property Location" name="location" class="cs_fs_20 cs_semibold cs_custom_select">
-                          <option selected>Any Location</option>
-                          <option value="dhaka">Dhaka</option>
-                          <option value="chattogram">Chattogram</option>
-                          <option value="sylhet">Sylhet</option>
-                          <option value="rajshahi">Rajshahi</option>
-                          <option value="khulna">Khulna</option>
-                          <option value="coxs_bazar">Cox's Bazar</option>
-                        </select>
-                                        </div>
-                                        <div class="col-lg-3 col-sm-6">
-                                            <select aria-label="Property Type" name="house" class="cs_fs_20 cs_semibold cs_custom_select">
-                          <option selected>Any Property</option>
-                          <option value="open_house">Open House</option>
-                          <option value="rent_house">Rent House</option>
-                          <option value="sale_house">Sale House</option>
-                          <option value="buy_house">Buy House</option>
-                        </select>
-                                        </div>
-                                        <div class="col-lg-3 col-sm-6">
-                                            <select aria-label="Property Bedrooms" name="bedroom" class="cs_fs_20 cs_semibold cs_custom_select">
-                          <option selected>Bedrooms</option>
-                          <option value="1">1</option>
-                          <option value="2">2</option>
-                          <option value="3">3</option>
-                          <option value="4">4</option>
-                        </select>
-                                        </div>
-                                        <div class="col-lg-3 col-sm-6">
-                                            <select aria-label="Property Bathrooms" name="bathroom" class="cs_fs_20 cs_semibold cs_custom_select">
-                          <option selected>Bathrooms</option>
-                          <option value="1">1</option>
-                          <option value="2">2</option>
-                          <option value="3">3</option>
-                          <option value="4">4</option>
-                        </select>
-                                        </div>
-                                        <div class="col-lg-6 col-sm-12">
-                                            <div class="cs_range-slider-wrap">
-                                                <div class="cs_amount-wrap">
-                                                    <input type="text" name="pvalue-range" class="cs_amount" readonly>
-                                                </div>
-                                                <div class="cs_slider_range"></div>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-3 col-sm-6">
-                                            <input type="text" name="minarea" placeholder="Min Area (sqft)">
-                                        </div>
-                                        <div class="col-lg-3 col-sm-6">
-                                            <input type="text" name="maxarea" placeholder="Max Area (sqft)">
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="cs_tab" id="rent">
-                            <form class="cs_property_filter_form position-relative">
-                                <div class="cs_custom_select_wrapper">
-                                    <label for="buy_house">Type</label>
-                                    <select class="cs_fs_20 cs_semibold cs_custom_select" name="house" id="buy_house">
-                      <option value="houses" selected>Houses</option>
-                      <option value="open_house">Open House</option>
-                      <option value="rent_house">Rent House</option>
-                      <option value="sale_house">Sale House</option>
-                      <option value="buy_house">Buy House</option>
-                    </select>
-                                </div>
-                                <div class="cs_custom_select_wrapper">
-                                    <label for="buy_location">Location</label>
-                                    <select class="cs_fs_20 cs_semibold cs_custom_select" name="location" id="buy_location">
-                      <option value="dhaka" selected>Dhaka</option>
-                      <option value="chattogram">Chattogram</option>
-                      <option value="sylhet">Sylhet</option>
-                      <option value="rajshahi">Rajshahi</option>
-                      <option value="khulna">Khulna</option>
-                      <option value="coxs_bazar">Cox's Bazar</option>
-                    </select>
-                                </div>
-                                <div class="cs_btns_wrapper">
-                                    <button type="button" aria-label="Advanced Search Button" class="cs_btn cs_style_1 cs_type_1 cs_white_bg advanced_search cs_radius_7">
-                    <span class="cs_btn_icon"><i class="fa-solid fa-sliders"></i></span>
-                    <span class="cs_btn_text">Advanced Search</span>
-                    </button>
-                                    <button type="submit" aria-label="Search Button" class="cs_btn cs_style_1 cs_accent_bg cs_white_color cs_radius_7">
-                    <span class="cs_btn_icon"><i class="fa-solid fa-magnifying-glass"></i></span>
-                    <span class="cs_btn_text">Search</span>
-                    </button>
-                                </div>
-                                <div class="cs_advanced_options_wrapper">
-                                    <div class="row cs_gap_y_24">
-                                        <div class="col-lg-3 col-sm-6">
-                                            <select aria-label="Property Location" name="location" class="cs_fs_20 cs_semibold cs_custom_select">
-                          <option selected>Any Location</option>
-                          <option value="dhaka">Dhaka</option>
-                          <option value="chattogram">Chattogram</option>
-                          <option value="sylhet">Sylhet</option>
-                          <option value="rajshahi">Rajshahi</option>
-                          <option value="khulna">Khulna</option>
-                          <option value="coxs_bazar">Cox's Bazar</option>
-                        </select>
-                                        </div>
-                                        <div class="col-lg-3 col-sm-6">
-                                            <select aria-label="Property Type" name="house" class="cs_fs_20 cs_semibold cs_custom_select">
-                          <option selected>Any Property</option>
-                          <option value="open_house">Open House</option>
-                          <option value="rent_house">Rent House</option>
-                          <option value="sale_house">Sale House</option>
-                          <option value="buy_house">Buy House</option>
-                        </select>
-                                        </div>
-                                        <div class="col-lg-3 col-sm-6">
-                                            <select aria-label="Property Bedrooms" name="bedroom" class="cs_fs_20 cs_semibold cs_custom_select">
-                          <option selected>Bedrooms</option>
-                          <option value="1">1</option>
-                          <option value="2">2</option>
-                          <option value="3">3</option>
-                          <option value="4">4</option>
-                        </select>
-                                        </div>
-                                        <div class="col-lg-3 col-sm-6">
-                                            <select aria-label="Property Bathrooms" name="bathroom" class="cs_fs_20 cs_semibold cs_custom_select">
-                          <option selected>Bathrooms</option>
-                          <option value="1">1</option>
-                          <option value="2">2</option>
-                          <option value="3">3</option>
-                          <option value="4">4</option>
-                        </select>
-                                        </div>
-                                        <div class="col-lg-6 col-sm-12">
-                                            <div class="cs_range-slider-wrap">
-                                                <div class="cs_amount-wrap">
-                                                    <input type="text" name="pvalue-range" class="cs_amount" readonly>
-                                                </div>
-                                                <div class="cs_slider_range"></div>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-3 col-sm-6">
-                                            <input type="text" name="minarea" placeholder="Min Area (sqft)">
-                                        </div>
-                                        <div class="col-lg-3 col-sm-6">
-                                            <input type="text" name="maxarea" placeholder="Max Area (sqft)">
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Start Filter Tabs Section -->
-        </div>
-    </section>
+    @include('frontend.partials.home-hero')
     <!-- End Hero Section -->
     <!-- Start Category Section -->
     <section>

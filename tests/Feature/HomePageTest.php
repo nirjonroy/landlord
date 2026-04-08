@@ -77,6 +77,7 @@ class HomePageTest extends TestCase
             ->assertOk()
             ->assertSee('Dhaka')
             ->assertSee('Chattogram')
+            ->assertSee('Find verified homes across Bangladesh')
             ->assertSee('Bashundhara Lake View Apartment')
             ->assertSee('৳45,000 /month')
             ->assertSee('We Are Available Across Bangladesh');

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\HomepageBanner;
 use App\Models\HomepageCity;
 use App\Models\HomepageProperty;
 use App\Models\SiteInfo;
@@ -27,6 +28,7 @@ class HomeController extends Controller
             'rentProperties' => $featuredProperties->where('purpose', 'rent')->values(),
             'saleProperties' => $featuredProperties->where('purpose', 'sale')->values(),
             'popularCities' => $this->homepageCities(),
+            'homepageBanners' => $this->homepageBanners(),
         ]);
     }
 
@@ -40,6 +42,18 @@ class HomeController extends Controller
         );
 
         return response()->file(Storage::disk('public')->path($siteInfo->logo_path));
+    }
+
+    public function homepageBannerImage(HomepageBanner $homepageBanner): BinaryFileResponse
+    {
+        abort_unless(
+            $homepageBanner->image_source === 'upload' &&
+            $homepageBanner->image_path &&
+            Storage::disk('public')->exists($homepageBanner->image_path),
+            404
+        );
+
+        return response()->file(Storage::disk('public')->path($homepageBanner->image_path));
     }
 
     private function siteInfo(): SiteInfo
@@ -82,6 +96,19 @@ class HomeController extends Controller
 
         return HomepageCity::query()
             ->orderBy('display_order')
+            ->get();
+    }
+
+    private function homepageBanners(): Collection
+    {
+        if (! Schema::hasTable('homepage_banners')) {
+            return collect();
+        }
+
+        return HomepageBanner::query()
+            ->where('is_active', true)
+            ->orderBy('display_order')
+            ->orderBy('id')
             ->get();
     }
 }

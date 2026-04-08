@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AuthenticatedSessionController as AdminAuthenticatedSessionController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\HomepageBannerController;
 use App\Http\Controllers\Admin\PropertyManagementController;
 use App\Http\Controllers\Admin\RolePermissionController;
 use App\Http\Controllers\Admin\UserManagementController;
@@ -23,6 +24,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('site-logo', [HomeController::class, 'siteLogo'])->name('site.logo');
+Route::get('homepage-banners/{homepageBanner}/image', [HomeController::class, 'homepageBannerImage'])->name('homepage-banners.image');
 
 Route::get('/dashboard', function () {
     return redirect()->to(route('profile.edit', ['tab' => 'dashboard']).'#dashboard');
@@ -35,6 +37,10 @@ Route::middleware('guest:admin')->prefix('admin')->name('admin.')->group(functio
 
 Route::middleware('auth:admin')->prefix('admin')->name('admin.')->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('homepage-banners', [HomepageBannerController::class, 'index'])->name('homepage-banners.index');
+    Route::post('homepage-banners', [HomepageBannerController::class, 'store'])->name('homepage-banners.store');
+    Route::put('homepage-banners/{homepageBanner}', [HomepageBannerController::class, 'update'])->name('homepage-banners.update');
+    Route::delete('homepage-banners/{homepageBanner}', [HomepageBannerController::class, 'destroy'])->name('homepage-banners.destroy');
     Route::get('users', [UserManagementController::class, 'index'])->name('users.index');
     Route::get('properties', [PropertyManagementController::class, 'index'])->name('properties.index');
     Route::put('properties/{property}/review', [PropertyManagementController::class, 'updateReview'])->name('properties.review.update');

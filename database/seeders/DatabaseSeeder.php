@@ -36,6 +36,7 @@ class DatabaseSeeder extends Seeder
 
         $permissions = collect([
             'dashboard.view',
+            'homepage-banners.manage',
             'site-info.manage',
             'api-access.view',
             'roles-permissions.manage',
@@ -65,6 +66,7 @@ class DatabaseSeeder extends Seeder
         );
 
         $this->call([
+            HomepageBannerSeeder::class,
             HomepagePropertySeeder::class,
             HomepageCitySeeder::class,
         ]);

@@ -183,6 +183,12 @@
                 </a>
               </li>
               <li class="nav-item">
+                <a href="{{ route('admin.homepage-banners.index') }}" class="nav-link {{ request()->routeIs('admin.homepage-banners.*') ? 'active' : '' }}">
+                  <i class="nav-icon bi bi-images"></i>
+                  <p>Hero Banners</p>
+                </a>
+              </li>
+              <li class="nav-item">
                 <a href="{{ route('admin.site-info.edit') }}" class="nav-link {{ request()->routeIs('admin.site-info.*') ? 'active' : '' }}">
                   <i class="nav-icon bi bi-info-circle"></i>
                   <p>Site Info</p>
