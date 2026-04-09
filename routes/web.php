@@ -2,10 +2,14 @@
 
 use App\Http\Controllers\Admin\AuthenticatedSessionController as AdminAuthenticatedSessionController;
 use App\Http\Controllers\Admin\AboutPageController;
+use App\Http\Controllers\Admin\BlogCategoryController;
+use App\Http\Controllers\Admin\BlogPageController;
+use App\Http\Controllers\Admin\BlogPostController as AdminBlogPostController;
 use App\Http\Controllers\Admin\ContactPageController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\HomepageBannerController;
 use App\Http\Controllers\Admin\PropertyManagementController;
+use App\Http\Controllers\BlogController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\Admin\RolePermissionController;
 use App\Http\Controllers\Admin\UserManagementController;
@@ -27,11 +31,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/about', [HomeController::class, 'about'])->name('about');
+Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
+Route::get('/blog/{blogPost:slug}', [BlogController::class, 'show'])->name('blog.show');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 Route::get('site-logo', [HomeController::class, 'siteLogo'])->name('site.logo');
 Route::get('homepage-banners/{homepageBanner}/image', [HomeController::class, 'homepageBannerImage'])->name('homepage-banners.image');
 Route::get('about-page/{aboutPage}/image/{group}/{index?}', [HomeController::class, 'aboutPageImage'])->name('about.image');
+Route::get('blog-page/{blogPage}/image', [BlogController::class, 'pageImage'])->name('blog-page.image');
+Route::get('blog-posts/{blogPost}/image/{group}/{index?}', [BlogController::class, 'postImage'])->name('blog-post.image');
 Route::get('contact-page/{contactPage}/image/{group}/{index?}', [ContactController::class, 'image'])->name('contact.image');
 
 Route::get('/dashboard', function () {
@@ -47,6 +55,18 @@ Route::middleware('auth:admin')->prefix('admin')->name('admin.')->group(function
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('about-page', [AboutPageController::class, 'edit'])->name('about-page.edit');
     Route::put('about-page', [AboutPageController::class, 'update'])->name('about-page.update');
+    Route::get('blog-page', [BlogPageController::class, 'edit'])->name('blog-page.edit');
+    Route::put('blog-page', [BlogPageController::class, 'update'])->name('blog-page.update');
+    Route::get('blog-categories', [BlogCategoryController::class, 'index'])->name('blog-categories.index');
+    Route::post('blog-categories', [BlogCategoryController::class, 'store'])->name('blog-categories.store');
+    Route::put('blog-categories/{blogCategory}', [BlogCategoryController::class, 'update'])->name('blog-categories.update');
+    Route::delete('blog-categories/{blogCategory}', [BlogCategoryController::class, 'destroy'])->name('blog-categories.destroy');
+    Route::get('blog-posts', [AdminBlogPostController::class, 'index'])->name('blog-posts.index');
+    Route::get('blog-posts/create', [AdminBlogPostController::class, 'create'])->name('blog-posts.create');
+    Route::post('blog-posts', [AdminBlogPostController::class, 'store'])->name('blog-posts.store');
+    Route::get('blog-posts/{blogPost}/edit', [AdminBlogPostController::class, 'edit'])->name('blog-posts.edit');
+    Route::put('blog-posts/{blogPost}', [AdminBlogPostController::class, 'update'])->name('blog-posts.update');
+    Route::delete('blog-posts/{blogPost}', [AdminBlogPostController::class, 'destroy'])->name('blog-posts.destroy');
     Route::get('contact-page', [ContactPageController::class, 'edit'])->name('contact-page.edit');
     Route::put('contact-page', [ContactPageController::class, 'update'])->name('contact-page.update');
     Route::get('homepage-banners', [HomepageBannerController::class, 'index'])->name('homepage-banners.index');

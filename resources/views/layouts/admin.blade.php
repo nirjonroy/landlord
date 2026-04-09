@@ -189,6 +189,24 @@
                 </a>
               </li>
               <li class="nav-item">
+                <a href="{{ route('admin.blog-page.edit') }}" class="nav-link {{ request()->routeIs('admin.blog-page.*') ? 'active' : '' }}">
+                  <i class="nav-icon bi bi-journal-richtext"></i>
+                  <p>Blog Page</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ route('admin.blog-categories.index') }}" class="nav-link {{ request()->routeIs('admin.blog-categories.*') ? 'active' : '' }}">
+                  <i class="nav-icon bi bi-tags"></i>
+                  <p>Blog Categories</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ route('admin.blog-posts.index') }}" class="nav-link {{ request()->routeIs('admin.blog-posts.*') ? 'active' : '' }}">
+                  <i class="nav-icon bi bi-card-text"></i>
+                  <p>Blog Posts</p>
+                </a>
+              </li>
+              <li class="nav-item">
                 <a href="{{ route('admin.contact-page.edit') }}" class="nav-link {{ request()->routeIs('admin.contact-page.*') ? 'active' : '' }}">
                   <i class="nav-icon bi bi-envelope-paper"></i>
                   <p>Contact Page</p>

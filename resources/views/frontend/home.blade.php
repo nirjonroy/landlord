@@ -102,13 +102,7 @@
                                 </li>
                                 <li><a href="{{ route('about') }}" aria-label="Click to visit about page">About</a></li>
                                 <li><a href="{{ route('contact') }}" aria-label="Click to visit contact page">Contact</a></li>
-                                <li class="menu-item-has-children">
-                                    <a href="#blog">Blog</a>
-                                    <ul>
-                                        <li><a href="#blog" aria-label="Click to visit all posts">Blog</a></li>
-                                        <li><a href="#blog" aria-label="Click to read post details">Blog Details</a></li>
-                                    </ul>
-                                </li>
+                                <li><a href="{{ route('blog.index') }}" aria-label="Click to visit blog page">Blog</a></li>
                             </ul>
                         </nav>
                     </div>
@@ -477,83 +471,7 @@
         <!-- <div class="cs_height_120 cs_height_lg_80"></div> -->
     </section>
     <!-- End CTA Section -->
-    <!-- Start Blog Section -->
-    <section id="blog" class="cs_blog_area position-relative">
-        <div class="cs_height_120 cs_height_lg_80"></div>
-        <div class="container">
-            <div class="cs_section_heading cs_style_1 text-center">
-                <h2 class="cs_fs_48 cs_semibold mb-0 wow zoomIn">News from {{ $siteName }}</h2>
-            </div>
-            <div class="cs_height_80 cs_height_lg_50"></div>
-            <div class="row cs_row_gap_20 cs_gap_y_30">
-                <div class="col-lg-4 wow fadeInUp" data-wow-duration="0.5s" data-wow-delay="0s">
-                    <article class="cs_post cs_style_1 cs_white_bg cs_radius_15">
-                        <a href="#blog" aria-label="Click To Read More" class="cs_post_thumbnail">
-              <img src="{{ asset('frontend-assets/img/post_img_1.jpg') }}" alt="Post Image">
-              </a>
-                        <div class="cs_post_content">
-                            <h3 class="cs_post_title cs_fs_28 cs_semibold cs_body_font cs_mb_13"><a href="#blog" aria-label="Click to read post">Investment on Property, Profitable or Detrimental?</a></h3>
-                            <div class="cs_post_meta_wrapper cs_mb_12">
-                                <div class="cs_post_meta">
-                                    <span><i class="fa-solid fa-circle-user"></i></span>
-                                    <span>{{ $siteName }} Team</span>
-                                </div>
-                                <div class="cs_post_meta">
-                                    <span><i class="fa-solid fa-clock"></i></span>
-                                    <span>10 March</span>
-                                </div>
-                            </div>
-                            <a href="#blog" aria-label="Click to read post" class="cs_post_btn cs_accent_color cs_medium text-decoration-underline">Read Post</a>
-                        </div>
-                    </article>
-                </div>
-                <div class="col-lg-4 wow fadeInUp" data-wow-duration="0.5s" data-wow-delay=".3s">
-                    <article class="cs_post cs_style_1 cs_white_bg cs_radius_15">
-                        <a href="#blog" aria-label="Click To Read More" class="cs_post_thumbnail">
-              <img src="{{ asset('frontend-assets/img/post_img_2.jpg') }}" alt="Post Image">
-              </a>
-                        <div class="cs_post_content">
-                            <h3 class="cs_post_title cs_fs_28 cs_semibold cs_body_font cs_mb_13"><a href="#blog" aria-label="Click to read post">5 Tips on Choosing Comfortable Housing for Families</a></h3>
-                            <div class="cs_post_meta_wrapper cs_mb_12">
-                                <div class="cs_post_meta">
-                                    <span><i class="fa-solid fa-circle-user"></i></span>
-                                    <span>{{ $siteName }} Team</span>
-                                </div>
-                                <div class="cs_post_meta">
-                                    <span><i class="fa-solid fa-clock"></i></span>
-                                    <span>13 March</span>
-                                </div>
-                            </div>
-                            <a href="#blog" aria-label="Click to read post" class="cs_post_btn cs_accent_color cs_medium text-decoration-underline">Read Post</a>
-                        </div>
-                    </article>
-                </div>
-                <div class="col-lg-4 wow fadeInUp" data-wow-duration="0.5s" data-wow-delay=".6s">
-                    <article class="cs_post cs_style_1 cs_white_bg cs_radius_15">
-                        <a href="#blog" aria-label="Click To Read More" class="cs_post_thumbnail">
-              <img src="{{ asset('frontend-assets/img/post_img_3.jpg') }}" alt="Post Image">
-              </a>
-                        <div class="cs_post_content">
-                            <h3 class="cs_post_title cs_fs_28 cs_semibold cs_body_font cs_mb_13"><a href="#blog" aria-label="Click to read post">5 Most Comfortable Areas for Living Space in Dhaka</a></h3>
-                            <div class="cs_post_meta_wrapper cs_mb_12">
-                                <div class="cs_post_meta">
-                                    <span><i class="fa-solid fa-circle-user"></i></span>
-                                    <span>{{ $siteName }} Team</span>
-                                </div>
-                                <div class="cs_post_meta">
-                                    <span><i class="fa-solid fa-clock"></i></span>
-                                    <span>15 March</span>
-                                </div>
-                            </div>
-                            <a href="#blog" aria-label="Click to read post" class="cs_post_btn cs_accent_color cs_medium text-decoration-underline">Read Post</a>
-                        </div>
-                    </article>
-                </div>
-            </div>
-        </div>
-        <div class="cs_height_130 cs_height_lg_80"></div>
-    </section>
-    <!-- End Blog Section -->
+    @include('frontend.partials.home-blog')
     <!-- Start FAQ Section -->
     <section>
         <div class="cs_height_120 cs_height_lg_80"></div>
@@ -629,7 +547,7 @@
                             <li><a href="#" aria-label="Page Link">Terms & Conditions</a></li>
                             <li><a href="#" aria-label="Page Link">Guide</a></li>
                             <li><a href="#" aria-label="Page Link">Support Center</a></li>
-                            <li><a href="#blog" aria-label="Page Link">Blog</a></li>
+                            <li><a href="{{ route('blog.index') }}" aria-label="Page Link">Blog</a></li>
                             <li><a href="{{ route('contact') }}" aria-label="Page Link">Contact</a></li>
                             <li><a href="#" aria-label="Page Link">Privacy Policy</a></li>
                         </ul>

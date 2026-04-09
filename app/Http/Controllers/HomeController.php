@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\AboutPage;
+use App\Models\BlogPage;
+use App\Models\BlogPost;
 use App\Models\HomepageBanner;
 use App\Models\HomepageCity;
 use App\Models\HomepageProperty;
@@ -30,6 +32,8 @@ class HomeController extends Controller
             'saleProperties' => $featuredProperties->where('purpose', 'sale')->values(),
             'popularCities' => $this->homepageCities(),
             'homepageBanners' => $this->homepageBanners(),
+            'blogPage' => $this->blogPage(),
+            'homeBlogPosts' => $this->homeBlogPosts(),
         ]);
     }
 
@@ -158,5 +162,32 @@ class HomeController extends Controller
             ['id' => 1],
             AboutPage::defaultAttributes()
         );
+    }
+
+    private function blogPage(): BlogPage
+    {
+        if (! Schema::hasTable('blog_pages')) {
+            return new BlogPage(BlogPage::defaultAttributes());
+        }
+
+        return BlogPage::query()->firstOrCreate(
+            ['id' => 1],
+            BlogPage::defaultAttributes()
+        );
+    }
+
+    private function homeBlogPosts(): Collection
+    {
+        if (! Schema::hasTable('blog_posts')) {
+            return collect();
+        }
+
+        return BlogPost::query()
+            ->published()
+            ->where('show_on_home', true)
+            ->latest('published_at')
+            ->latest('id')
+            ->limit(3)
+            ->get();
     }
 }

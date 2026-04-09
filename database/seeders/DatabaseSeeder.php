@@ -37,6 +37,9 @@ class DatabaseSeeder extends Seeder
         $permissions = collect([
             'dashboard.view',
             'about-page.manage',
+            'blog-page.manage',
+            'blog-categories.manage',
+            'blog-posts.manage',
             'contact-page.manage',
             'homepage-banners.manage',
             'site-info.manage',
@@ -69,6 +72,9 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             AboutPageSeeder::class,
+            BlogPageSeeder::class,
+            BlogCategorySeeder::class,
+            BlogPostSeeder::class,
             ContactPageSeeder::class,
             HomepageBannerSeeder::class,
             HomepagePropertySeeder::class,

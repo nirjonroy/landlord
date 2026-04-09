@@ -52,7 +52,7 @@
                                 <li><a href="{{ route('home') }}#featured-properties" aria-label="Listing">Listing</a></li>
                                 <li><a href="{{ route('about') }}" aria-label="About">About</a></li>
                                 <li><a href="{{ route('contact') }}" aria-label="Contact">Contact</a></li>
-                                <li><a href="{{ route('home') }}#blog" aria-label="Blog">Blog</a></li>
+                                <li><a href="{{ route('blog.index') }}" aria-label="Blog">Blog</a></li>
                             </ul>
                         </nav>
                     </div>
@@ -121,7 +121,7 @@
                         <ul class="cs_footer_widget_menu">
                             <li><a href="{{ route('about') }}" aria-label="Page Link">About Us</a></li>
                             <li><a href="{{ route('home') }}#featured-properties" aria-label="Page Link">Listings</a></li>
-                            <li><a href="{{ route('home') }}#blog" aria-label="Page Link">Blog</a></li>
+                            <li><a href="{{ route('blog.index') }}" aria-label="Page Link">Blog</a></li>
                             <li><a href="{{ route('contact') }}" aria-label="Page Link">Contact</a></li>
                             <li><a href="{{ route('login') }}" aria-label="Page Link">User Login</a></li>
                             <li><a href="{{ route('admin.login') }}" aria-label="Page Link">Admin Login</a></li>
