@@ -79,6 +79,7 @@ class DatabaseSeeder extends Seeder
             HomepageBannerSeeder::class,
             HomepagePropertySeeder::class,
             HomepageCitySeeder::class,
+            PropertySeeder::class,
         ]);
     }
 }

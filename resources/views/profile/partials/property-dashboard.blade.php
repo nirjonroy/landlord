@@ -48,7 +48,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($propertyAnalytics['listings']->take(5) as $listing)
+                    @foreach ($propertyAnalytics['listings'] as $listing)
                         <tr>
                             <td>
                                 <div class="cs_property_info">
