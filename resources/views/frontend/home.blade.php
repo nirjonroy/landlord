@@ -92,12 +92,11 @@
                                     </ul>
                                 </li>
                                 <li class="menu-item-has-children">
-                                    <a href="#featured-properties">Listing</a>
+                                    <a href="{{ route('properties.index') }}">Listing</a>
                                     <ul>
-                                        <li><a href="#featured-properties" aria-label="Click to visit all property page">Property Grid View</a></li>
-                                        <li><a href="#featured-properties" aria-label="Click to visit property map view page">Property Map View</a></li>
-                                        <li><a href="#featured-properties" aria-label="Click to visit property details page">Property Details</a></li>
-                                        <li><a href="#featured-properties" aria-label="Click to visit property details V2 page">Property Details V2</a></li>
+                                        <li><a href="{{ route('properties.index') }}" aria-label="Click to visit all property page">All Listings</a></li>
+                                        <li><a href="{{ route('properties.index', ['purpose' => 'rent']) }}" aria-label="Click to visit rent property page">Rent Listings</a></li>
+                                        <li><a href="{{ route('properties.index', ['purpose' => 'sale']) }}" aria-label="Click to visit sale property page">Sale Listings</a></li>
                                     </ul>
                                 </li>
                                 <li><a href="{{ route('about') }}" aria-label="Click to visit about page">About</a></li>
@@ -162,7 +161,7 @@
             <div class="cs_features_content_wrapper">
                 <div class="row">
                     <div class="col-lg-3 col-sm-6 wow zoomIn">
-                        <a href="#featured-properties" aria-label="Click to visit all property" class="cs_iconbox cs_style_1 cs_white_bg cs_radius_15 cs_hover_3 text-center">
+                        <a href="{{ route('properties.index', ['property_type' => 'House']) }}" aria-label="Click to visit all property" class="cs_iconbox cs_style_1 cs_white_bg cs_radius_15 cs_hover_3 text-center">
                 <span class="cs_iconbox_icon cs_center cs_mb_31">
                 <img src="{{ asset('frontend-assets/img/icons/house_icon.svg') }}" alt="House Icon">
                 </span>
@@ -170,7 +169,7 @@
               </a>
                     </div>
                     <div class="col-lg-3 col-sm-6 wow zoomIn">
-                        <a href="#featured-properties" aria-label="Click to visit all property" class="cs_iconbox cs_style_1 cs_white_bg cs_radius_15 cs_hover_3 text-center">
+                        <a href="{{ route('properties.index', ['property_type' => 'Apartment']) }}" aria-label="Click to visit all property" class="cs_iconbox cs_style_1 cs_white_bg cs_radius_15 cs_hover_3 text-center">
                 <span class="cs_iconbox_icon cs_center cs_mb_31">
                 <img src="{{ asset('frontend-assets/img/icons/apartment_icon.svg') }}" alt="Appartment Icon">
                 </span>
@@ -178,7 +177,7 @@
               </a>
                     </div>
                     <div class="col-lg-3 col-sm-6 wow zoomIn">
-                        <a href="#featured-properties" aria-label="Click to visit all property" class="cs_iconbox cs_style_1 cs_white_bg cs_radius_15 cs_hover_3 text-center">
+                        <a href="{{ route('properties.index') }}" aria-label="Click to visit all property" class="cs_iconbox cs_style_1 cs_white_bg cs_radius_15 cs_hover_3 text-center">
                 <span class="cs_iconbox_icon cs_center cs_mb_31">
                 <img src="{{ asset('frontend-assets/img/icons/villa_icon.svg') }}" alt="Vill Icon">
                 </span>
@@ -186,7 +185,7 @@
               </a>
                     </div>
                     <div class="col-lg-3 col-sm-6 wow zoomIn">
-                        <a href="#featured-properties" aria-label="Click to visit all property" class="cs_iconbox cs_style_1 cs_white_bg cs_radius_15 cs_hover_3 text-center">
+                        <a href="{{ route('properties.index') }}" aria-label="Click to visit all property" class="cs_iconbox cs_style_1 cs_white_bg cs_radius_15 cs_hover_3 text-center">
                 <span class="cs_iconbox_icon cs_center cs_mb_31">
                 <img src="{{ asset('frontend-assets/img/icons/bunglo_icon.svg') }}" alt="Bunglow Icon">
                 </span>
@@ -194,7 +193,7 @@
               </a>
                     </div>
                     <div class="col-lg-3 col-sm-6 wow zoomIn">
-                        <a href="#featured-properties" aria-label="Click to visit all property" class="cs_iconbox cs_style_1 cs_white_bg cs_radius_15 cs_hover_3 text-center">
+                        <a href="{{ route('properties.index') }}" aria-label="Click to visit all property" class="cs_iconbox cs_style_1 cs_white_bg cs_radius_15 cs_hover_3 text-center">
                             <div class="cs_iconbox_icon cs_center cs_accent_color cs_mb_31">
                                 <img src="{{ asset('frontend-assets/img/icons/townhouse_icon.svg') }}" alt="Townhouse Icon">
                             </div>
@@ -202,7 +201,7 @@
                         </a>
                     </div>
                     <div class="col-lg-3 col-sm-6 wow zoomIn">
-                        <a href="#featured-properties" aria-label="Click to visit all property" class="cs_iconbox cs_style_1 cs_white_bg cs_radius_15 cs_hover_3 text-center">
+                        <a href="{{ route('properties.index') }}" aria-label="Click to visit all property" class="cs_iconbox cs_style_1 cs_white_bg cs_radius_15 cs_hover_3 text-center">
                 <span class="cs_iconbox_icon cs_center cs_mb_31">
                 <img src="{{ asset('frontend-assets/img/icons/loft_icon.svg') }}" alt="Loft Icon">
                 </span>
@@ -210,7 +209,7 @@
               </a>
                     </div>
                     <div class="col-lg-3 col-sm-6 wow zoomIn">
-                        <a href="#featured-properties" aria-label="Click to visit all property" class="cs_iconbox cs_style_1 cs_white_bg cs_radius_15 cs_hover_3 text-center">
+                        <a href="{{ route('properties.index', ['property_type' => 'Office']) }}" aria-label="Click to visit all property" class="cs_iconbox cs_style_1 cs_white_bg cs_radius_15 cs_hover_3 text-center">
                 <span class="cs_iconbox_icon cs_center cs_mb_31">
                 <img src="{{ asset('frontend-assets/img/icons/office_icon.svg') }}" alt="Office Icon">
                 </span>
@@ -452,7 +451,7 @@
                 <div class="cs_cta_text_wrapper">
                     <div class="cs_cta_text cs_accent_bg cs_radius_15 cs_center_column text-center position-relative">
                         <h2 class="cs_fs_48 cs_semibold cs_white_color cs_mb_50 cs_mb_lg_30 wow fadeInDown">Let's Find Your Dream House <br> with {{ $siteName }}!</h2>
-                        <a href="#featured-properties" aria-label="Click to visit all property" class="cs_btn cs_style_1 cs_white_bg cs_accent_color cs_medium cs_radius_7 wow fadeInUp">
+                        <a href="{{ route('properties.index') }}" aria-label="Click to visit all property" class="cs_btn cs_style_1 cs_white_bg cs_accent_color cs_medium cs_radius_7 wow fadeInUp">
               <span class="cs_btn_text">View More</span>
               </a>
                         <div class="cs_cta_shape_1 position-absolute">
