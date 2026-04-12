@@ -60,6 +60,23 @@ class PropertyManagementTest extends TestCase
         $this->assertSame($admin->id, $property->reviewed_by_admin_id);
     }
 
+    public function test_admin_property_detail_page_can_be_rendered(): void
+    {
+        $admin = Admin::factory()->create();
+        $property = Property::factory()->create([
+            'status' => 'approved',
+            'availability_status' => 'available',
+            'postal_code' => '1209',
+        ]);
+
+        $this->actingAs($admin, 'admin')
+            ->get(route('admin.properties.show', $property))
+            ->assertOk()
+            ->assertSee('Property Details')
+            ->assertSee($property->title)
+            ->assertSee('ZIP Code');
+    }
+
     public function test_admin_can_reject_a_property_with_note(): void
     {
         $admin = Admin::factory()->create();

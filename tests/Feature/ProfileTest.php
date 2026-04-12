@@ -184,6 +184,32 @@ class ProfileTest extends TestCase
         Storage::disk('public')->assertMissing($property->gallery_paths[1]);
     }
 
+    public function test_user_can_mark_property_as_sold_from_detail_page(): void
+    {
+        $user = User::factory()->create();
+        $property = Property::factory()->create([
+            'user_id' => $user->id,
+            'purpose' => 'sale',
+            'status' => 'approved',
+            'availability_status' => 'available',
+        ]);
+
+        $this->actingAs($user)
+            ->put(route('properties.availability.update', $property), [
+                'availability_status' => 'sold',
+            ])
+            ->assertRedirect(route('properties.show', $property).'#management-panel');
+
+        $property->refresh();
+
+        $this->assertSame('sold', $property->availability_status);
+
+        $this->actingAs($user)
+            ->get(route('properties.show', $property))
+            ->assertOk()
+            ->assertSee('Sold');
+    }
+
     public function test_profile_information_can_be_updated(): void
     {
         Storage::fake('public');

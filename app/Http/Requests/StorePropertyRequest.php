@@ -40,6 +40,7 @@ class StorePropertyRequest extends FormRequest
             'location' => ['required', 'string', 'max:255'],
             'district' => ['nullable', 'string', 'max:255'],
             'division' => ['nullable', 'string', 'max:255'],
+            'postal_code' => ['nullable', 'string', 'max:20'],
             'address' => ['required', 'string', 'max:1000'],
             'description' => ['nullable', 'string', 'max:4000'],
             'contact_phone' => ['nullable', 'string', 'max:30'],

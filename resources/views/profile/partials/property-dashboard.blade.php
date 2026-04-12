@@ -43,8 +43,10 @@
                     <tr>
                         <th class="cs_medium cs_heading_color">Recent Properties</th>
                         <th class="cs_medium cs_heading_color">Type</th>
-                        <th class="cs_medium cs_heading_color">Status</th>
+                        <th class="cs_medium cs_heading_color">Review</th>
+                        <th class="cs_medium cs_heading_color">Market</th>
                         <th class="cs_medium cs_heading_color">Submitted</th>
+                        <th class="cs_medium cs_heading_color">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -60,7 +62,17 @@
                             <td>
                                 <span class="cs_listing_status cs_listing_status_{{ $listing['status_tone'] }}">{{ $listing['status'] }}</span>
                             </td>
+                            <td>
+                                <span class="cs_listing_status cs_listing_status_{{ $listing['availability_tone'] ?? 'neutral' }}">{{ $listing['availability'] ?? 'Still Available' }}</span>
+                            </td>
                             <td>{{ $listing['submitted_at'] }}</td>
+                            <td>
+                                @if ($propertyAnalytics['table'] === 'properties' && $listing['id'])
+                                    <a href="{{ route('properties.show', $listing['id']) }}" class="cs_btn cs_style_1 cs_type_1 cs_accent_color cs_medium cs_radius_7 cs_table_action_btn">
+                                        <span>Details</span>
+                                    </a>
+                                @endif
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>

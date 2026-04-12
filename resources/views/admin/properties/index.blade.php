@@ -170,8 +170,12 @@
                             @endif
                           </p>
                         </div>
-                        <div class="text-secondary small">
-                          Submitted {{ optional($property->created_at)->format('d M Y, h:i A') ?: 'N/A' }}
+                        <div class="text-secondary small text-end">
+                          <div>Submitted {{ optional($property->created_at)->format('d M Y, h:i A') ?: 'N/A' }}</div>
+                          <a href="{{ route('admin.properties.show', $property) }}" class="btn btn-outline-primary btn-sm mt-2">
+                            <i class="bi bi-eye me-1"></i>
+                            Details
+                          </a>
                         </div>
                       </div>
 
@@ -199,6 +203,10 @@
                         <div>
                           <span class="meta-label">Contact Phone</span>
                           <div class="meta-value">{{ $property->contact_phone ?: 'Not set' }}</div>
+                        </div>
+                        <div>
+                          <span class="meta-label">Market</span>
+                          <div class="meta-value">{{ ucfirst($property->availability_status ?: 'available') }}</div>
                         </div>
                         <div>
                           <span class="meta-label">Bedrooms</span>
@@ -283,9 +291,11 @@
                   <th>Owner</th>
                   <th>Purpose</th>
                   <th>Status</th>
+                  <th>Market</th>
                   <th>Reviewed By</th>
                   <th>Reviewed At</th>
                   <th>Note</th>
+                  <th class="px-3">Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -305,13 +315,24 @@
                         {{ ucfirst($property->status) }}
                       </span>
                     </td>
+                    <td>
+                      <span class="review-status-badge review-status-{{ in_array($property->availability_status, ['sold', 'rented'], true) ? 'rejected' : 'approved' }}">
+                        {{ ucfirst($property->availability_status ?: 'available') }}
+                      </span>
+                    </td>
                     <td>{{ $property->reviewedBy?->name ?: 'Not recorded' }}</td>
                     <td>{{ optional($property->reviewed_at)->format('d M Y, h:i A') ?: 'Not reviewed' }}</td>
                     <td class="text-secondary small">{{ $property->review_note ?: 'No note' }}</td>
+                    <td class="px-3">
+                      <a href="{{ route('admin.properties.show', $property) }}" class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-eye me-1"></i>
+                        Details
+                      </a>
+                    </td>
                   </tr>
                 @empty
                   <tr>
-                    <td colspan="7" class="px-3 py-4 text-center text-secondary">No reviewed properties yet.</td>
+                    <td colspan="9" class="px-3 py-4 text-center text-secondary">No reviewed properties yet.</td>
                   </tr>
                 @endforelse
               </tbody>

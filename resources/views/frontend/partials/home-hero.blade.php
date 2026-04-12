@@ -17,6 +17,39 @@
             ],
         ]);
     }
+
+    $heroPropertyTypes = $homePropertyTypes
+        ->map(fn ($propertyType) => [
+            'label' => $propertyType->name,
+            'value' => $propertyType->filter_value,
+        ])
+        ->values();
+
+    if ($heroPropertyTypes->isEmpty()) {
+        $heroPropertyTypes = collect([
+            ['label' => 'House', 'value' => 'House'],
+            ['label' => 'Apartment', 'value' => 'Apartment'],
+            ['label' => 'Land', 'value' => 'Land'],
+            ['label' => 'Office', 'value' => 'Office'],
+        ]);
+    }
+
+    $heroLocations = $popularCities
+        ->pluck('name')
+        ->filter()
+        ->unique()
+        ->values();
+
+    if ($heroLocations->isEmpty()) {
+        $heroLocations = collect([
+            'Dhaka',
+            'Chattogram',
+            'Sylhet',
+            'Rajshahi',
+            'Khulna',
+            "Cox's Bazar",
+        ]);
+    }
 @endphp
 
 <section class="cs_hero cs_style_1">
@@ -60,277 +93,31 @@
                 </ul>
                 <div class="cs_tab_body cs_white_bg cs_radius_20">
                     <div class="cs_tab active" id="buy">
-                        <form class="cs_property_filter_form position-relative">
-                            <div class="cs_custom_select_wrapper">
-                                <label for="buy_house">Type</label>
-                                <select class="cs_fs_20 cs_semibold cs_custom_select" name="house" id="buy_house">
-                                    <option value="houses" selected>Houses</option>
-                                    <option value="open_house">Open House</option>
-                                    <option value="rent_house">Rent House</option>
-                                    <option value="sale_house">Sale House</option>
-                                    <option value="buy_house">Buy House</option>
-                                </select>
-                            </div>
-                            <div class="cs_custom_select_wrapper">
-                                <label for="buy_location">Location</label>
-                                <select class="cs_fs_20 cs_semibold cs_custom_select" name="location" id="buy_location">
-                                    <option value="dhaka" selected>Dhaka</option>
-                                    <option value="chattogram">Chattogram</option>
-                                    <option value="sylhet">Sylhet</option>
-                                    <option value="rajshahi">Rajshahi</option>
-                                    <option value="khulna">Khulna</option>
-                                    <option value="coxs_bazar">Cox's Bazar</option>
-                                </select>
-                            </div>
-                            <div class="cs_btns_wrapper">
-                                <button type="button" aria-label="Advanced Search Button" class="cs_btn cs_style_1 cs_type_1 cs_white_bg advanced_search cs_radius_7">
-                                    <span class="cs_btn_icon"><i class="fa-solid fa-sliders"></i></span>
-                                    <span class="cs_btn_text">Advanced Search</span>
-                                </button>
-                                <button type="submit" aria-label="Search Button" class="cs_btn cs_style_1 cs_accent_bg cs_white_color cs_radius_7">
-                                    <span class="cs_btn_icon"><i class="fa-solid fa-magnifying-glass"></i></span>
-                                    <span class="cs_btn_text">Search</span>
-                                </button>
-                            </div>
-                            <div class="cs_advanced_options_wrapper">
-                                <div class="row cs_gap_y_24">
-                                    <div class="col-lg-3 col-sm-6">
-                                        <select aria-label="Property Location" name="location" class="cs_fs_20 cs_semibold cs_custom_select">
-                                            <option selected>Any Location</option>
-                                            <option value="dhaka">Dhaka</option>
-                                            <option value="chattogram">Chattogram</option>
-                                            <option value="sylhet">Sylhet</option>
-                                            <option value="rajshahi">Rajshahi</option>
-                                            <option value="khulna">Khulna</option>
-                                            <option value="coxs_bazar">Cox's Bazar</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-lg-3 col-sm-6">
-                                        <select aria-label="Property Type" name="house" class="cs_fs_20 cs_semibold cs_custom_select">
-                                            <option selected>Any Property</option>
-                                            <option value="open_house">Open House</option>
-                                            <option value="rent_house">Rent House</option>
-                                            <option value="sale_house">Sale House</option>
-                                            <option value="buy_house">Buy House</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-lg-3 col-sm-6">
-                                        <select aria-label="Property Bedrooms" name="bedroom" class="cs_fs_20 cs_semibold cs_custom_select">
-                                            <option selected>Bedrooms</option>
-                                            <option value="1">1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                            <option value="4">4</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-lg-3 col-sm-6">
-                                        <select aria-label="Property Bathrooms" name="bathroom" class="cs_fs_20 cs_semibold cs_custom_select">
-                                            <option selected>Bathrooms</option>
-                                            <option value="1">1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                            <option value="4">4</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-lg-6 col-sm-12">
-                                        <div class="cs_range-slider-wrap">
-                                            <div class="cs_amount-wrap">
-                                                <input type="text" name="pvalue-range" class="cs_amount" readonly>
-                                            </div>
-                                            <div class="cs_slider_range"></div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3 col-sm-6">
-                                        <input type="text" name="minarea" placeholder="Min Area (sqft)">
-                                    </div>
-                                    <div class="col-lg-3 col-sm-6">
-                                        <input type="text" name="maxarea" placeholder="Max Area (sqft)">
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
+                        @include('frontend.partials.home-hero-search-form', [
+                            'tabId' => 'buy',
+                            'purpose' => 'sale',
+                            'defaultLocation' => 'Dhaka',
+                            'heroPropertyTypes' => $heroPropertyTypes,
+                            'heroLocations' => $heroLocations,
+                        ])
                     </div>
                     <div class="cs_tab" id="co_living">
-                        <form class="cs_property_filter_form position-relative">
-                            <div class="cs_custom_select_wrapper">
-                                <label for="co_living_house">Type</label>
-                                <select class="cs_fs_20 cs_semibold cs_custom_select" name="house" id="co_living_house">
-                                    <option value="houses" selected>Houses</option>
-                                    <option value="open_house">Open House</option>
-                                    <option value="rent_house">Rent House</option>
-                                    <option value="sale_house">Sale House</option>
-                                    <option value="buy_house">Buy House</option>
-                                </select>
-                            </div>
-                            <div class="cs_custom_select_wrapper">
-                                <label for="co_living_location">Location</label>
-                                <select class="cs_fs_20 cs_semibold cs_custom_select" name="location" id="co_living_location">
-                                    <option value="dhaka" selected>Dhaka</option>
-                                    <option value="chattogram">Chattogram</option>
-                                    <option value="sylhet">Sylhet</option>
-                                    <option value="rajshahi">Rajshahi</option>
-                                    <option value="khulna">Khulna</option>
-                                    <option value="coxs_bazar">Cox's Bazar</option>
-                                </select>
-                            </div>
-                            <div class="cs_btns_wrapper">
-                                <button type="button" aria-label="Advanced Search Button" class="cs_btn cs_style_1 cs_type_1 cs_white_bg advanced_search cs_radius_7">
-                                    <span class="cs_btn_icon"><i class="fa-solid fa-sliders"></i></span>
-                                    <span class="cs_btn_text">Advanced Search</span>
-                                </button>
-                                <button type="submit" aria-label="Search Button" class="cs_btn cs_style_1 cs_accent_bg cs_white_color cs_radius_7">
-                                    <span class="cs_btn_icon"><i class="fa-solid fa-magnifying-glass"></i></span>
-                                    <span class="cs_btn_text">Search</span>
-                                </button>
-                            </div>
-                            <div class="cs_advanced_options_wrapper">
-                                <div class="row cs_gap_y_24">
-                                    <div class="col-lg-3 col-sm-6">
-                                        <select aria-label="Property Location" name="location" class="cs_fs_20 cs_semibold cs_custom_select">
-                                            <option selected>Any Location</option>
-                                            <option value="dhaka">Dhaka</option>
-                                            <option value="chattogram">Chattogram</option>
-                                            <option value="sylhet">Sylhet</option>
-                                            <option value="rajshahi">Rajshahi</option>
-                                            <option value="khulna">Khulna</option>
-                                            <option value="coxs_bazar">Cox's Bazar</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-lg-3 col-sm-6">
-                                        <select aria-label="Property Type" name="house" class="cs_fs_20 cs_semibold cs_custom_select">
-                                            <option selected>Any Property</option>
-                                            <option value="open_house">Open House</option>
-                                            <option value="rent_house">Rent House</option>
-                                            <option value="sale_house">Sale House</option>
-                                            <option value="buy_house">Buy House</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-lg-3 col-sm-6">
-                                        <select aria-label="Property Bedrooms" name="bedroom" class="cs_fs_20 cs_semibold cs_custom_select">
-                                            <option selected>Bedrooms</option>
-                                            <option value="1">1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                            <option value="4">4</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-lg-3 col-sm-6">
-                                        <select aria-label="Property Bathrooms" name="bathroom" class="cs_fs_20 cs_semibold cs_custom_select">
-                                            <option selected>Bathrooms</option>
-                                            <option value="1">1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                            <option value="4">4</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-lg-6 col-sm-12">
-                                        <div class="cs_range-slider-wrap">
-                                            <div class="cs_amount-wrap">
-                                                <input type="text" name="pvalue-range" class="cs_amount" readonly>
-                                            </div>
-                                            <div class="cs_slider_range"></div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3 col-sm-6">
-                                        <input type="text" name="minarea" placeholder="Min Area (sqft)">
-                                    </div>
-                                    <div class="col-lg-3 col-sm-6">
-                                        <input type="text" name="maxarea" placeholder="Max Area (sqft)">
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
+                        @include('frontend.partials.home-hero-search-form', [
+                            'tabId' => 'co_living',
+                            'purpose' => 'rent',
+                            'defaultLocation' => 'Dhaka',
+                            'heroPropertyTypes' => $heroPropertyTypes,
+                            'heroLocations' => $heroLocations,
+                        ])
                     </div>
                     <div class="cs_tab" id="rent">
-                        <form class="cs_property_filter_form position-relative">
-                            <div class="cs_custom_select_wrapper">
-                                <label for="rent_house_type">Type</label>
-                                <select class="cs_fs_20 cs_semibold cs_custom_select" name="house" id="rent_house_type">
-                                    <option value="houses" selected>Houses</option>
-                                    <option value="open_house">Open House</option>
-                                    <option value="rent_house">Rent House</option>
-                                    <option value="sale_house">Sale House</option>
-                                    <option value="buy_house">Buy House</option>
-                                </select>
-                            </div>
-                            <div class="cs_custom_select_wrapper">
-                                <label for="rent_location">Location</label>
-                                <select class="cs_fs_20 cs_semibold cs_custom_select" name="location" id="rent_location">
-                                    <option value="dhaka" selected>Dhaka</option>
-                                    <option value="chattogram">Chattogram</option>
-                                    <option value="sylhet">Sylhet</option>
-                                    <option value="rajshahi">Rajshahi</option>
-                                    <option value="khulna">Khulna</option>
-                                    <option value="coxs_bazar">Cox's Bazar</option>
-                                </select>
-                            </div>
-                            <div class="cs_btns_wrapper">
-                                <button type="button" aria-label="Advanced Search Button" class="cs_btn cs_style_1 cs_type_1 cs_white_bg advanced_search cs_radius_7">
-                                    <span class="cs_btn_icon"><i class="fa-solid fa-sliders"></i></span>
-                                    <span class="cs_btn_text">Advanced Search</span>
-                                </button>
-                                <button type="submit" aria-label="Search Button" class="cs_btn cs_style_1 cs_accent_bg cs_white_color cs_radius_7">
-                                    <span class="cs_btn_icon"><i class="fa-solid fa-magnifying-glass"></i></span>
-                                    <span class="cs_btn_text">Search</span>
-                                </button>
-                            </div>
-                            <div class="cs_advanced_options_wrapper">
-                                <div class="row cs_gap_y_24">
-                                    <div class="col-lg-3 col-sm-6">
-                                        <select aria-label="Property Location" name="location" class="cs_fs_20 cs_semibold cs_custom_select">
-                                            <option selected>Any Location</option>
-                                            <option value="dhaka">Dhaka</option>
-                                            <option value="chattogram">Chattogram</option>
-                                            <option value="sylhet">Sylhet</option>
-                                            <option value="rajshahi">Rajshahi</option>
-                                            <option value="khulna">Khulna</option>
-                                            <option value="coxs_bazar">Cox's Bazar</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-lg-3 col-sm-6">
-                                        <select aria-label="Property Type" name="house" class="cs_fs_20 cs_semibold cs_custom_select">
-                                            <option selected>Any Property</option>
-                                            <option value="open_house">Open House</option>
-                                            <option value="rent_house">Rent House</option>
-                                            <option value="sale_house">Sale House</option>
-                                            <option value="buy_house">Buy House</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-lg-3 col-sm-6">
-                                        <select aria-label="Property Bedrooms" name="bedroom" class="cs_fs_20 cs_semibold cs_custom_select">
-                                            <option selected>Bedrooms</option>
-                                            <option value="1">1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                            <option value="4">4</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-lg-3 col-sm-6">
-                                        <select aria-label="Property Bathrooms" name="bathroom" class="cs_fs_20 cs_semibold cs_custom_select">
-                                            <option selected>Bathrooms</option>
-                                            <option value="1">1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                            <option value="4">4</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-lg-6 col-sm-12">
-                                        <div class="cs_range-slider-wrap">
-                                            <div class="cs_amount-wrap">
-                                                <input type="text" name="pvalue-range" class="cs_amount" readonly>
-                                            </div>
-                                            <div class="cs_slider_range"></div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3 col-sm-6">
-                                        <input type="text" name="minarea" placeholder="Min Area (sqft)">
-                                    </div>
-                                    <div class="col-lg-3 col-sm-6">
-                                        <input type="text" name="maxarea" placeholder="Max Area (sqft)">
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
+                        @include('frontend.partials.home-hero-search-form', [
+                            'tabId' => 'rent',
+                            'purpose' => 'rent',
+                            'defaultLocation' => 'Dhaka',
+                            'heroPropertyTypes' => $heroPropertyTypes,
+                            'heroLocations' => $heroLocations,
+                        ])
                     </div>
                 </div>
             </div>

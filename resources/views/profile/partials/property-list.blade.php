@@ -16,7 +16,8 @@
                     <tr>
                         <th class="cs_medium cs_heading_color">Property</th>
                         <th class="cs_medium cs_heading_color">Type</th>
-                        <th class="cs_medium cs_heading_color">Status</th>
+                        <th class="cs_medium cs_heading_color">Review</th>
+                        <th class="cs_medium cs_heading_color">Market</th>
                         <th class="cs_medium cs_heading_color">Price</th>
                         <th class="cs_medium cs_heading_color">Submitted</th>
                         @if ($propertyAnalytics['table'] === 'properties')
@@ -37,17 +38,25 @@
                             <td>
                                 <span class="cs_listing_status cs_listing_status_{{ $listing['status_tone'] }}">{{ $listing['status'] }}</span>
                             </td>
+                            <td>
+                                <span class="cs_listing_status cs_listing_status_{{ $listing['availability_tone'] ?? 'neutral' }}">{{ $listing['availability'] ?? 'Still Available' }}</span>
+                            </td>
                             <td>{{ $listing['price'] ?: 'Price not set' }}</td>
                             <td>{{ $listing['submitted_at'] }}</td>
                             @if ($propertyAnalytics['table'] === 'properties' && $listing['id'])
                                 <td>
-                                    <form method="POST" action="{{ route('properties.destroy', $listing['id']) }}" onsubmit="return confirm('Delete this property from your account?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="cs_btn cs_style_1 cs_type_1 cs_accent_color cs_medium cs_radius_7 cs_table_action_btn">
-                                            <span>Delete</span>
-                                        </button>
-                                    </form>
+                                    <div class="cs_table_action_group">
+                                        <a href="{{ route('properties.show', $listing['id']) }}" class="cs_btn cs_style_1 cs_accent_bg cs_white_color cs_medium cs_radius_7 cs_table_action_btn">
+                                            <span>Details</span>
+                                        </a>
+                                        <form method="POST" action="{{ route('properties.destroy', $listing['id']) }}" onsubmit="return confirm('Delete this property from your account?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="cs_btn cs_style_1 cs_type_1 cs_accent_color cs_medium cs_radius_7 cs_table_action_btn">
+                                                <span>Delete</span>
+                                            </button>
+                                        </form>
+                                    </div>
                                 </td>
                             @endif
                         </tr>

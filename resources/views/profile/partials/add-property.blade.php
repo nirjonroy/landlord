@@ -96,6 +96,12 @@
             @error('division')<div class="cs_form_error">{{ $message }}</div>@enderror
         </div>
 
+        <div class="col-md-4">
+            <label for="postal_code_property">ZIP / Postal Code</label>
+            <input type="text" name="postal_code" id="postal_code_property" class="cs_form_field cs_radius_7 @error('postal_code') is-invalid @enderror" value="{{ old('postal_code', $user->postal_code) }}" placeholder="1209">
+            @error('postal_code')<div class="cs_form_error">{{ $message }}</div>@enderror
+        </div>
+
         <div class="col-lg-12">
             <label for="property_address">Full Address</label>
             <textarea name="address" id="property_address" rows="4" class="cs_form_field cs_radius_7 @error('address') is-invalid @enderror" placeholder="House, road, area, thana, district">{{ old('address', $user->present_address) }}</textarea>

@@ -56,26 +56,45 @@
             color: var(--heading-color);
         }
 
-        .cs_listing_filters_form .cs_filter_heading_left,
-        .cs_listing_filters_form .cs_filter_heading_right {
-            width: 100%;
+        .cs_listing_filter_grid {
+            display: grid;
+            gap: 18px;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
         }
 
-        .cs_listing_filters_form .cs_filter_heading_right {
+        .cs_listing_filter_field label {
+            display: block;
+            margin-bottom: 10px;
+            color: #64748b;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .cs_listing_filter_field input,
+        .cs_listing_filter_field select {
+            width: 100%;
+            min-height: 60px;
+            border: 1px solid rgba(15, 23, 42, 0.12);
+            border-radius: 14px;
+            padding: 14px 18px;
+            background: #fff;
+            color: var(--heading-color);
+        }
+
+        .cs_listing_filter_field .cs_custom_select {
+            margin-left: 0;
+        }
+
+        .cs_listing_filter_actions {
             display: flex;
-            align-items: center;
+            align-items: end;
             gap: 12px;
             flex-wrap: wrap;
         }
 
-        .cs_listing_filters_form .cs_search_form {
-            width: 100%;
-            max-width: 320px;
-        }
-
-        .cs_listing_filters_form .cs_search_form input,
-        .cs_listing_filters_form .cs_price_range input {
-            width: 100%;
+        .cs_listing_filter_actions .cs_btn {
+            min-width: 150px;
+            justify-content: center;
         }
 
         .cs_listing_hint {
@@ -132,6 +151,28 @@
             font-size: 14px;
         }
 
+        .cs_listing_card .cs_card_content {
+            display: flex;
+            flex-direction: column;
+            height: calc(100% - 250px);
+        }
+
+        .cs_listing_card_actions {
+            display: flex;
+            gap: 12px;
+            align-items: stretch;
+        }
+
+        .cs_listing_card_actions .cs_card_price {
+            flex: 1;
+        }
+
+        .cs_listing_detail_btn {
+            min-width: 132px;
+            padding: 0 18px;
+            justify-content: center;
+        }
+
         .cs_listing_empty_state {
             padding: 40px 34px;
             border: 1px dashed rgba(15, 23, 42, 0.18);
@@ -182,6 +223,10 @@
                 grid-template-columns: repeat(2, minmax(0, 1fr));
             }
 
+            .cs_listing_filter_grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
             .cs_listing_map_box,
             .cs_listing_map_box iframe {
                 min-height: 520px;
@@ -189,17 +234,25 @@
         }
 
         @media (max-width: 767px) {
-            .cs_listing_metric_grid {
+            .cs_listing_metric_grid,
+            .cs_listing_filter_grid {
                 grid-template-columns: 1fr;
             }
 
-            .cs_listing_filters_form .cs_filter_heading_right {
-                flex-direction: column;
+            .cs_listing_filter_actions {
                 align-items: stretch;
             }
 
-            .cs_listing_filters_form .cs_search_form {
-                max-width: none;
+            .cs_listing_filter_actions .cs_btn {
+                width: 100%;
+            }
+
+            .cs_listing_card_actions {
+                flex-direction: column;
+            }
+
+            .cs_listing_detail_btn {
+                width: 100%;
             }
 
             .cs_listing_map_box,
@@ -244,43 +297,59 @@
 
                 <form method="GET" action="{{ route('properties.index') }}" class="cs_listing_filters_form">
                     <div class="cs_filter_heading cs_style_1 cs_mb_39 wow fadeInDown">
-                        <div class="cs_filter_heading_left cs_type_1">
-                            <select aria-label="Property type" name="property_type" class="cs_custom_select" {{ $supportsPropertyTypeFilter ? '' : 'disabled' }}>
-                                <option value="">Types</option>
-                                @foreach ($availablePropertyTypes as $propertyType)
-                                    <option value="{{ $propertyType->filter_value }}" @selected(request('property_type') === $propertyType->filter_value)>{{ $propertyType->name }}</option>
-                                @endforeach
-                            </select>
-                            <select aria-label="Property status" name="purpose" class="cs_custom_select">
-                                <option value="">Status</option>
-                                <option value="rent" @selected(request('purpose') === 'rent')>Rent</option>
-                                <option value="sale" @selected(request('purpose') === 'sale')>Sale</option>
-                            </select>
-                            <div class="cs_price_range">
-                                <div class="cs_price_range_in">
-                                    <div>
-                                        <span>Min</span>
-                                        <input type="text" name="min_price" value="{{ request('min_price') }}" placeholder="৳10,000">
-                                    </div>
-                                    <div>
-                                        <span>Max</span>
-                                        <input type="text" name="max_price" value="{{ request('max_price') }}" placeholder="৳5,00,00,000">
-                                    </div>
+                        <div class="w-100">
+                            <div class="cs_listing_filter_grid">
+                                <div class="cs_listing_filter_field">
+                                    <label for="listing_search">Address or neighborhood</label>
+                                    <input type="text" id="listing_search" name="search" value="{{ request('search') }}" placeholder="Address, title, neighborhood, or owner" data-location-search="search">
                                 </div>
-                            </div>
-                            <div class="cs_filter_heading_right cs_type_1">
-                                <div class="cs_search_form">
-                                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search by title, area, district, or owner">
+                                <div class="cs_listing_filter_field">
+                                    <label for="listing_location">City / Area</label>
+                                    <input type="text" id="listing_location" name="location" value="{{ request('location') }}" placeholder="City or neighborhood" data-location-search="location">
                                 </div>
-                                <button type="submit" aria-label="Apply filter button" class="cs_btn cs_style_1 cs_accent_bg cs_white_color cs_radius_7">
-                                    <span class="cs_btn_text">Filters</span>
-                                    <span class="cs_btn_icon"><i class="fa-solid fa-sliders"></i></span>
-                                </button>
-                                @if ($activeFiltersCount > 0)
-                                    <a href="{{ route('properties.index') }}" aria-label="Reset filters button" class="cs_btn cs_style_1 cs_type_1 cs_accent_color cs_radius_7">
-                                        <span class="cs_btn_text">Reset</span>
-                                    </a>
-                                @endif
+                                <div class="cs_listing_filter_field">
+                                    <label for="listing_postal_code">ZIP Code</label>
+                                    <input type="text" id="listing_postal_code" name="postal_code" value="{{ request('postal_code') }}" placeholder="1209" inputmode="numeric" data-location-search="postal">
+                                </div>
+                                <div class="cs_listing_filter_field">
+                                    <label for="listing_property_type">Property Type</label>
+                                    <select id="listing_property_type" aria-label="Property type" name="property_type" class="cs_custom_select" {{ $supportsPropertyTypeFilter ? '' : 'disabled' }}>
+                                        <option value="">Any Type</option>
+                                        @foreach ($availablePropertyTypes as $propertyType)
+                                            <option value="{{ $propertyType->filter_value }}" @selected(request('property_type') === $propertyType->filter_value)>{{ $propertyType->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="cs_listing_filter_field">
+                                    <label for="listing_purpose">Listing Purpose</label>
+                                    <select id="listing_purpose" aria-label="Property status" name="purpose" class="cs_custom_select">
+                                        <option value="">Any Purpose</option>
+                                        <option value="rent" @selected(request('purpose') === 'rent')>Rent</option>
+                                        <option value="sale" @selected(request('purpose') === 'sale')>Sale</option>
+                                    </select>
+                                </div>
+                                <div class="cs_listing_filter_field">
+                                    <label for="listing_min_price">Min Price</label>
+                                    <input type="text" id="listing_min_price" name="min_price" value="{{ request('min_price') }}" placeholder="BDT 10,000">
+                                </div>
+                                <div class="cs_listing_filter_field">
+                                    <label for="listing_max_price">Max Price</label>
+                                    <input type="text" id="listing_max_price" name="max_price" value="{{ request('max_price') }}" placeholder="BDT 5,00,00,000">
+                                </div>
+                                <div class="cs_listing_filter_actions">
+                                    <button type="button" class="cs_btn cs_style_1 cs_type_1 cs_accent_color cs_radius_7 js-use-current-location">
+                                        <span class="cs_btn_text">Current Location</span>
+                                    </button>
+                                    <button type="submit" aria-label="Apply filter button" class="cs_btn cs_style_1 cs_accent_bg cs_white_color cs_radius_7">
+                                        <span class="cs_btn_text">Search</span>
+                                        <span class="cs_btn_icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+                                    </button>
+                                    @if ($activeFiltersCount > 0)
+                                        <a href="{{ route('properties.index') }}" aria-label="Reset filters button" class="cs_btn cs_style_1 cs_type_1 cs_accent_color cs_radius_7">
+                                            <span class="cs_btn_text">Reset</span>
+                                        </a>
+                                    @endif
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -293,7 +362,7 @@
                     <div class="col-xl-7" id="listing-results">
                         <div class="cs_propducts_view_area">
                             <div class="cs_listing_meta_row wow fadeInUp">
-                                <p>Use the filters to narrow listings by purpose, price range, and text search.</p>
+                                <p>Use address, ZIP code, city, price, or your current location to narrow the active listings.</p>
                                 <p>{{ $listingStats['total'] }} result{{ $listingStats['total'] === 1 ? '' : 's' }} found</p>
                             </div>
 
@@ -312,7 +381,7 @@
                                                         <p class="cs_card_subtitle cs_fs_14 cs_mb_10">
                                                             <i class="fa-solid fa-location-dot"></i>{{ $listing['location'] }}
                                                         </p>
-                                                        <p class="cs_listing_owner">{{ $listing['property_type'] }} • {{ $listing['owner_name'] }}</p>
+                                                        <p class="cs_listing_owner">{{ $listing['property_type'] }} • {{ $listing['owner_name'] }}@if(!empty($listing['postal_code'])) • ZIP {{ $listing['postal_code'] }}@endif</p>
                                                         <ul class="cs_card_features_list cs_mp_0">
                                                             <li><span class="cs_accent_color"><i class="fa-solid fa-bed"></i></span> {{ $listing['beds_label'] }}</li>
                                                             <li><span class="cs_accent_color"><i class="fa-solid fa-warehouse"></i></span> {{ $listing['garage_label'] }}</li>
@@ -320,14 +389,13 @@
                                                             <li><span class="cs_accent_color"><i class="fa-solid fa-expand"></i></span> {{ $listing['area_label'] }}</li>
                                                         </ul>
                                                     </div>
-                                                    <div class="cs_card_btns_wrapper">
+                                                    <div class="cs_card_btns_wrapper cs_listing_card_actions">
                                                         <div class="cs_card_price cs_radius_10">
                                                             <h3 class="cs_card_price_for cs_fs_16 cs_normal cs_body_font mb-0">{{ $listing['purpose_label'] }}</h3>
                                                             <h3 class="cs_card_price_value cs_fs_24 cs_semibold cs_body_font mb-0">{{ $listing['price_label'] }}</h3>
                                                         </div>
-                                                        <a href="{{ $listing['action_url'] }}" aria-label="Ask about {{ $listing['title'] }}" class="cs_card_btn cs_center cs_accent_bg cs_white_color cs_radius_7">
-                                                            <span><i class="fa-solid fa-arrow-right"></i></span>
-                                                            <span><i class="fa-solid fa-arrow-right"></i></span>
+                                                        <a href="{{ $listing['action_url'] }}" aria-label="{{ $listing['action_label'] }} for {{ $listing['title'] }}" class="cs_btn cs_style_1 cs_accent_bg cs_white_color cs_radius_7 cs_listing_detail_btn">
+                                                            <span class="cs_btn_text">{{ $listing['action_label'] }}</span>
                                                         </a>
                                                     </div>
                                                 </div>

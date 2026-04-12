@@ -150,6 +150,13 @@
             min-width: auto;
             font-size: 14px;
         }
+
+        .cs_table_action_group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
     </style>
 @endsection
 

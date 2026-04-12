@@ -87,6 +87,7 @@ class ListingAnalytics
             'table' => null,
             'type_column' => null,
             'status_column' => null,
+            'availability_column' => null,
             'total_posts' => 0,
             'rent_posts' => 0,
             'sale_posts' => 0,
@@ -108,6 +109,7 @@ class ListingAnalytics
 
         $typeColumn = $this->resolveColumn($columns, ['type', 'purpose', 'listing_type', 'property_for', 'ad_type', 'post_type']);
         $statusColumn = $this->resolveColumn($columns, ['status', 'approval_status', 'listing_status', 'publish_status', 'post_status']);
+        $availabilityColumn = $this->resolveColumn($columns, ['availability_status', 'availability', 'market_status']);
         $titleColumn = $this->resolveColumn($columns, ['title', 'name', 'property_title', 'post_title', 'headline']);
         $locationColumn = $this->resolveColumn($columns, ['location', 'address', 'property_address', 'area_name', 'district', 'city']);
         $priceColumn = $this->resolveColumn($columns, ['price', 'amount', 'sale_price', 'rent_price', 'expected_price']);
@@ -123,6 +125,7 @@ class ListingAnalytics
             'table' => $listingTable,
             'type_column' => $typeColumn,
             'status_column' => $statusColumn,
+            'availability_column' => $availabilityColumn,
             'total_posts' => (int) (clone $baseQuery)->count(),
             'rent_posts' => 0,
             'sale_posts' => 0,
@@ -145,13 +148,15 @@ class ListingAnalytics
             ->orderByDesc($orderColumn)
             ->limit($limit)
             ->get()
-            ->map(function (object $listing) use ($locationColumn, $priceColumn, $statusColumn, $titleColumn, $typeColumn) {
+            ->map(function (object $listing) use ($availabilityColumn, $locationColumn, $priceColumn, $statusColumn, $titleColumn, $typeColumn) {
                 return [
                     'id' => $listing->id ?? null,
                     'title' => $this->listingTitle($listing, $titleColumn),
                     'purpose' => $this->listingPurpose($listing, $typeColumn),
                     'status' => $this->listingStatus($listing, $statusColumn),
                     'status_tone' => $this->listingStatusTone($listing, $statusColumn),
+                    'availability' => $this->listingAvailability($listing, $availabilityColumn, $typeColumn),
+                    'availability_tone' => $this->listingAvailabilityTone($listing, $availabilityColumn),
                     'location' => $locationColumn ? $this->stringValue($listing->{$locationColumn} ?? null) : null,
                     'price' => $priceColumn ? $this->listingPrice($listing->{$priceColumn} ?? null) : null,
                     'submitted_at' => $this->listingDate($listing->created_at ?? null),
@@ -259,6 +264,30 @@ class ListingAnalytics
         };
     }
 
+    private function listingAvailability(object $listing, ?string $availabilityColumn, ?string $typeColumn): string
+    {
+        $value = $availabilityColumn ? strtolower((string) ($listing->{$availabilityColumn} ?? '')) : '';
+        $purpose = $typeColumn ? strtolower((string) ($listing->{$typeColumn} ?? '')) : '';
+
+        return match ($value) {
+            'sold' => 'Sold',
+            'rented' => $purpose === 'rent' ? 'Rented' : 'Rented',
+            'available', '' => 'Still Available',
+            default => Str::title(str_replace(['-', '_'], ' ', $value)),
+        };
+    }
+
+    private function listingAvailabilityTone(object $listing, ?string $availabilityColumn): string
+    {
+        $value = $availabilityColumn ? strtolower((string) ($listing->{$availabilityColumn} ?? '')) : '';
+
+        return match ($value) {
+            'sold', 'rented', 'unavailable', 'closed' => 'danger',
+            'available', '' => 'success',
+            default => 'neutral',
+        };
+    }
+
     private function listingPrice(mixed $value): ?string
     {
         if ($value === null || $value === '') {
@@ -266,7 +295,7 @@ class ListingAnalytics
         }
 
         if (is_numeric($value)) {
-            return '৳'.number_format((float) $value, 0);
+            return 'BDT '.number_format((float) $value, 0);
         }
 
         return $this->stringValue($value);

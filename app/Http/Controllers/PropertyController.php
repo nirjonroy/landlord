@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class PropertyController extends Controller
 {
@@ -23,6 +24,7 @@ class PropertyController extends Controller
         $property = new Property($validated);
         $property->user_id = $user->id;
         $property->status = 'pending';
+        $property->availability_status = 'available';
         $property->contact_phone = $validated['contact_phone'] ?? $user->phone;
 
         if ($request->hasFile('thumbnail_image')) {
@@ -39,6 +41,25 @@ class PropertyController extends Controller
 
         return Redirect::to(route('profile.edit', ['tab' => 'my_property']).'#my_property')
             ->with('status', 'property-created');
+    }
+
+    public function updateAvailability(Request $request, Property $property): RedirectResponse
+    {
+        abort_unless((int) $property->user_id === (int) $request->user()->id, 403);
+
+        $allowedStatuses = strtolower((string) $property->purpose) === 'rent'
+            ? ['available', 'rented']
+            : ['available', 'sold'];
+
+        $validated = $request->validate([
+            'availability_status' => ['required', Rule::in($allowedStatuses)],
+        ]);
+
+        $property->availability_status = $validated['availability_status'];
+        $property->save();
+
+        return Redirect::to(route('properties.show', $property).'#management-panel')
+            ->with('status', 'property-availability-updated');
     }
 
     public function destroy(Request $request, Property $property): RedirectResponse

@@ -41,6 +41,7 @@ class PropertyListingPageTest extends TestCase
             'purpose' => 'rent',
             'property_type' => 'Apartment',
             'status' => 'approved',
+            'availability_status' => 'available',
             'price' => 65000,
             'area_size' => 1650,
             'bedrooms' => 3,
@@ -49,6 +50,7 @@ class PropertyListingPageTest extends TestCase
             'location' => 'Banani, Dhaka',
             'district' => 'Dhaka',
             'division' => 'Dhaka',
+            'postal_code' => '1213',
             'address' => 'Road 11, Banani, Dhaka',
             'description' => 'Approved live listing.',
             'contact_phone' => '01700000000',
@@ -60,13 +62,32 @@ class PropertyListingPageTest extends TestCase
             'purpose' => 'sale',
             'property_type' => 'Land',
             'status' => 'pending',
+            'availability_status' => 'available',
             'price' => 35000000,
             'area_size' => 3600,
             'location' => 'Gulshan, Dhaka',
             'district' => 'Dhaka',
             'division' => 'Dhaka',
+            'postal_code' => '1212',
             'address' => 'Gulshan, Dhaka',
             'description' => 'Should stay hidden from the public page.',
+            'contact_phone' => '01700000000',
+        ]);
+
+        Property::query()->create([
+            'user_id' => $user->id,
+            'title' => 'Sold Niketan Flat',
+            'purpose' => 'sale',
+            'property_type' => 'Apartment',
+            'status' => 'approved',
+            'availability_status' => 'sold',
+            'price' => 15000000,
+            'location' => 'Niketan, Dhaka',
+            'district' => 'Dhaka',
+            'division' => 'Dhaka',
+            'postal_code' => '1212',
+            'address' => 'Niketan, Dhaka',
+            'description' => 'Should stay hidden from the public page because it is sold.',
             'contact_phone' => '01700000000',
         ]);
 
@@ -75,5 +96,35 @@ class PropertyListingPageTest extends TestCase
             ->assertSee('Approved Live Listings')
             ->assertSee('Banani Approved Flat')
             ->assertDontSee('Pending Gulshan Plot');
+
+        $this->get(route('properties.index', ['location' => 'Banani']))
+            ->assertOk()
+            ->assertSee('Banani Approved Flat')
+            ->assertDontSee('Sold Niketan Flat')
+            ->assertDontSee('Pending Gulshan Plot');
+
+        $this->get(route('properties.index', ['postal_code' => '1213']))
+            ->assertOk()
+            ->assertSee('Banani Approved Flat')
+            ->assertDontSee('Pending Gulshan Plot');
+    }
+
+    public function test_property_detail_page_can_be_viewed_for_approved_listing(): void
+    {
+        $user = User::factory()->create(['name' => 'Detail Owner']);
+
+        $property = Property::factory()->create([
+            'user_id' => $user->id,
+            'title' => 'Dhanmondi Detail Flat',
+            'status' => 'approved',
+            'availability_status' => 'available',
+            'postal_code' => '1209',
+        ]);
+
+        $this->get(route('properties.show', $property))
+            ->assertOk()
+            ->assertSee('Dhanmondi Detail Flat')
+            ->assertSee('Still Available')
+            ->assertSee('ZIP Code');
     }
 }

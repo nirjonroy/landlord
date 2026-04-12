@@ -18,6 +18,7 @@ class HomepagePropertySeeder extends Seeder
             [
                 'title' => 'Bashundhara Lake View Apartment',
                 'location' => 'Bashundhara R/A, Dhaka',
+                'postal_code' => '1229',
                 'purpose' => 'rent',
                 'property_type' => 'Apartment',
                 'price' => 45000,
@@ -31,6 +32,7 @@ class HomepagePropertySeeder extends Seeder
             [
                 'title' => 'Dhanmondi Family Flat',
                 'location' => 'Dhanmondi, Dhaka',
+                'postal_code' => '1209',
                 'purpose' => 'rent',
                 'property_type' => 'Apartment',
                 'price' => 38000,
@@ -44,6 +46,7 @@ class HomepagePropertySeeder extends Seeder
             [
                 'title' => 'Uttara Modern Apartment',
                 'location' => 'Sector 7, Uttara, Dhaka',
+                'postal_code' => '1230',
                 'purpose' => 'rent',
                 'property_type' => 'Apartment',
                 'price' => 52000,
@@ -57,6 +60,7 @@ class HomepagePropertySeeder extends Seeder
             [
                 'title' => 'Sylhet Garden Home',
                 'location' => 'Zindabazar, Sylhet',
+                'postal_code' => '3100',
                 'purpose' => 'rent',
                 'property_type' => 'House',
                 'price' => 30000,
@@ -70,6 +74,7 @@ class HomepagePropertySeeder extends Seeder
             [
                 'title' => 'Purbachal Residential Plot',
                 'location' => 'Sector 12, Purbachal, Narayanganj',
+                'postal_code' => '1460',
                 'purpose' => 'sale',
                 'property_type' => 'Plot',
                 'price' => 8500000,
@@ -83,6 +88,7 @@ class HomepagePropertySeeder extends Seeder
             [
                 'title' => 'Chattogram Hillside Duplex',
                 'location' => 'Khulshi, Chattogram',
+                'postal_code' => '4202',
                 'purpose' => 'sale',
                 'property_type' => 'Duplex',
                 'price' => 14500000,
@@ -96,6 +102,7 @@ class HomepagePropertySeeder extends Seeder
             [
                 'title' => 'Rajshahi Mango Garden House',
                 'location' => 'Padma Residential Area, Rajshahi',
+                'postal_code' => '6000',
                 'purpose' => 'sale',
                 'property_type' => 'House',
                 'price' => 7200000,
@@ -109,6 +116,7 @@ class HomepagePropertySeeder extends Seeder
             [
                 'title' => "Cox's Bazar Beachfront Apartment",
                 'location' => "Kolatoli, Cox's Bazar",
+                'postal_code' => '4700',
                 'purpose' => 'sale',
                 'property_type' => 'Apartment',
                 'price' => 11000000,

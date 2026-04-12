@@ -35,7 +35,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/about', [HomeController::class, 'about'])->name('about');
 Route::get('/properties', [PropertyListingController::class, 'index'])->name('properties.index');
+Route::get('/properties/{property}', [PropertyListingController::class, 'show'])->name('properties.show');
 Route::get('/properties/{property}/image', [PropertyListingController::class, 'image'])->name('properties.image');
+Route::get('/properties/{property}/gallery/{index}', [PropertyListingController::class, 'galleryImage'])->name('properties.gallery.image');
 Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
 Route::get('/blog/{blogPost:slug}', [BlogController::class, 'show'])->name('blog.show');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
@@ -91,6 +93,7 @@ Route::middleware('auth:admin')->prefix('admin')->name('admin.')->group(function
     Route::delete('property-types/{propertyType}', [AdminPropertyTypeController::class, 'destroy'])->name('property-types.destroy');
     Route::get('users', [UserManagementController::class, 'index'])->name('users.index');
     Route::get('properties', [PropertyManagementController::class, 'index'])->name('properties.index');
+    Route::get('properties/{property}', [PropertyManagementController::class, 'show'])->name('properties.show');
     Route::put('properties/{property}/review', [PropertyManagementController::class, 'updateReview'])->name('properties.review.update');
     Route::get('site-info', [DashboardController::class, 'editSiteInfo'])->name('site-info.edit');
     Route::get('site-info/logo', [DashboardController::class, 'siteLogo'])->name('site-info.logo');
@@ -115,6 +118,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/profile/files/{type}/{index?}', [ProfileController::class, 'file'])->name('profile.files.show');
     Route::post('/properties', [PropertyController::class, 'store'])->name('properties.store');
+    Route::put('/properties/{property}/availability', [PropertyController::class, 'updateAvailability'])->name('properties.availability.update');
     Route::delete('/properties/{property}', [PropertyController::class, 'destroy'])->name('properties.destroy');
 });
 

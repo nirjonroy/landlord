@@ -55,6 +55,7 @@
         listAndGridView();
         lightGallery();
         modalVideo();
+        currentLocationSearch();
         scrollUp();
         loadMore();
         roundPercentInit();
@@ -590,7 +591,93 @@
         }
     }
     /*===============================================================
-      14. Scroll Up
+      14. Current Location Search
+    =================================================================*/
+    function currentLocationSearch() {
+        $(".js-use-current-location")
+            .off("click.csCurrentLocation")
+            .on("click.csCurrentLocation", function() {
+                var $button = $(this);
+                var $form = $button.closest("form");
+                var $searchInput = $form.find("[data-location-search='search']").first();
+                var $locationInput = $form.find("[data-location-search='location']").first();
+                var $postalInput = $form.find("[data-location-search='postal']").first();
+                var originalLabel = $button.find(".cs_btn_text").text() || "Current Location";
+
+                if (!navigator.geolocation) {
+                    window.alert("This browser does not support location detection.");
+                    return;
+                }
+
+                $button.prop("disabled", true);
+                $button.find(".cs_btn_text").text("Detecting...");
+
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        var lat = position.coords.latitude;
+                        var lng = position.coords.longitude;
+
+                        fetch("https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=" + encodeURIComponent(lat) + "&lon=" + encodeURIComponent(lng) + "&zoom=18&addressdetails=1")
+                            .then(function(response) {
+                                if (!response.ok) {
+                                    throw new Error("reverse-geocode-failed");
+                                }
+                                return response.json();
+                            })
+                            .then(function(payload) {
+                                var address = payload.address || {};
+                                var city =
+                                    address.city ||
+                                    address.town ||
+                                    address.village ||
+                                    address.state_district ||
+                                    "";
+                                var locality =
+                                    address.suburb ||
+                                    address.neighbourhood ||
+                                    address.quarter ||
+                                    address.road ||
+                                    "";
+                                var postalCode = address.postcode || "";
+                                var searchParts = [address.road, locality, city].filter(Boolean);
+                                var locationParts = [locality, city].filter(Boolean);
+
+                                if ($searchInput.length) {
+                                    $searchInput.val(searchParts.length ? searchParts.join(", ") : city);
+                                }
+
+                                if ($locationInput.length) {
+                                    $locationInput.val(locationParts.length ? locationParts.join(", ") : city);
+                                }
+
+                                if ($postalInput.length) {
+                                    $postalInput.val(postalCode);
+                                }
+
+                                $form.trigger("submit");
+                            })
+                            .catch(function() {
+                                window.alert("Current location was detected, but the address lookup failed. Please type the city or ZIP code manually.");
+                            })
+                            .finally(function() {
+                                $button.prop("disabled", false);
+                                $button.find(".cs_btn_text").text(originalLabel);
+                            });
+                    },
+                    function() {
+                        $button.prop("disabled", false);
+                        $button.find(".cs_btn_text").text(originalLabel);
+                        window.alert("Location access was blocked. Allow location access and try again.");
+                    }, {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 0,
+                    }
+                );
+            });
+    }
+    /*===============================================================
+      15. Scroll Up
     =================================================================*/
     function scrollUp() {
         $(".cs_scrolltop_btn").on("click", function(e) {
@@ -612,7 +699,7 @@
         }
     }
     /*===============================================================
-     15. Load More Portfolio Items
+     16. Load More Portfolio Items
     =================================================================*/
     function loadMore() {
         $(".cs_property_item").slice(0, 4).show();
@@ -628,7 +715,7 @@
         });
     }
     /*===============================================================
-      16. Round Percent
+      17. Round Percent
     =================================================================*/
     function roundPercentInit() {
         if ($.exists(".cs_round_progress_percentage")) {
@@ -656,7 +743,7 @@
         }
     }
     /*==========================================================
-      17. Smooth Page Scroll
+      18. Smooth Page Scroll
     =============================================================*/
     function smoothScroll() {
         if (typeof Lenis !== "undefined") {

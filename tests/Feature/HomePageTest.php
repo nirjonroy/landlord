@@ -28,6 +28,7 @@ class HomePageTest extends TestCase
             ->assertSee('News from Land Site')
             ->assertSee('Sign In')
             ->assertSee('Create Account')
+            ->assertSee('Enter an address, neighborhood, city, or ZIP code')
             ->assertSee('Rent Listings')
             ->assertSee('cs_mobile_nav_actions', false)
             ->assertDontSee('Home Default')

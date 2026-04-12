@@ -12,6 +12,7 @@ class HomepageProperty extends Model
     protected $fillable = [
         'title',
         'location',
+        'postal_code',
         'purpose',
         'property_type',
         'price',

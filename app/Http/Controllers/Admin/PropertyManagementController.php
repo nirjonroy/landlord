@@ -39,6 +39,25 @@ class PropertyManagementController extends Controller
         ]);
     }
 
+    public function show(Property $property): View
+    {
+        $siteInfo = $this->siteInfo();
+
+        return view('admin.properties.show', [
+            'admin' => Auth::guard('admin')->user(),
+            'siteInfo' => $siteInfo,
+            'siteName' => $siteInfo->site_name ?: config('app.name', 'Land Site'),
+            'siteLogoUrl' => $this->siteLogoUrl($siteInfo),
+            'property' => $property->loadMissing(['user', 'reviewedBy']),
+            'reviewTone' => $this->reviewTone((string) $property->status),
+            'reviewLabel' => $this->reviewLabel((string) $property->status),
+            'availabilityTone' => $this->availabilityTone((string) $property->availability_status),
+            'availabilityLabel' => $this->availabilityLabel((string) $property->availability_status, (string) $property->purpose),
+            'thumbnailUrl' => $this->thumbnailUrl($property),
+            'galleryUrls' => $this->galleryUrls($property),
+        ]);
+    }
+
     public function updateReview(Request $request, Property $property): RedirectResponse
     {
         $validated = $request->validate([
@@ -59,9 +78,70 @@ class PropertyManagementController extends Controller
         $property->reviewed_by_admin_id = Auth::guard('admin')->id();
         $property->save();
 
+        if ($request->input('return_to') === 'show') {
+            return redirect()
+                ->route('admin.properties.show', $property)
+                ->with('status', 'property-reviewed');
+        }
+
         return redirect()
             ->route('admin.properties.index')
             ->with('status', 'property-reviewed');
+    }
+
+    private function thumbnailUrl(Property $property): ?string
+    {
+        if (! $property->thumbnail_path || ! Storage::disk('public')->exists($property->thumbnail_path)) {
+            return null;
+        }
+
+        return route('properties.image', ['property' => $property, 'v' => optional($property->updated_at)->timestamp]);
+    }
+
+    private function galleryUrls(Property $property): array
+    {
+        return collect($property->gallery_paths ?? [])
+            ->filter(fn (?string $path) => $path && Storage::disk('public')->exists($path))
+            ->values()
+            ->map(fn (string $path, int $index) => route('properties.gallery.image', [
+                'property' => $property,
+                'index' => $index,
+                'v' => optional($property->updated_at)->timestamp,
+            ]))
+            ->all();
+    }
+
+    private function reviewLabel(string $status): string
+    {
+        $normalized = trim(str_replace(['-', '_'], ' ', strtolower($status)));
+
+        return $normalized === '' ? 'Pending' : ucwords($normalized);
+    }
+
+    private function reviewTone(string $status): string
+    {
+        return match (strtolower(trim($status))) {
+            'approved' => 'success',
+            'rejected' => 'danger',
+            default => 'warning',
+        };
+    }
+
+    private function availabilityLabel(string $availabilityStatus, string $purpose): string
+    {
+        return match (strtolower(trim($availabilityStatus))) {
+            'sold' => 'Sold',
+            'rented' => strtolower($purpose) === 'rent' ? 'Rented' : 'Rented',
+            default => 'Still Available',
+        };
+    }
+
+    private function availabilityTone(string $availabilityStatus): string
+    {
+        return match (strtolower(trim($availabilityStatus))) {
+            'sold', 'rented' => 'danger',
+            default => 'success',
+        };
     }
 
     private function siteInfo(): SiteInfo
