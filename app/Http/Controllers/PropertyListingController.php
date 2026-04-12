@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\HomepageProperty;
 use App\Models\Property;
+use App\Models\PropertyType;
 use App\Models\SiteInfo;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
@@ -19,10 +20,11 @@ class PropertyListingController extends Controller
     public function index(Request $request): View
     {
         $siteInfo = $this->siteInfo();
+        $activePropertyTypes = $this->activePropertyTypes();
         $usesApprovedListings = $this->hasApprovedListings();
         $listingPayload = $usesApprovedListings
-            ? $this->approvedListingPayload($request)
-            : $this->demoListingPayload($request);
+            ? $this->approvedListingPayload($request, $activePropertyTypes)
+            : $this->demoListingPayload($request, $activePropertyTypes);
         $listings = $listingPayload['listings'];
 
         return view('frontend.properties.index', [
@@ -58,7 +60,7 @@ class PropertyListingController extends Controller
         return response()->file(Storage::disk('public')->path($property->thumbnail_path));
     }
 
-    private function approvedListingPayload(Request $request): array
+    private function approvedListingPayload(Request $request, Collection $activePropertyTypes): array
     {
         $baseQuery = $this->applyApprovedFilters(
             Property::query()
@@ -93,12 +95,12 @@ class PropertyListingController extends Controller
             'message' => $stats['total'] > 0
                 ? 'Showing approved landlord listings that are ready for the public marketplace.'
                 : 'No approved properties matched the current filters.',
-            'supports_property_type_filter' => true,
-            'property_types' => $this->approvedPropertyTypes(),
+            'supports_property_type_filter' => $activePropertyTypes->isNotEmpty(),
+            'property_types' => $activePropertyTypes,
         ];
     }
 
-    private function demoListingPayload(Request $request): array
+    private function demoListingPayload(Request $request, Collection $activePropertyTypes): array
     {
         $baseQuery = $this->applyDemoFilters(
             HomepageProperty::query(),
@@ -131,8 +133,8 @@ class PropertyListingController extends Controller
             'message' => $stats['total'] > 0
                 ? 'Showing seeded Bangladesh demo listings until approved user properties go live.'
                 : 'No demo properties matched the current filters.',
-            'supports_property_type_filter' => false,
-            'property_types' => collect(),
+            'supports_property_type_filter' => $activePropertyTypes->isNotEmpty(),
+            'property_types' => $activePropertyTypes,
         ];
     }
 
@@ -183,6 +185,7 @@ class PropertyListingController extends Controller
     {
         $search = trim((string) $request->query('search', ''));
         $purpose = trim((string) $request->query('purpose', ''));
+        $propertyType = trim((string) $request->query('property_type', ''));
         $minPrice = $this->moneyInput($request->query('min_price'));
         $maxPrice = $this->moneyInput($request->query('max_price'));
 
@@ -198,6 +201,10 @@ class PropertyListingController extends Controller
 
         if (in_array($purpose, ['rent', 'sale'], true)) {
             $query->where('purpose', $purpose);
+        }
+
+        if ($propertyType !== '') {
+            $query->where('property_type', $propertyType);
         }
 
         if ($minPrice !== null) {
@@ -243,7 +250,7 @@ class PropertyListingController extends Controller
             'id' => 'demo-'.$property->id,
             'title' => $property->title,
             'location' => $property->location ?: 'Bangladesh',
-            'property_type' => 'Property',
+            'property_type' => $property->property_type ?: 'Property',
             'purpose_label' => $property->purpose === 'sale' ? 'For Sale' : 'For Rent',
             'price_label' => $this->formattedPrice((int) $property->price, (string) $property->purpose),
             'beds_label' => $this->countLabel($property->bedrooms, 'bed', 'No beds'),
@@ -264,20 +271,17 @@ class PropertyListingController extends Controller
             && Property::query()->where('status', 'approved')->exists();
     }
 
-    private function approvedPropertyTypes(): Collection
+    private function activePropertyTypes(): Collection
     {
-        if (! Schema::hasTable('properties')) {
+        if (! Schema::hasTable('property_types')) {
             return collect();
         }
 
-        return Property::query()
-            ->where('status', 'approved')
-            ->whereNotNull('property_type')
-            ->where('property_type', '!=', '')
-            ->select('property_type')
-            ->distinct()
-            ->orderBy('property_type')
-            ->pluck('property_type');
+        return PropertyType::query()
+            ->active()
+            ->orderBy('display_order')
+            ->orderBy('name')
+            ->get();
     }
 
     private function propertyImageUrl(Property $property): string

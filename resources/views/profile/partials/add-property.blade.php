@@ -35,14 +35,9 @@
             <label for="property_type">Property Type</label>
             <select name="property_type" id="property_type" class="cs_form_field cs_radius_7 @error('property_type') is-invalid @enderror" required>
                 <option value="">Select property type</option>
-                <option value="Apartment" @selected(old('property_type', $user->home_type) === 'Apartment')>Apartment</option>
-                <option value="House" @selected(old('property_type', $user->home_type) === 'House')>House</option>
-                <option value="Duplex" @selected(old('property_type', $user->home_type) === 'Duplex')>Duplex</option>
-                <option value="Office" @selected(old('property_type', $user->home_type) === 'Office')>Office</option>
-                <option value="Shop" @selected(old('property_type', $user->home_type) === 'Shop')>Shop</option>
-                <option value="Land" @selected(old('property_type', $user->home_type) === 'Land')>Land</option>
-                <option value="Plot" @selected(old('property_type', $user->home_type) === 'Plot')>Plot</option>
-                <option value="Commercial Space" @selected(old('property_type', $user->home_type) === 'Commercial Space')>Commercial Space</option>
+                @foreach ($propertyTypes as $propertyType)
+                    <option value="{{ $propertyType->filter_value }}" @selected(old('property_type', $user->home_type) === $propertyType->filter_value)>{{ $propertyType->name }}</option>
+                @endforeach
             </select>
             @error('property_type')<div class="cs_form_error">{{ $message }}</div>@enderror
         </div>

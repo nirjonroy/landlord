@@ -26,7 +26,12 @@ class StorePropertyRequest extends FormRequest
             'property_form' => ['nullable', 'string'],
             'title' => ['required', 'string', 'max:255'],
             'purpose' => ['required', Rule::in(['sale', 'rent'])],
-            'property_type' => ['required', 'string', 'max:255'],
+            'property_type' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::exists('property_types', 'filter_value')->where(fn ($query) => $query->where('is_active', true)),
+            ],
             'price' => ['required', 'numeric', 'min:0'],
             'area_size' => ['nullable', 'numeric', 'min:0'],
             'bedrooms' => ['nullable', 'integer', 'min:0', 'max:99'],

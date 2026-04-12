@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\PropertyType;
 use App\Models\User;
 use App\Support\ListingAnalytics;
 use Illuminate\Http\RedirectResponse;
@@ -48,6 +49,11 @@ class ProfileController extends Controller
                 'gallery_count' => count($user->home_elevation_image_paths ?? []),
             ],
             'propertyAnalytics' => $this->listingAnalytics->analyticsForUser($user),
+            'propertyTypes' => PropertyType::query()
+                ->active()
+                ->orderBy('display_order')
+                ->orderBy('name')
+                ->get(),
         ]);
     }
 

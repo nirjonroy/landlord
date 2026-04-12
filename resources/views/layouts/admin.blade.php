@@ -219,6 +219,12 @@
                 </a>
               </li>
               <li class="nav-item">
+                <a href="{{ route('admin.property-types.index') }}" class="nav-link {{ request()->routeIs('admin.property-types.*') ? 'active' : '' }}">
+                  <i class="nav-icon bi bi-grid-3x3-gap"></i>
+                  <p>Property Types</p>
+                </a>
+              </li>
+              <li class="nav-item">
                 <a href="{{ route('admin.site-info.edit') }}" class="nav-link {{ request()->routeIs('admin.site-info.*') ? 'active' : '' }}">
                   <i class="nav-icon bi bi-info-circle"></i>
                   <p>Site Info</p>

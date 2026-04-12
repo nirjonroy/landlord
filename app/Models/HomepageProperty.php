@@ -13,6 +13,7 @@ class HomepageProperty extends Model
         'title',
         'location',
         'purpose',
+        'property_type',
         'price',
         'bedrooms',
         'bathrooms',

@@ -42,6 +42,7 @@ class DatabaseSeeder extends Seeder
             'blog-posts.manage',
             'contact-page.manage',
             'homepage-banners.manage',
+            'property-types.manage',
             'site-info.manage',
             'api-access.view',
             'roles-permissions.manage',
@@ -71,6 +72,7 @@ class DatabaseSeeder extends Seeder
         );
 
         $this->call([
+            PropertyTypeSeeder::class,
             AboutPageSeeder::class,
             BlogPageSeeder::class,
             BlogCategorySeeder::class,

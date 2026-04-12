@@ -248,7 +248,7 @@
                             <select aria-label="Property type" name="property_type" class="cs_custom_select" {{ $supportsPropertyTypeFilter ? '' : 'disabled' }}>
                                 <option value="">Types</option>
                                 @foreach ($availablePropertyTypes as $propertyType)
-                                    <option value="{{ $propertyType }}" @selected(request('property_type') === $propertyType)>{{ $propertyType }}</option>
+                                    <option value="{{ $propertyType->filter_value }}" @selected(request('property_type') === $propertyType->filter_value)>{{ $propertyType->name }}</option>
                                 @endforeach
                             </select>
                             <select aria-label="Property status" name="purpose" class="cs_custom_select">
@@ -285,7 +285,7 @@
                         </div>
                     </div>
                     @if (! $supportsPropertyTypeFilter)
-                        <p class="cs_listing_hint">Property type filtering will start after approved user listings become available. The page is currently showing seeded Bangladesh demo data.</p>
+                        <p class="cs_listing_hint">No property types are active yet. Add and publish them from the admin panel to enable this filter.</p>
                     @endif
                 </form>
 

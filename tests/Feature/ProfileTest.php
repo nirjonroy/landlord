@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Property;
+use App\Models\PropertyType;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -91,6 +92,16 @@ class ProfileTest extends TestCase
     public function test_user_can_add_property_from_profile(): void
     {
         Storage::fake('public');
+
+        PropertyType::query()->create([
+            'name' => 'Apartment',
+            'filter_value' => 'Apartment',
+            'icon_path' => 'frontend-assets/img/icons/apartment_icon.svg',
+            'icon_source' => 'asset',
+            'display_order' => 1,
+            'is_active' => true,
+            'show_on_home' => true,
+        ]);
 
         $user = User::factory()->create([
             'phone' => '01712345678',

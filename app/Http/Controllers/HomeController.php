@@ -8,6 +8,7 @@ use App\Models\BlogPost;
 use App\Models\HomepageBanner;
 use App\Models\HomepageCity;
 use App\Models\HomepageProperty;
+use App\Models\PropertyType;
 use App\Models\SiteInfo;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
@@ -30,6 +31,7 @@ class HomeController extends Controller
             'featuredProperties' => $featuredProperties,
             'rentProperties' => $featuredProperties->where('purpose', 'rent')->values(),
             'saleProperties' => $featuredProperties->where('purpose', 'sale')->values(),
+            'homePropertyTypes' => $this->homePropertyTypes(),
             'popularCities' => $this->homepageCities(),
             'homepageBanners' => $this->homepageBanners(),
             'blogPage' => $this->blogPage(),
@@ -79,6 +81,18 @@ class HomeController extends Controller
         );
 
         return response()->file(Storage::disk('public')->path($homepageBanner->image_path));
+    }
+
+    public function propertyTypeIcon(PropertyType $propertyType): BinaryFileResponse
+    {
+        abort_unless(
+            $propertyType->icon_source === 'upload' &&
+            $propertyType->icon_path &&
+            Storage::disk('public')->exists($propertyType->icon_path),
+            404
+        );
+
+        return response()->file(Storage::disk('public')->path($propertyType->icon_path));
     }
 
     public function aboutPageImage(AboutPage $aboutPage, string $group, ?int $index = null): BinaryFileResponse
@@ -149,6 +163,20 @@ class HomeController extends Controller
             ->where('is_active', true)
             ->orderBy('display_order')
             ->orderBy('id')
+            ->get();
+    }
+
+    private function homePropertyTypes(): Collection
+    {
+        if (! Schema::hasTable('property_types')) {
+            return collect();
+        }
+
+        return PropertyType::query()
+            ->active()
+            ->homeVisible()
+            ->orderBy('display_order')
+            ->orderBy('name')
             ->get();
     }
 
