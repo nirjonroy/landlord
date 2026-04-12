@@ -129,10 +129,36 @@
                         <nav class="cs_nav cs_heading_color">
                             <ul class="cs_nav_list">
                                 <li><a href="{{ route('home') }}" aria-label="Home">Home</a></li>
-                                <li><a href="{{ route('properties.index') }}" aria-label="Listing">Listing</a></li>
+                                <li class="menu-item-has-children">
+                                    <a href="{{ route('properties.index') }}" aria-label="Listing">Listing</a>
+                                    <ul>
+                                        <li><a href="{{ route('properties.index') }}" aria-label="All listings">All Listings</a></li>
+                                        <li><a href="{{ route('properties.index', ['purpose' => 'rent']) }}" aria-label="Rent listings">Rent Listings</a></li>
+                                        <li><a href="{{ route('properties.index', ['purpose' => 'sale']) }}" aria-label="Sale listings">Sale Listings</a></li>
+                                    </ul>
+                                </li>
                                 <li><a href="{{ route('about') }}" aria-label="About">About</a></li>
                                 <li><a href="{{ route('contact') }}" aria-label="Contact">Contact</a></li>
                                 <li><a href="{{ route('blog.index') }}" aria-label="Blog">Blog</a></li>
+                                <li class="cs_mobile_nav_actions">
+                                    <div class="cs_mobile_nav_buttons">
+                                        @if (request()->routeIs('login'))
+                                            <a href="{{ route('register') }}" aria-label="Create account button" class="cs_btn cs_style_1 cs_accent_bg cs_fs_15 cs_medium cs_white_color cs_radius_7">
+                                                <span class="cs_btn_icon"><i class="fa-solid fa-user-plus"></i></span>
+                                                <span class="cs_btn_text">Create Account</span>
+                                            </a>
+                                        @else
+                                            <a href="{{ route('login') }}" aria-label="Sign in button" class="cs_btn cs_style_1 cs_accent_bg cs_fs_15 cs_medium cs_white_color cs_radius_7">
+                                                <span class="cs_btn_icon"><i class="fa-solid fa-circle-user"></i></span>
+                                                <span class="cs_btn_text">Sign In</span>
+                                            </a>
+                                        @endif
+                                        <a href="{{ route('home') }}" aria-label="Back home button" class="cs_btn cs_style_1 cs_type_1 cs_accent_color cs_fs_15 cs_medium cs_radius_7">
+                                            <span class="cs_btn_icon"><i class="fa-solid fa-house"></i></span>
+                                            <span class="cs_btn_text">Back Home</span>
+                                        </a>
+                                    </div>
+                                </li>
                             </ul>
                         </nav>
                     </div>

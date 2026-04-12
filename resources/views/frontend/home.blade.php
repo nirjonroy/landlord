@@ -83,25 +83,56 @@
                         <a class="cs_site_branding" href="{{ route('home') }}" aria-label="Click to visit home page"><img src="{{ $siteLogoUrl ?: asset('frontend-assets/img/logo.svg') }}" alt="{{ $siteName }}"></a>
                         <nav class="cs_nav cs_heading_color">
                             <ul class="cs_nav_list">
+                                <li><a href="{{ route('home') }}" aria-label="Home">Home</a></li>
                                 <li class="menu-item-has-children">
-                                    <a href="{{ route('home') }}" aria-label="Home">Home</a>
+                                    <a href="{{ route('properties.index') }}" aria-label="Listing">Listing</a>
                                     <ul>
-                                        <li><a href="{{ route('home') }}" aria-label="Click to visit home default page">Home Default</a></li>
-                                        <li><a href="{{ route('home') }}" aria-label="Click to visit home V2 page">Home V2</a></li>
-                                        <li><a href="{{ route('home') }}" aria-label="Click to visit home V3 page">Home V3</a></li>
-                                    </ul>
-                                </li>
-                                <li class="menu-item-has-children">
-                                    <a href="{{ route('properties.index') }}">Listing</a>
-                                    <ul>
-                                        <li><a href="{{ route('properties.index') }}" aria-label="Click to visit all property page">All Listings</a></li>
-                                        <li><a href="{{ route('properties.index', ['purpose' => 'rent']) }}" aria-label="Click to visit rent property page">Rent Listings</a></li>
-                                        <li><a href="{{ route('properties.index', ['purpose' => 'sale']) }}" aria-label="Click to visit sale property page">Sale Listings</a></li>
+                                        <li><a href="{{ route('properties.index') }}" aria-label="All listings">All Listings</a></li>
+                                        <li><a href="{{ route('properties.index', ['purpose' => 'rent']) }}" aria-label="Rent listings">Rent Listings</a></li>
+                                        <li><a href="{{ route('properties.index', ['purpose' => 'sale']) }}" aria-label="Sale listings">Sale Listings</a></li>
                                     </ul>
                                 </li>
                                 <li><a href="{{ route('about') }}" aria-label="Click to visit about page">About</a></li>
                                 <li><a href="{{ route('contact') }}" aria-label="Click to visit contact page">Contact</a></li>
                                 <li><a href="{{ route('blog.index') }}" aria-label="Click to visit blog page">Blog</a></li>
+                                <li class="cs_mobile_nav_actions">
+                                    <div class="cs_mobile_nav_buttons">
+                                        @if (auth()->check())
+                                            <a href="{{ route('dashboard') }}" aria-label="Dashboard button" class="cs_btn cs_style_1 cs_type_1 cs_accent_color cs_fs_15 cs_medium cs_radius_7">
+                                                <span class="cs_btn_icon"><i class="fa-solid fa-table-columns"></i></span>
+                                                <span class="cs_btn_text">Dashboard</span>
+                                            </a>
+                                            <form method="POST" action="{{ route('logout') }}" class="cs_header_logout_form">
+                                                @csrf
+                                                <button type="submit" aria-label="Logout button" class="cs_btn cs_style_1 cs_accent_bg cs_fs_15 cs_medium cs_white_color cs_radius_7">
+                                                    <span class="cs_btn_icon"><i class="fa-solid fa-right-from-bracket"></i></span>
+                                                    <span class="cs_btn_text">Logout</span>
+                                                </button>
+                                            </form>
+                                        @elseif (auth('admin')->check())
+                                            <a href="{{ route('admin.dashboard') }}" aria-label="Admin dashboard button" class="cs_btn cs_style_1 cs_type_1 cs_accent_color cs_fs_15 cs_medium cs_radius_7">
+                                                <span class="cs_btn_icon"><i class="fa-solid fa-table-columns"></i></span>
+                                                <span class="cs_btn_text">Dashboard</span>
+                                            </a>
+                                            <form method="POST" action="{{ route('admin.logout') }}" class="cs_header_logout_form">
+                                                @csrf
+                                                <button type="submit" aria-label="Admin logout button" class="cs_btn cs_style_1 cs_accent_bg cs_fs_15 cs_medium cs_white_color cs_radius_7">
+                                                    <span class="cs_btn_icon"><i class="fa-solid fa-right-from-bracket"></i></span>
+                                                    <span class="cs_btn_text">Logout</span>
+                                                </button>
+                                            </form>
+                                        @else
+                                            <a href="{{ route('login') }}" aria-label="Sign In button" class="cs_btn cs_style_1 cs_accent_bg cs_fs_15 cs_medium cs_white_color cs_radius_7">
+                                                <span class="cs_btn_icon"><i class="fa-solid fa-circle-user"></i></span>
+                                                <span class="cs_btn_text">Sign In</span>
+                                            </a>
+                                            <a href="{{ route('register') }}" aria-label="Create account button" class="cs_btn cs_style_1 cs_type_1 cs_accent_color cs_fs_15 cs_medium cs_radius_7">
+                                                <span class="cs_btn_icon"><i class="fa-solid fa-user-plus"></i></span>
+                                                <span class="cs_btn_text">Create Account</span>
+                                            </a>
+                                        @endif
+                                    </div>
+                                </li>
                             </ul>
                         </nav>
                     </div>

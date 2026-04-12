@@ -82,20 +82,74 @@
       2. Mobile Menu
     =================================================================*/
     function mainNav() {
-        $(".cs_nav").append('<span class="cs_menu_toggle"><span></span></span>');
-        $(".menu-item-has-children").append(
-            '<span class="cs_menu_dropdown_toggle"><span></span></span>'
-        );
-        $(".cs_menu_toggle").on("click", function() {
-            $(this)
-                .toggleClass("cs_toggle_active")
-                .siblings(".cs_nav_list")
-                .toggleClass("cs_active");
+        $(".cs_nav").each(function() {
+            if (!$(this).children(".cs_menu_toggle").length) {
+                $(this).append('<span class="cs_menu_toggle"><span></span></span>');
+            }
         });
-        $(".cs_menu_dropdown_toggle").on("click", function() {
-            $(this).toggleClass("active").siblings("ul").slideToggle();
-            $(this).parent().toggleClass("active");
+
+        $(".menu-item-has-children").each(function() {
+            if (!$(this).children(".cs_menu_dropdown_toggle").length) {
+                $(this).append(
+                    '<span class="cs_menu_dropdown_toggle"><span></span></span>'
+                );
+            }
         });
+
+        function closeMobileMenu($navList) {
+            if (!$navList || !$navList.length) {
+                return;
+            }
+
+            $navList.removeClass("cs_active");
+            $navList.siblings(".cs_menu_toggle").removeClass("cs_toggle_active");
+            $navList
+                .find(".cs_menu_dropdown_toggle.active")
+                .removeClass("active");
+            $navList
+                .find(".menu-item-has-children.active")
+                .removeClass("active")
+                .children("ul")
+                .removeAttr("style");
+            $("body").removeClass("cs_mobile_menu_open");
+        }
+
+        $(".cs_menu_toggle")
+            .off("click.csMenu")
+            .on("click.csMenu", function() {
+                var $toggle = $(this);
+                var $navList = $toggle.siblings(".cs_nav_list");
+                var willOpen = !$toggle.hasClass("cs_toggle_active");
+
+                $toggle.toggleClass("cs_toggle_active");
+                $navList.toggleClass("cs_active");
+                $("body").toggleClass("cs_mobile_menu_open", willOpen);
+            });
+
+        $(".cs_menu_dropdown_toggle")
+            .off("click.csDropdown")
+            .on("click.csDropdown", function() {
+                $(this).toggleClass("active").siblings("ul").slideToggle();
+                $(this).parent().toggleClass("active");
+            });
+
+        $(".cs_nav .cs_nav_list a")
+            .off("click.csNavLink")
+            .on("click.csNavLink", function() {
+                if (window.innerWidth >= 1200 || $(this).siblings("ul").length) {
+                    return;
+                }
+
+                closeMobileMenu($(this).closest(".cs_nav_list"));
+            });
+
+        $(window)
+            .off("resize.csMenuState")
+            .on("resize.csMenuState", function() {
+                if (window.innerWidth >= 1200) {
+                    closeMobileMenu($(".cs_nav .cs_nav_list"));
+                }
+            });
     }
     /*===============================================================
       3. Sticky Header
