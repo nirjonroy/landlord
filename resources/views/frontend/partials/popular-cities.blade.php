@@ -3,7 +3,10 @@
     <div class="cs_height_120 cs_height_lg_80"></div>
     <div class="container">
         <div class="cs_section_heading cs_style_1 text-center">
-            <h2 class="cs_fs_48 cs_semibold mb-0 wow fadeInUp">We Are Available Across Bangladesh</h2>
+            <h2 class="cs_fs_48 cs_semibold mb-0 wow fadeInUp">{{ $homepageCitySection->title }}</h2>
+            @if (! empty($homepageCitySection->subtitle))
+                <p class="mb-0 mt-3">{{ $homepageCitySection->subtitle }}</p>
+            @endif
         </div>
         <div class="cs_height_80 cs_height_lg_50"></div>
         <div class="cs_slider cs_style_1 cs_slider_gap_20 cs_align_center cs_overflow_visible_2 position-relative">
@@ -12,10 +15,10 @@
                     @forelse ($popularCities as $city)
                         <div class="cs_slide">
                             <div class="cs_card_wrapper">
-                                <a href="#featured-properties" aria-label="Click to visit all property" class="cs_card cs_style_2 cs_radius_15 text-center position-relative">
+                                <a href="{{ route('properties.index', ['search' => $city->name]) }}" aria-label="Click to visit all property" class="cs_card cs_style_2 cs_radius_15 text-center position-relative">
                                     <div class="cs_card_overlay cs_heading_bg position-absolute"></div>
                                     <div class="cs_card_thumbnail cs_radius_15">
-                                        <img src="{{ asset($city->image_path) }}" alt="{{ $city->name }} City Image">
+                                        <img src="{{ $city->imageUrl() }}" alt="{{ $city->name }} City Image">
                                     </div>
                                     <div class="cs_card_info">
                                         <h3 class="cs_fs_28 cs_semibold cs_white_color cs_body_font cs_mb_3">{{ $city->name }}</h3>

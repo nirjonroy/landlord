@@ -219,6 +219,12 @@
                 </a>
               </li>
               <li class="nav-item">
+                <a href="{{ route('admin.homepage-cities.index') }}" class="nav-link {{ request()->routeIs('admin.homepage-cities.*') ? 'active' : '' }}">
+                  <i class="nav-icon bi bi-geo-alt"></i>
+                  <p>Coverage Cities</p>
+                </a>
+              </li>
+              <li class="nav-item">
                 <a href="{{ route('admin.property-types.index') }}" class="nav-link {{ request()->routeIs('admin.property-types.*') ? 'active' : '' }}">
                   <i class="nav-icon bi bi-grid-3x3-gap"></i>
                   <p>Property Types</p>

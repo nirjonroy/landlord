@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\BlogPostController as AdminBlogPostController;
 use App\Http\Controllers\Admin\ContactPageController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\HomepageBannerController;
+use App\Http\Controllers\Admin\HomepageCityController;
 use App\Http\Controllers\Admin\PropertyManagementController;
 use App\Http\Controllers\Admin\PropertyTypeController as AdminPropertyTypeController;
 use App\Http\Controllers\BlogController;
@@ -40,6 +41,7 @@ Route::get('/blog/{blogPost:slug}', [BlogController::class, 'show'])->name('blog
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 Route::get('property-types/{propertyType}/icon', [HomeController::class, 'propertyTypeIcon'])->name('property-types.icon');
+Route::get('homepage-cities/{homepageCity}/image', [HomeController::class, 'homepageCityImage'])->name('homepage-cities.image');
 Route::get('site-logo', [HomeController::class, 'siteLogo'])->name('site.logo');
 Route::get('homepage-banners/{homepageBanner}/image', [HomeController::class, 'homepageBannerImage'])->name('homepage-banners.image');
 Route::get('about-page/{aboutPage}/image/{group}/{index?}', [HomeController::class, 'aboutPageImage'])->name('about.image');
@@ -78,6 +80,11 @@ Route::middleware('auth:admin')->prefix('admin')->name('admin.')->group(function
     Route::post('homepage-banners', [HomepageBannerController::class, 'store'])->name('homepage-banners.store');
     Route::put('homepage-banners/{homepageBanner}', [HomepageBannerController::class, 'update'])->name('homepage-banners.update');
     Route::delete('homepage-banners/{homepageBanner}', [HomepageBannerController::class, 'destroy'])->name('homepage-banners.destroy');
+    Route::get('homepage-cities', [HomepageCityController::class, 'index'])->name('homepage-cities.index');
+    Route::put('homepage-cities/section', [HomepageCityController::class, 'updateSection'])->name('homepage-cities.section.update');
+    Route::post('homepage-cities', [HomepageCityController::class, 'store'])->name('homepage-cities.store');
+    Route::put('homepage-cities/{homepageCity}', [HomepageCityController::class, 'update'])->name('homepage-cities.update');
+    Route::delete('homepage-cities/{homepageCity}', [HomepageCityController::class, 'destroy'])->name('homepage-cities.destroy');
     Route::get('property-types', [AdminPropertyTypeController::class, 'index'])->name('property-types.index');
     Route::post('property-types', [AdminPropertyTypeController::class, 'store'])->name('property-types.store');
     Route::put('property-types/{propertyType}', [AdminPropertyTypeController::class, 'update'])->name('property-types.update');

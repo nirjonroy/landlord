@@ -42,6 +42,7 @@ class DatabaseSeeder extends Seeder
             'blog-posts.manage',
             'contact-page.manage',
             'homepage-banners.manage',
+            'homepage-cities.manage',
             'property-types.manage',
             'site-info.manage',
             'api-access.view',
@@ -80,6 +81,7 @@ class DatabaseSeeder extends Seeder
             ContactPageSeeder::class,
             HomepageBannerSeeder::class,
             HomepagePropertySeeder::class,
+            HomepageCitySectionSeeder::class,
             HomepageCitySeeder::class,
             PropertySeeder::class,
         ]);

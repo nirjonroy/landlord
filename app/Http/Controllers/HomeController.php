@@ -7,6 +7,7 @@ use App\Models\BlogPage;
 use App\Models\BlogPost;
 use App\Models\HomepageBanner;
 use App\Models\HomepageCity;
+use App\Models\HomepageCitySection;
 use App\Models\HomepageProperty;
 use App\Models\PropertyType;
 use App\Models\SiteInfo;
@@ -32,6 +33,7 @@ class HomeController extends Controller
             'rentProperties' => $featuredProperties->where('purpose', 'rent')->values(),
             'saleProperties' => $featuredProperties->where('purpose', 'sale')->values(),
             'homePropertyTypes' => $this->homePropertyTypes(),
+            'homepageCitySection' => $this->homepageCitySection(),
             'popularCities' => $this->homepageCities(),
             'homepageBanners' => $this->homepageBanners(),
             'blogPage' => $this->blogPage(),
@@ -81,6 +83,18 @@ class HomeController extends Controller
         );
 
         return response()->file(Storage::disk('public')->path($homepageBanner->image_path));
+    }
+
+    public function homepageCityImage(HomepageCity $homepageCity): BinaryFileResponse
+    {
+        abort_unless(
+            $homepageCity->image_source === 'upload' &&
+            $homepageCity->image_path &&
+            Storage::disk('public')->exists($homepageCity->image_path),
+            404
+        );
+
+        return response()->file(Storage::disk('public')->path($homepageCity->image_path));
     }
 
     public function propertyTypeIcon(PropertyType $propertyType): BinaryFileResponse
@@ -151,6 +165,18 @@ class HomeController extends Controller
         return HomepageCity::query()
             ->orderBy('display_order')
             ->get();
+    }
+
+    private function homepageCitySection(): HomepageCitySection
+    {
+        if (! Schema::hasTable('homepage_city_sections')) {
+            return new HomepageCitySection(HomepageCitySection::defaultAttributes());
+        }
+
+        return HomepageCitySection::query()->firstOrCreate(
+            ['id' => 1],
+            HomepageCitySection::defaultAttributes()
+        );
     }
 
     private function homepageBanners(): Collection
