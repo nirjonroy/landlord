@@ -96,7 +96,7 @@
                         @include('frontend.partials.home-hero-search-form', [
                             'tabId' => 'buy',
                             'purpose' => 'sale',
-                            'defaultLocation' => 'Dhaka',
+                            'defaultLocation' => '',
                             'heroPropertyTypes' => $heroPropertyTypes,
                             'heroLocations' => $heroLocations,
                         ])
@@ -105,7 +105,7 @@
                         @include('frontend.partials.home-hero-search-form', [
                             'tabId' => 'co_living',
                             'purpose' => 'rent',
-                            'defaultLocation' => 'Dhaka',
+                            'defaultLocation' => '',
                             'heroPropertyTypes' => $heroPropertyTypes,
                             'heroLocations' => $heroLocations,
                         ])
@@ -114,7 +114,7 @@
                         @include('frontend.partials.home-hero-search-form', [
                             'tabId' => 'rent',
                             'purpose' => 'rent',
-                            'defaultLocation' => 'Dhaka',
+                            'defaultLocation' => '',
                             'heroPropertyTypes' => $heroPropertyTypes,
                             'heroLocations' => $heroLocations,
                         ])
