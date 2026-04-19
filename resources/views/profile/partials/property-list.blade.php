@@ -49,6 +49,9 @@
                                         <a href="{{ route('properties.show', $listing['id']) }}" class="cs_btn cs_style_1 cs_accent_bg cs_white_color cs_medium cs_radius_7 cs_table_action_btn">
                                             <span>Details</span>
                                         </a>
+                                        <a href="{{ route('properties.edit', $listing['id']) }}" class="cs_btn cs_style_1 cs_type_1 cs_accent_color cs_medium cs_radius_7 cs_table_action_btn">
+                                            <span>Edit</span>
+                                        </a>
                                         <form method="POST" action="{{ route('properties.destroy', $listing['id']) }}" onsubmit="return confirm('Delete this property from your account?');">
                                             @csrf
                                             @method('DELETE')

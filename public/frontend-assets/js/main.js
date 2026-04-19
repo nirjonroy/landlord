@@ -468,6 +468,26 @@
                 asNavFor: ".cs_single_property_slider_1",
                 focusOnSelect: true,
                 arrows: false,
+                swipeToSlide: true,
+                responsive: [{
+                        breakpoint: 992,
+                        settings: {
+                            slidesToShow: 4,
+                        },
+                    },
+                    {
+                        breakpoint: 768,
+                        settings: {
+                            slidesToShow: 3,
+                        },
+                    },
+                    {
+                        breakpoint: 480,
+                        settings: {
+                            slidesToShow: 2,
+                        },
+                    },
+                ],
             });
         }
         if ($.exists(".cs_single_property_slider_2")) {
@@ -487,6 +507,26 @@
                 asNavFor: ".cs_single_property_slider_2",
                 focusOnSelect: true,
                 arrows: false,
+                swipeToSlide: true,
+                responsive: [{
+                        breakpoint: 992,
+                        settings: {
+                            slidesToShow: 4,
+                        },
+                    },
+                    {
+                        breakpoint: 768,
+                        settings: {
+                            slidesToShow: 3,
+                        },
+                    },
+                    {
+                        breakpoint: 480,
+                        settings: {
+                            slidesToShow: 2,
+                        },
+                    },
+                ],
             });
         }
         // Range Slider

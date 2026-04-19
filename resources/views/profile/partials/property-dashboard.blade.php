@@ -68,9 +68,14 @@
                             <td>{{ $listing['submitted_at'] }}</td>
                             <td>
                                 @if ($propertyAnalytics['table'] === 'properties' && $listing['id'])
-                                    <a href="{{ route('properties.show', $listing['id']) }}" class="cs_btn cs_style_1 cs_type_1 cs_accent_color cs_medium cs_radius_7 cs_table_action_btn">
-                                        <span>Details</span>
-                                    </a>
+                                    <div class="cs_table_action_group">
+                                        <a href="{{ route('properties.show', $listing['id']) }}" class="cs_btn cs_style_1 cs_type_1 cs_accent_color cs_medium cs_radius_7 cs_table_action_btn">
+                                            <span>Details</span>
+                                        </a>
+                                        <a href="{{ route('properties.edit', $listing['id']) }}" class="cs_btn cs_style_1 cs_type_1 cs_accent_color cs_medium cs_radius_7 cs_table_action_btn">
+                                            <span>Edit</span>
+                                        </a>
+                                    </div>
                                 @endif
                             </td>
                         </tr>

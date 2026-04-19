@@ -117,7 +117,9 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/profile/files/{type}/{index?}', [ProfileController::class, 'file'])->name('profile.files.show');
+    Route::get('/properties/{property}/edit', [PropertyController::class, 'edit'])->name('properties.edit');
     Route::post('/properties', [PropertyController::class, 'store'])->name('properties.store');
+    Route::put('/properties/{property}', [PropertyController::class, 'update'])->name('properties.update');
     Route::put('/properties/{property}/availability', [PropertyController::class, 'updateAvailability'])->name('properties.availability.update');
     Route::delete('/properties/{property}', [PropertyController::class, 'destroy'])->name('properties.destroy');
 });

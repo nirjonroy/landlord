@@ -4,6 +4,7 @@ namespace Tests\Feature\Admin;
 
 use App\Models\Admin;
 use App\Models\Property;
+use App\Models\PropertyType;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -116,5 +117,62 @@ class PropertyManagementTest extends TestCase
             ->assertRedirect(route('admin.properties.index'));
 
         $this->assertSame('pending', $property->fresh()->status);
+    }
+
+    public function test_edited_property_returns_to_admin_pending_queue(): void
+    {
+        PropertyType::query()->create([
+            'name' => 'Apartment',
+            'filter_value' => 'Apartment',
+            'icon_path' => 'frontend-assets/img/icons/apartment_icon.svg',
+            'icon_source' => 'asset',
+            'display_order' => 1,
+            'is_active' => true,
+            'show_on_home' => true,
+        ]);
+
+        $admin = Admin::factory()->create();
+        $user = User::factory()->create();
+        $property = Property::factory()->create([
+            'user_id' => $user->id,
+            'title' => 'Editable Review Flat',
+            'property_type' => 'Apartment',
+            'status' => 'approved',
+            'review_note' => 'Approved previously.',
+            'reviewed_at' => now(),
+            'reviewed_by_admin_id' => $admin->id,
+        ]);
+
+        $this->actingAs($user)
+            ->put(route('properties.update', $property), [
+                'property_form' => 'edit',
+                'title' => 'Editable Review Flat',
+                'purpose' => $property->purpose,
+                'property_type' => 'Apartment',
+                'price' => $property->price,
+                'area_size' => $property->area_size,
+                'bedrooms' => $property->bedrooms,
+                'bathrooms' => $property->bathrooms,
+                'garages' => $property->garages,
+                'location' => $property->location,
+                'district' => $property->district,
+                'division' => $property->division,
+                'postal_code' => $property->postal_code,
+                'address' => $property->address,
+                'description' => 'Updated details for another review pass.',
+                'contact_phone' => $property->contact_phone,
+            ])
+            ->assertRedirect(route('properties.show', $property).'#management-panel');
+
+        $property->refresh();
+
+        $this->assertSame('pending', $property->status);
+        $this->assertNull($property->review_note);
+
+        $this->actingAs($admin, 'admin')
+            ->get(route('admin.properties.index'))
+            ->assertOk()
+            ->assertSee('Pending Review Queue')
+            ->assertSee('Editable Review Flat');
     }
 }

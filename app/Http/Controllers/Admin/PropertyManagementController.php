@@ -19,6 +19,7 @@ class PropertyManagementController extends Controller
         $properties = Property::query()
             ->with(['user', 'reviewedBy'])
             ->orderByRaw("case when status = 'pending' then 0 else 1 end")
+            ->orderByDesc('updated_at')
             ->orderByDesc('created_at')
             ->get();
 

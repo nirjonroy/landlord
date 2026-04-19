@@ -159,18 +159,45 @@
 
         .cs_listing_card_actions {
             display: flex;
-            gap: 12px;
+            gap: 10px;
             align-items: stretch;
         }
 
         .cs_listing_card_actions .cs_card_price {
-            flex: 1;
+            flex: 1 1 auto;
+            min-width: 0;
+            min-height: 102px;
+            padding: 16px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .cs_listing_card_actions .cs_card_price_for {
+            font-size: 15px !important;
+            line-height: 1.2em;
+        }
+
+        .cs_listing_card_actions .cs_card_price_value {
+            margin-top: 6px;
+            font-size: 18px !important;
+            line-height: 1.2em;
+            word-break: break-word;
         }
 
         .cs_listing_detail_btn {
-            min-width: 132px;
-            padding: 0 18px;
+            flex: 0 0 118px;
+            min-width: 118px;
+            min-height: 102px;
+            padding: 0 16px;
             justify-content: center;
+            text-align: center;
+        }
+
+        .cs_listing_detail_btn .cs_btn_text {
+            font-size: 15px;
+            font-weight: 600;
+            line-height: 1.2em;
         }
 
         .cs_listing_empty_state {
@@ -251,8 +278,13 @@
                 flex-direction: column;
             }
 
+            .cs_listing_card_actions .cs_card_price {
+                min-height: auto;
+            }
+
             .cs_listing_detail_btn {
                 width: 100%;
+                min-height: 60px;
             }
 
             .cs_listing_map_box,

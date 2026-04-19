@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Models\PropertyType;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class StorePropertyRequest extends FormRequest
 {
@@ -22,15 +22,40 @@ class StorePropertyRequest extends FormRequest
      */
     public function rules(): array
     {
+        $currentPropertyType = $this->route('property')?->property_type;
+
         return [
             'property_form' => ['nullable', 'string'],
             'title' => ['required', 'string', 'max:255'],
-            'purpose' => ['required', Rule::in(['sale', 'rent'])],
+            'purpose' => ['required', 'in:sale,rent'],
             'property_type' => [
                 'required',
                 'string',
                 'max:255',
-                Rule::exists('property_types', 'filter_value')->where(fn ($query) => $query->where('is_active', true)),
+                function (string $attribute, mixed $value, \Closure $fail) use ($currentPropertyType): void {
+                    $normalizedValue = trim((string) $value);
+
+                    if ($normalizedValue === '') {
+                        $fail('Please select a valid property type.');
+
+                        return;
+                    }
+
+                    $isValid = PropertyType::query()
+                        ->where('filter_value', $normalizedValue)
+                        ->where(function ($query) use ($currentPropertyType) {
+                            $query->where('is_active', true);
+
+                            if ($currentPropertyType !== null) {
+                                $query->orWhere('filter_value', $currentPropertyType);
+                            }
+                        })
+                        ->exists();
+
+                    if (! $isValid) {
+                        $fail('Please select a valid property type.');
+                    }
+                },
             ],
             'price' => ['required', 'numeric', 'min:0'],
             'area_size' => ['nullable', 'numeric', 'min:0'],
@@ -45,8 +70,10 @@ class StorePropertyRequest extends FormRequest
             'description' => ['nullable', 'string', 'max:4000'],
             'contact_phone' => ['nullable', 'string', 'max:30'],
             'thumbnail_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
+            'remove_thumbnail_image' => ['nullable', 'boolean'],
             'gallery_images' => ['nullable', 'array', 'max:6'],
             'gallery_images.*' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
+            'reset_gallery_images' => ['nullable', 'boolean'],
         ];
     }
 }

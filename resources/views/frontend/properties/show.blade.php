@@ -94,6 +94,30 @@
             gap: 12px;
         }
 
+        .cs_single_property_slider_wrapper {
+            margin-bottom: 12px;
+        }
+
+        .cs_single_property_slider_2 .cs_property_gallery_thumb {
+            height: 520px;
+            background: #f8fafc;
+        }
+
+        .cs_single_property_slider_2 .slick-slide > div,
+        .cs_single_property_nav_2 .slick-slide > div {
+            height: 100%;
+        }
+
+        .cs_single_property_nav_2 {
+            margin-top: 18px;
+        }
+
+        .cs_single_property_nav_2 .cs_property_gallery_thumb {
+            height: 110px;
+            cursor: pointer;
+            background: #f8fafc;
+        }
+
         .cs_property_gallery_thumb {
             border-radius: 15px;
             overflow: hidden;
@@ -102,6 +126,7 @@
         .cs_property_gallery_thumb img {
             width: 100%;
             height: 100%;
+            display: block;
             object-fit: cover;
         }
 
@@ -127,6 +152,52 @@
         }
 
         @media (max-width: 767px) {
+            .cs_property_status_badges {
+                gap: 8px;
+                margin-bottom: 18px;
+            }
+
+            .cs_property_status_badge {
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+
+            .cs_property_header {
+                margin-bottom: 28px !important;
+            }
+
+            .cs_property_header .cs_fs_48 {
+                font-size: 30px;
+                line-height: 1.15em;
+            }
+
+            .cs_property_header .cs_btns_wrapper {
+                width: 100%;
+                justify-content: flex-start;
+            }
+
+            .cs_single_property_slider_2 .cs_property_gallery_thumb {
+                height: 220px;
+            }
+
+            .cs_single_property_nav_2 {
+                margin-top: 12px;
+            }
+
+            .cs_single_property_nav_2 .slick-list {
+                margin-left: -4px;
+                margin-right: -4px;
+            }
+
+            .cs_single_property_nav_2 .slick-slide {
+                padding: 0 4px;
+            }
+
+            .cs_single_property_nav_2 .cs_property_gallery_thumb {
+                height: 72px;
+                border-radius: 12px;
+            }
+
             .cs_property_detail_grid {
                 grid-template-columns: 1fr;
             }
@@ -157,6 +228,10 @@
 
             @if (session('status') === 'property-availability-updated')
                 <div class="cs_property_note cs_property_note_success">The market availability was updated successfully.</div>
+            @endif
+
+            @if (session('status') === 'property-updated')
+                <div class="cs_property_note cs_property_note_success">Your changes were saved. This property is now back in the admin review queue.</div>
             @endif
 
             <div class="cs_property_header cs_mb_43">
@@ -286,6 +361,12 @@
                             <p class="mb-4"><strong>Market:</strong> {{ $availabilityLabel }}</p>
 
                             @if ($ownerCanManage)
+                                <div class="cs_property_management_actions cs_mb_20">
+                                    <a href="{{ route('properties.edit', $property) }}" class="cs_btn cs_style_1 cs_type_1 cs_accent_color cs_radius_7">
+                                        <span>Edit Property</span>
+                                    </a>
+                                </div>
+
                                 <h4 class="cs_fs_20 cs_semibold cs_mb_15">Update availability</h4>
                                 <div class="cs_property_management_actions">
                                     @foreach ($availabilityOptions as $value => $label)

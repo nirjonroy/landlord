@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Admin;
 use App\Models\Property;
 use App\Models\PropertyType;
 use App\Models\User;
@@ -182,6 +183,91 @@ class ProfileTest extends TestCase
         Storage::disk('public')->assertMissing($property->thumbnail_path);
         Storage::disk('public')->assertMissing($property->gallery_paths[0]);
         Storage::disk('public')->assertMissing($property->gallery_paths[1]);
+    }
+
+    public function test_user_can_edit_property_and_it_returns_to_pending_review(): void
+    {
+        Storage::fake('public');
+
+        PropertyType::query()->create([
+            'name' => 'Apartment',
+            'filter_value' => 'Apartment',
+            'icon_path' => 'frontend-assets/img/icons/apartment_icon.svg',
+            'icon_source' => 'asset',
+            'display_order' => 1,
+            'is_active' => true,
+            'show_on_home' => true,
+        ]);
+
+        $admin = Admin::factory()->create();
+        $user = User::factory()->create([
+            'phone' => '01712345678',
+        ]);
+
+        $property = Property::factory()->create([
+            'user_id' => $user->id,
+            'title' => 'Old Property Title',
+            'purpose' => 'sale',
+            'property_type' => 'Apartment',
+            'status' => 'approved',
+            'availability_status' => 'available',
+            'review_note' => 'Old approval note.',
+            'reviewed_at' => now(),
+            'reviewed_by_admin_id' => $admin->id,
+            'thumbnail_path' => 'users/'.$user->id.'/properties/thumbnails/old-cover.jpg',
+            'gallery_paths' => [
+                'users/'.$user->id.'/properties/gallery/old-one.jpg',
+                'users/'.$user->id.'/properties/gallery/old-two.jpg',
+            ],
+        ]);
+
+        Storage::disk('public')->put($property->thumbnail_path, 'old-cover');
+        Storage::disk('public')->put($property->gallery_paths[0], 'old-one');
+        Storage::disk('public')->put($property->gallery_paths[1], 'old-two');
+
+        $this->actingAs($user)
+            ->put(route('properties.update', $property), [
+                'property_form' => 'edit',
+                'title' => 'Updated Property Title',
+                'purpose' => 'rent',
+                'property_type' => 'Apartment',
+                'price' => 68000,
+                'area_size' => 1550,
+                'bedrooms' => 3,
+                'bathrooms' => 3,
+                'garages' => 1,
+                'location' => 'Banani, Dhaka',
+                'district' => 'Dhaka',
+                'division' => 'Dhaka',
+                'postal_code' => '1213',
+                'address' => 'Road 11, Banani, Dhaka',
+                'description' => 'Freshly updated listing details.',
+                'contact_phone' => '01812345678',
+                'thumbnail_image' => UploadedFile::fake()->image('new-cover.jpg'),
+                'gallery_images' => [
+                    UploadedFile::fake()->image('new-one.jpg'),
+                ],
+            ])
+            ->assertSessionHasNoErrors()
+            ->assertRedirect(route('properties.show', $property).'#management-panel');
+
+        $property->refresh();
+
+        $this->assertSame('Updated Property Title', $property->title);
+        $this->assertSame('rent', $property->purpose);
+        $this->assertSame('pending', $property->status);
+        $this->assertNull($property->review_note);
+        $this->assertNull($property->reviewed_at);
+        $this->assertNull($property->reviewed_by_admin_id);
+        $this->assertSame('01812345678', $property->contact_phone);
+        $this->assertNotNull($property->thumbnail_path);
+        $this->assertCount(1, $property->gallery_paths ?? []);
+
+        Storage::disk('public')->assertMissing('users/'.$user->id.'/properties/thumbnails/old-cover.jpg');
+        Storage::disk('public')->assertMissing('users/'.$user->id.'/properties/gallery/old-one.jpg');
+        Storage::disk('public')->assertMissing('users/'.$user->id.'/properties/gallery/old-two.jpg');
+        Storage::disk('public')->assertExists($property->thumbnail_path);
+        Storage::disk('public')->assertExists($property->gallery_paths[0]);
     }
 
     public function test_user_can_mark_property_as_sold_from_detail_page(): void
