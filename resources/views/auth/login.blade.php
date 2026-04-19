@@ -49,7 +49,6 @@
                 @if (Route::has('password.request'))
                     <a href="{{ route('password.request') }}">Forgot your password?</a>
                 @endif
-                <a href="{{ route('admin.login') }}">Admin login</a>
             </div>
         </div>
 
