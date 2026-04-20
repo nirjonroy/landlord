@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Admin;
+use App\Models\PaymentSetting;
 use App\Models\SiteInfo;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -44,7 +45,9 @@ class DatabaseSeeder extends Seeder
             'homepage-banners.manage',
             'homepage-cities.manage',
             'property-types.manage',
+            'subscription-packages.manage',
             'site-info.manage',
+            'payment-settings.manage',
             'api-access.view',
             'roles-permissions.manage',
         ])->map(fn ($permissionName) => Permission::findOrCreate($permissionName, 'admin'));
@@ -69,6 +72,15 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Nirjon Roy',
                 'email_verified_at' => now(),
                 'password' => Hash::make('password'),
+            ]
+        );
+
+        PaymentSetting::updateOrCreate(
+            ['id' => 1],
+            [
+                'sslcommerz_enabled' => false,
+                'sslcommerz_mode' => 'sandbox',
+                'currency' => 'BDT',
             ]
         );
 

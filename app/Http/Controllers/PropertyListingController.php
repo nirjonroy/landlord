@@ -100,9 +100,14 @@ class PropertyListingController extends Controller
     {
         $baseQuery = $this->applyApprovedFilters(
             Property::query()
-                ->with('user')
+                ->with('user.subscription')
                 ->where('status', 'approved')
-                ->where('availability_status', 'available'),
+                ->where('availability_status', 'available')
+                ->whereHas('user.subscription', function (Builder $query) {
+                    $query
+                        ->where('status', 'active')
+                        ->where('ends_at', '>', now());
+                }),
             $request
         );
 
@@ -334,9 +339,15 @@ class PropertyListingController extends Controller
     private function hasApprovedListings(): bool
     {
         return Schema::hasTable('properties')
+            && Schema::hasTable('user_subscriptions')
             && Property::query()
                 ->where('status', 'approved')
                 ->where('availability_status', 'available')
+                ->whereHas('user.subscription', function (Builder $query) {
+                    $query
+                        ->where('status', 'active')
+                        ->where('ends_at', '>', now());
+                })
                 ->exists();
     }
 
@@ -521,7 +532,19 @@ class PropertyListingController extends Controller
 
     private function ensurePropertyVisible(Property $property): void
     {
-        $canView = $property->status === 'approved'
+        $property->loadMissing('user.subscription');
+
+        $hasActiveSubscription = Schema::hasTable('user_subscriptions')
+            && $property->user?->subscription
+            && $property->user->subscription->status === 'active'
+            && $property->user->subscription->ends_at !== null
+            && $property->user->subscription->ends_at->isFuture();
+
+        $canView = (
+                $property->status === 'approved'
+                && $property->availability_status === 'available'
+                && $hasActiveSubscription
+            )
             || (auth()->check() && (int) auth()->id() === (int) $property->user_id)
             || auth('admin')->check();
 

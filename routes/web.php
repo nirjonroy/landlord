@@ -11,9 +11,12 @@ use App\Http\Controllers\Admin\HomepageBannerController;
 use App\Http\Controllers\Admin\HomepageCityController;
 use App\Http\Controllers\Admin\PropertyManagementController;
 use App\Http\Controllers\Admin\PropertyTypeController as AdminPropertyTypeController;
+use App\Http\Controllers\Admin\PaymentSettingController;
+use App\Http\Controllers\Admin\SubscriptionPackageController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\Admin\RolePermissionController;
+use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PropertyController;
@@ -50,6 +53,10 @@ Route::get('about-page/{aboutPage}/image/{group}/{index?}', [HomeController::cla
 Route::get('blog-page/{blogPage}/image', [BlogController::class, 'pageImage'])->name('blog-page.image');
 Route::get('blog-posts/{blogPost}/image/{group}/{index?}', [BlogController::class, 'postImage'])->name('blog-post.image');
 Route::get('contact-page/{contactPage}/image/{group}/{index?}', [ContactController::class, 'image'])->name('contact.image');
+Route::match(['GET', 'POST'], 'subscriptions/sslcommerz/success', [SubscriptionController::class, 'success'])->name('subscriptions.sslcommerz.success');
+Route::match(['GET', 'POST'], 'subscriptions/sslcommerz/fail', [SubscriptionController::class, 'fail'])->name('subscriptions.sslcommerz.fail');
+Route::match(['GET', 'POST'], 'subscriptions/sslcommerz/cancel', [SubscriptionController::class, 'cancel'])->name('subscriptions.sslcommerz.cancel');
+Route::match(['GET', 'POST'], 'subscriptions/sslcommerz/ipn', [SubscriptionController::class, 'ipn'])->name('subscriptions.sslcommerz.ipn');
 
 Route::get('/dashboard', function () {
     return redirect()->to(route('profile.edit', ['tab' => 'dashboard']).'#dashboard');
@@ -91,6 +98,12 @@ Route::middleware('auth:admin')->prefix('admin')->name('admin.')->group(function
     Route::post('property-types', [AdminPropertyTypeController::class, 'store'])->name('property-types.store');
     Route::put('property-types/{propertyType}', [AdminPropertyTypeController::class, 'update'])->name('property-types.update');
     Route::delete('property-types/{propertyType}', [AdminPropertyTypeController::class, 'destroy'])->name('property-types.destroy');
+    Route::get('subscription-packages', [SubscriptionPackageController::class, 'index'])->name('subscription-packages.index');
+    Route::post('subscription-packages', [SubscriptionPackageController::class, 'store'])->name('subscription-packages.store');
+    Route::put('subscription-packages/{subscriptionPackage}', [SubscriptionPackageController::class, 'update'])->name('subscription-packages.update');
+    Route::delete('subscription-packages/{subscriptionPackage}', [SubscriptionPackageController::class, 'destroy'])->name('subscription-packages.destroy');
+    Route::get('payment-settings', [PaymentSettingController::class, 'edit'])->name('payment-settings.edit');
+    Route::put('payment-settings', [PaymentSettingController::class, 'update'])->name('payment-settings.update');
     Route::get('users', [UserManagementController::class, 'index'])->name('users.index');
     Route::get('properties', [PropertyManagementController::class, 'index'])->name('properties.index');
     Route::get('properties/{property}', [PropertyManagementController::class, 'show'])->name('properties.show');
@@ -117,6 +130,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/profile/files/{type}/{index?}', [ProfileController::class, 'file'])->name('profile.files.show');
+    Route::post('/subscriptions/packages/{package}/checkout', [SubscriptionController::class, 'checkout'])->name('subscriptions.checkout');
     Route::get('/properties/{property}/edit', [PropertyController::class, 'edit'])->name('properties.edit');
     Route::post('/properties', [PropertyController::class, 'store'])->name('properties.store');
     Route::put('/properties/{property}', [PropertyController::class, 'update'])->name('properties.update');

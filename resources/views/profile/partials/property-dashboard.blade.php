@@ -5,13 +5,27 @@
             <p class="mb-0">Track your active property posts, see sale versus rent totals, and jump into the next property step quickly.</p>
         </div>
         <div class="cs_profile_action_group">
-            <a href="{{ route('profile.edit', ['tab' => 'add_property']) }}#add_property" class="cs_btn cs_style_1 cs_accent_bg cs_white_color cs_medium cs_radius_7">
-                <span>Add Property</span>
+            <a href="{{ route('profile.edit', ['tab' => $subscriptionSummary['has_active_subscription'] ? 'add_property' : 'subscription']) }}#{{ $subscriptionSummary['has_active_subscription'] ? 'add_property' : 'subscription' }}" class="cs_btn cs_style_1 cs_accent_bg cs_white_color cs_medium cs_radius_7">
+                <span>{{ $subscriptionSummary['has_active_subscription'] ? 'Add Property' : 'Get Subscription' }}</span>
             </a>
             <a href="{{ route('profile.edit', ['tab' => 'my_property']) }}#my_property" class="cs_btn cs_style_1 cs_type_1 cs_accent_color cs_medium cs_radius_7">
                 <span>View My Property</span>
             </a>
         </div>
+    </div>
+
+    <div class="cs_dashboard_note cs_mb_30">
+        <strong>Subscription:</strong>
+        @if ($subscriptionSummary['has_active_subscription'])
+            {{ $subscriptionSummary['subscription']->package_name }} is active until {{ optional($subscriptionSummary['subscription']->ends_at)->format('d M Y, h:i A') ?: 'N/A' }}.
+            @if ($subscriptionSummary['remaining_slots'] === null)
+                Your current package supports unlimited active listings.
+            @else
+                {{ $subscriptionSummary['remaining_slots'] }} active listing slot{{ $subscriptionSummary['remaining_slots'] === 1 ? '' : 's' }} remaining.
+            @endif
+        @else
+            No active package is attached to your account. Open the Subscription tab before posting a property.
+        @endif
     </div>
 
     <div class="cs_property_stat_grid cs_mb_40">

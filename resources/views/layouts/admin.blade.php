@@ -231,9 +231,21 @@
                 </a>
               </li>
               <li class="nav-item">
+                <a href="{{ route('admin.subscription-packages.index') }}" class="nav-link {{ request()->routeIs('admin.subscription-packages.*') ? 'active' : '' }}">
+                  <i class="nav-icon bi bi-wallet2"></i>
+                  <p>Subscriptions</p>
+                </a>
+              </li>
+              <li class="nav-item">
                 <a href="{{ route('admin.site-info.edit') }}" class="nav-link {{ request()->routeIs('admin.site-info.*') ? 'active' : '' }}">
                   <i class="nav-icon bi bi-info-circle"></i>
                   <p>Site Info</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ route('admin.payment-settings.edit') }}" class="nav-link {{ request()->routeIs('admin.payment-settings.*') ? 'active' : '' }}">
+                  <i class="nav-icon bi bi-credit-card-2-front"></i>
+                  <p>Payment Settings</p>
                 </a>
               </li>
               <li class="nav-item">

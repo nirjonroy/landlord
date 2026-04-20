@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorePropertyRequest;
 use App\Models\Property;
 use App\Models\PropertyType;
+use App\Services\SubscriptionAccessService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -14,6 +15,13 @@ use Illuminate\Validation\Rule;
 
 class PropertyController extends Controller
 {
+    private SubscriptionAccessService $subscriptionAccessService;
+
+    public function __construct(SubscriptionAccessService $subscriptionAccessService)
+    {
+        $this->subscriptionAccessService = $subscriptionAccessService;
+    }
+
     public function edit(Request $request, Property $property): View
     {
         abort_unless((int) $property->user_id === (int) $request->user()->id, 403);
@@ -21,6 +29,7 @@ class PropertyController extends Controller
         return view('frontend.properties.edit', [
             'user' => $request->user(),
             'property' => $property,
+            'subscriptionSummary' => $this->subscriptionAccessService->summaryForUser($request->user()),
             'propertyTypes' => PropertyType::query()
                 ->active()
                 ->orderBy('display_order')
@@ -38,6 +47,13 @@ class PropertyController extends Controller
     public function store(StorePropertyRequest $request): RedirectResponse
     {
         $user = $request->user();
+        $access = $this->subscriptionAccessService->canCreateProperty($user);
+
+        if (! $access['allowed']) {
+            return Redirect::to(route('profile.edit', ['tab' => 'subscription']).'#subscription')
+                ->with('status', $access['status']);
+        }
+
         $validated = $request->safe()->except([
             'property_form',
             'thumbnail_image',
@@ -73,6 +89,13 @@ class PropertyController extends Controller
         abort_unless((int) $property->user_id === (int) $request->user()->id, 403);
 
         $user = $request->user();
+        $access = $this->subscriptionAccessService->canUpdateProperty($user);
+
+        if (! $access['allowed']) {
+            return Redirect::to(route('profile.edit', ['tab' => 'subscription']).'#subscription')
+                ->with('status', $access['status']);
+        }
+
         $validated = $request->safe()->except([
             'property_form',
             'thumbnail_image',

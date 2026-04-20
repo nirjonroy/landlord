@@ -114,6 +114,12 @@
                     </div>
                 @endif
 
+                @if (! $subscriptionSummary['has_active_subscription'])
+                    <div class="cs_property_edit_note cs_property_edit_note_danger">
+                        <strong>Subscription required:</strong> You can review this property, but saving changes requires an active subscription package on your account.
+                    </div>
+                @endif
+
                 @include('profile.partials.property-form', [
                     'formAction' => route('properties.update', $property),
                     'formMethod' => 'PUT',

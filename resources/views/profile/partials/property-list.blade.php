@@ -4,8 +4,8 @@
             <h2 class="cs_profile_title cs_fs_28 cs_semibold mb-2">My Property</h2>
             <p class="mb-0">See which properties are already listed under your account and what status each one currently has.</p>
         </div>
-        <a href="{{ route('profile.edit', ['tab' => 'add_property']) }}#add_property" class="cs_btn cs_style_1 cs_accent_bg cs_white_color cs_medium cs_radius_7">
-            <span>Add Property</span>
+        <a href="{{ route('profile.edit', ['tab' => $subscriptionSummary['has_active_subscription'] ? 'add_property' : 'subscription']) }}#{{ $subscriptionSummary['has_active_subscription'] ? 'add_property' : 'subscription' }}" class="cs_btn cs_style_1 cs_accent_bg cs_white_color cs_medium cs_radius_7">
+            <span>{{ $subscriptionSummary['has_active_subscription'] ? 'Add Property' : 'Get Subscription' }}</span>
         </a>
     </div>
 
@@ -71,8 +71,8 @@
         <div class="cs_empty_state">
             <h3 class="cs_fs_24 cs_semibold cs_mb_12">No property has been added yet</h3>
             <p class="cs_mb_20">{{ $propertyAnalytics['message'] }}</p>
-            <a href="{{ route('profile.edit', ['tab' => 'add_property']) }}#add_property" class="cs_btn cs_style_1 cs_accent_bg cs_white_color cs_medium cs_radius_7">
-                <span>Open Add Property</span>
+            <a href="{{ route('profile.edit', ['tab' => $subscriptionSummary['has_active_subscription'] ? 'add_property' : 'subscription']) }}#{{ $subscriptionSummary['has_active_subscription'] ? 'add_property' : 'subscription' }}" class="cs_btn cs_style_1 cs_accent_bg cs_white_color cs_medium cs_radius_7">
+                <span>{{ $subscriptionSummary['has_active_subscription'] ? 'Open Add Property' : 'Open Subscription' }}</span>
             </a>
         </div>
     @endif

@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\SubscriptionPackage;
 use App\Models\PropertyType;
+use App\Models\SubscriptionTransaction;
 use App\Models\User;
+use App\Services\SubscriptionAccessService;
 use App\Support\ListingAnalytics;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -18,9 +21,12 @@ class ProfileController extends Controller
 {
     private ListingAnalytics $listingAnalytics;
 
-    public function __construct(ListingAnalytics $listingAnalytics)
+    private SubscriptionAccessService $subscriptionAccessService;
+
+    public function __construct(ListingAnalytics $listingAnalytics, SubscriptionAccessService $subscriptionAccessService)
     {
         $this->listingAnalytics = $listingAnalytics;
+        $this->subscriptionAccessService = $subscriptionAccessService;
     }
 
     /**
@@ -48,6 +54,17 @@ class ProfileController extends Controller
                 'ownership_ready' => (bool) $user->ownership_proof_path,
                 'gallery_count' => count($user->home_elevation_image_paths ?? []),
             ],
+            'subscriptionSummary' => $this->subscriptionAccessService->summaryForUser($user),
+            'subscriptionPackages' => SubscriptionPackage::query()
+                ->active()
+                ->ordered()
+                ->get(),
+            'subscriptionTransactions' => SubscriptionTransaction::query()
+                ->with('package')
+                ->where('user_id', $user->id)
+                ->latest('id')
+                ->limit(10)
+                ->get(),
             'propertyAnalytics' => $this->listingAnalytics->analyticsForUser($user),
             'propertyTypes' => PropertyType::query()
                 ->active()
@@ -267,6 +284,7 @@ class ProfileController extends Controller
     {
         $allowedTabs = [
             'dashboard',
+            'subscription',
             'my_property',
             'add_property',
             'profile',

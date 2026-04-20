@@ -190,6 +190,42 @@
                     <div class="cs_status_alert cs_status_alert_success">Your password has been updated successfully.</div>
                 @endif
 
+                @if (session('status') === 'subscription-activated')
+                    <div class="cs_status_alert cs_status_alert_success">Your subscription payment was confirmed and listing access is now active.</div>
+                @endif
+
+                @if (session('status') === 'subscription-payment-cancelled')
+                    <div class="cs_status_alert cs_status_alert_error">The SSLCommerz checkout was cancelled before payment was completed.</div>
+                @endif
+
+                @if (session('status') === 'subscription-payment-failed')
+                    <div class="cs_status_alert cs_status_alert_error">The SSLCommerz payment failed. Please try again or choose another package.</div>
+                @endif
+
+                @if (session('status') === 'subscription-payment-init-failed')
+                    <div class="cs_status_alert cs_status_alert_error">The payment session could not be created right now. Please try again shortly.</div>
+                @endif
+
+                @if (session('status') === 'subscription-payment-validation-failed')
+                    <div class="cs_status_alert cs_status_alert_error">The payment callback returned, but the subscription could not be validated safely.</div>
+                @endif
+
+                @if (session('status') === 'subscription-gateway-not-configured')
+                    <div class="cs_status_alert cs_status_alert_error">SSLCommerz is not configured yet from the admin panel.</div>
+                @endif
+
+                @if (session('status') === 'subscription-required')
+                    <div class="cs_status_alert cs_status_alert_error">You need an active subscription before adding or updating a property listing.</div>
+                @endif
+
+                @if (session('status') === 'subscription-limit-reached')
+                    <div class="cs_status_alert cs_status_alert_error">Your current subscription has no remaining active listing slots. Upgrade, renew, or free a slot first.</div>
+                @endif
+
+                @if (session('status') === 'subscription-transaction-missing')
+                    <div class="cs_status_alert cs_status_alert_error">The subscription payment callback could not be matched with a local transaction.</div>
+                @endif
+
                 @if (session('status') === 'property-created')
                     <div class="cs_status_alert cs_status_alert_success">Your property was added successfully and is now waiting for review.</div>
                 @endif
@@ -217,6 +253,7 @@
 
                             <ul class="cs_tab_links cs_style_5 cs_mp_0">
                                 <li class="{{ $activeTab === 'dashboard' ? 'active' : '' }}"><a href="{{ route('profile.edit', ['tab' => 'dashboard']) }}#dashboard" aria-label="Dashboard tab button">Dashboard</a></li>
+                                <li class="{{ $activeTab === 'subscription' ? 'active' : '' }}"><a href="{{ route('profile.edit', ['tab' => 'subscription']) }}#subscription" aria-label="Subscription tab button">Subscription</a></li>
                                 <li class="{{ $activeTab === 'my_property' ? 'active' : '' }}"><a href="{{ route('profile.edit', ['tab' => 'my_property']) }}#my_property" aria-label="My property tab button">My Property</a></li>
                                 <li class="{{ $activeTab === 'add_property' ? 'active' : '' }}"><a href="{{ route('profile.edit', ['tab' => 'add_property']) }}#add_property" aria-label="Add property tab button">Add New Property</a></li>
                                 <li class="{{ $activeTab === 'profile' ? 'active' : '' }}"><a href="{{ route('profile.edit', ['tab' => 'profile']) }}#profile" aria-label="Profile details tab button">Profile Details</a></li>
@@ -248,6 +285,10 @@
                         <div class="cs_tab_body">
                             <div class="cs_tab {{ $activeTab === 'dashboard' ? 'active' : '' }}" id="dashboard">
                                 @include('profile.partials.property-dashboard')
+                            </div>
+
+                            <div class="cs_tab {{ $activeTab === 'subscription' ? 'active' : '' }}" id="subscription">
+                                @include('profile.partials.subscription')
                             </div>
 
                             <div class="cs_tab {{ $activeTab === 'my_property' ? 'active' : '' }}" id="my_property">
